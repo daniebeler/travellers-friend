@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { IonGrid } from '@ionic/angular';
 import * as L from 'leaflet';
+import { OverpassService } from 'src/app/services/overpass.service';
 
 @Component({
   selector: 'app-map',
@@ -11,11 +12,31 @@ export class MapComponent implements OnInit, AfterViewInit {
   private map: L.map;
   private initialized: boolean = false;
 
-  constructor() { }
+  constructor(private overpassService: OverpassService) { }
 
   ngOnInit() {
     if(navigator.geolocation) {
       navigator.geolocation.watchPosition(this.setGeoLocation.bind(this));
+
+    this.map.on('moveend', () => {
+      const bounds = this.map.getBounds();
+      console.log(bounds.getSouthWest());
+      console.log(bounds.getNorthEast());
+
+
+      this.overpassService.getNodes(
+        '"amenity"="toilets"',
+        bounds.getSouthWest().lat,
+        bounds.getSouthWest().lng,
+        bounds.getNorthEast().lat,
+        bounds.getNorthEast().lng
+      ).subscribe((data) => {
+        console.log('fief is here: ');
+
+        console.log(data);
+
+      });;
+    });
     }
    }
 
