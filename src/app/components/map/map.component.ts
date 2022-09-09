@@ -12,11 +12,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   private map: L.map;
   private initialized: boolean = false;
 
+  private nodes: any[];
+
   constructor(private overpassService: OverpassService) { }
 
   ngOnInit() {
 
-    if(navigator.geolocation) {
+    if (navigator.geolocation) {
       navigator.geolocation.watchPosition(this.setGeoLocation.bind(this));
     }
   }
@@ -24,10 +26,10 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   setGeoLocation(position: { coords: { latitude: any; longitude: any } }) {
     const {
-       coords: { latitude, longitude },
+      coords: { latitude, longitude },
     } = position;
 
-    if(!this.initialized){
+    if (!this.initialized) {
       this.map = L.map('map', {
         center: [latitude, longitude],
         zoom: 13,
@@ -36,23 +38,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.initialized = true;
 
       this.map.on('moveend', () => {
-        const bounds = this.map.getBounds();
-        console.log(bounds.getSouthWest());
-        console.log(bounds.getNorthEast());
-
-
-        this.overpassService.getNodes(
-          '"amenity"="toilets"',
-          bounds.getSouthWest().lat,
-          bounds.getSouthWest().lng,
-          bounds.getNorthEast().lat,
-          bounds.getNorthEast().lng
-        ).subscribe((data) => {
-          console.log('fief is here: ');
-
-          console.log(data);
-
-        });;
+        this.getNewNodes();
       });
 
     }
@@ -64,7 +50,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       fillColor: 'lightblue',
       radius: 5
     }
-      ).addTo(this.map);
+    ).addTo(this.map);
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -78,29 +64,29 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.invalidateSize();
     }, 0);
 
-    }
+  }
 
   ngAfterViewInit(): void {
     // this.initMap();
   }
 
-  // private initMap(): void {
-    // this.map = L.map('map', {
-    //   center: [51.505, -0.09],
-    //   zoom: 13,
-    //   renderer: L.canvas()
-    // });
 
-    // const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //   maxZoom: 18,
-    //   minZoom: 3,
-    //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    // });
+  getNewNodes() {
+    const bounds = this.map.getBounds();
+    console.log(bounds.getSouthWest());
+    console.log(bounds.getNorthEast());
 
-    // tiles.addTo(this.map);
+    this.overpassService.getNodes(
+      '"amenity"="toilets"',
+      bounds.getSouthWest().lat,
+      bounds.getSouthWest().lng,
+      bounds.getNorthEast().lat,
+      bounds.getNorthEast().lng
+    ).subscribe((data) => {
+      console.log('fief is here: ');
 
-    // setTimeout(() => {
-    //   this.map.invalidateSize();
-    // }, 0);
-  // }
+      console.log(data);
+
+    });
+  }
 }
