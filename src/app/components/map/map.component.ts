@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { IonGrid } from '@ionic/angular';
 import * as L from 'leaflet';
 import { OverpassService } from 'src/app/services/overpass.service';
 
@@ -9,8 +8,20 @@ import { OverpassService } from 'src/app/services/overpass.service';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, AfterViewInit {
-  private map: L.map;
+  map;
   private initialized: boolean = false;
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  public locateOptions:  L.Control.LocateOptions = {
+    flyTo: false,
+    keepCurrentZoomLevel: false,
+    locateOptions: {
+                 enableHighAccuracy: true,
+               },
+    icon: 'material-icons md-18 target icon',
+    clickBehavior: {inView: 'stop',
+                    outOfView: 'setView',
+                    inViewNotFollowing: 'setView'}
+  };
 
   constructor(private overpassService: OverpassService) { }
 
@@ -58,13 +69,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     }
 
     console.log(position);
-
-    let circle = L.circle([latitude, longitude], {
-      color: 'blue',
-      fillColor: 'lightblue',
-      radius: 5
-    }
-      ).addTo(this.map);
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
