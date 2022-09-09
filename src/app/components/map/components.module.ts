@@ -3,7 +3,7 @@ import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MapComponent } from './map/map.component';
+import { MapComponent } from './map.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +17,9 @@ import { MapComponent } from './map/map.component';
     CommonModule,
     FormsModule,
     RouterModule
+  ],
+  providers: [
+    Geolocation
   ]
 })
 export class ComponentsModule { }
