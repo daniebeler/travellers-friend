@@ -7,7 +7,8 @@ const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'https://www.shareicon.net/data/48x48/2015/09/21/644170_pointer_512x512.png'
+  iconUrl:
+    'https://www.shareicon.net/data/48x48/2015/09/21/644170_pointer_512x512.png',
 });
 
 @Component({
@@ -21,52 +22,48 @@ export class MapComponent implements OnInit {
 
   map;
   private layerGroup: L.LayerGroup = L.layerGroup();
-  private initialized = false;
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  public locateOptions:  L.Control.LocateOptions = {
-    flyTo: false,
-    keepCurrentZoomLevel: false,
-    locateOptions: {
-                 enableHighAccuracy: true,
-               },
-    icon: 'material-icons md-18 target icon',
-    clickBehavior: {inView: 'stop',
-                    outOfView: 'setView',
-                    inViewNotFollowing: 'setView'}
-  };
 
-  constructor(private overpassService: OverpassService) { }
+  constructor(private overpassService: OverpassService) {}
 
   ngOnInit() {
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition(this.setGeoLocation.bind(this));
-    }
+    this.initializeMap();
   }
 
-  setGeoLocation(position: { coords: { latitude: any; longitude: any } }) {
-    const {
-      coords: { latitude, longitude },
-    } = position;
+  initializeMap() {
+    let latitude = 47.404391;
+    let longitude = 9.744025;
 
-    if (!this.initialized) {
-      this.map = L.map('map', {
-        center: [latitude, longitude],
-        zoom: 13,
-        renderer: L.canvas()
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        latitude = position.coords.latitude;
+        longitude = position.coords.longitude;
       });
-      this.initialized = true;
-
-      this.map.on('moveend', () => {
-        this.getNewNodes();
-      });
-
     }
 
-    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      minZoom: 3,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    this.map = L.map('map', {
+      center: [latitude, longitude],
+      zoom: 20,
+      renderer: L.canvas(),
     });
+
+    try{
+      L.control.locate({ flyTo: true, keepCurrentZoomLevel: true }).addTo(this.map).start();
+    }
+    catch{console.log('ses');}
+
+    this.map.on('moveend', () => {
+      this.getNewNodes();
+    });
+
+    const tiles = L.tileLayer(
+      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        maxZoom: 18,
+        minZoom: 3,
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }
+    );
 
     tiles.addTo(this.map);
 
@@ -79,16 +76,18 @@ export class MapComponent implements OnInit {
     const mapBounds = this.map.getBounds();
     console.log('Requested new nodes');
 
-    this.overpassService.getNodes(
-      '"amenity"="toilets"',
-      mapBounds.getSouthWest().lat,
-      mapBounds.getSouthWest().lng,
-      mapBounds.getNorthEast().lat,
-      mapBounds.getNorthEast().lng
-    ).subscribe((nodes) => {
-      console.log('New nodes are here');
-      this.setMarker(nodes);
-    });
+    this.overpassService
+      .getNodes(
+        '"amenity"="toilets"',
+        mapBounds.getSouthWest().lat,
+        mapBounds.getSouthWest().lng,
+        mapBounds.getNorthEast().lat,
+        mapBounds.getNorthEast().lng
+      )
+      .subscribe((nodes) => {
+        console.log('New nodes are here');
+        this.setMarker(nodes);
+      });
   }
 
   setMarker(nodes: OsmNode[]) {
