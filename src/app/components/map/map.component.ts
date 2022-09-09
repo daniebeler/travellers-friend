@@ -31,5 +31,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
 
     tiles.addTo(this.map);
+
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 0);
   }
 }
