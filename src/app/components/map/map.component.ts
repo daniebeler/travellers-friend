@@ -72,16 +72,16 @@ export class MapComponent implements OnInit, AfterViewInit {
 
 
   getNewNodes() {
-    const bounds = this.map.getBounds();
-    console.log(bounds.getSouthWest());
-    console.log(bounds.getNorthEast());
+    const mapBounds = this.map.getBounds();
+    console.log(mapBounds.getSouthWest());
+    console.log(mapBounds.getNorthEast());
 
     this.overpassService.getNodes(
       '"amenity"="toilets"',
-      bounds.getSouthWest().lat,
-      bounds.getSouthWest().lng,
-      bounds.getNorthEast().lat,
-      bounds.getNorthEast().lng
+      mapBounds.getSouthWest().lat,
+      mapBounds.getSouthWest().lng,
+      mapBounds.getNorthEast().lat,
+      mapBounds.getNorthEast().lng
     ).subscribe((data) => {
       console.log('fief is here: ');
 
