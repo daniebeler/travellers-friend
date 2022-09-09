@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { OverpassService } from 'src/app/services/overpass.service';
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -9,19 +7,17 @@ import { Observable } from 'rxjs';
 })
 export class HomePage {
 
-  api = 'https://overpass-api.de/api/interpreter?data=';
-
   constructor(
-    private http: HttpClient,
+    private overpassService: OverpassService,
   ) { }
 
   ngOnInit(): void {
-
+    this.test();
   }
 
   test() {
     console.log('hola');
-    this.getNodes(
+    this.overpassService.getNodes(
       '"amenity"="toilets"',
       '47.44027965714996',
       '9.673805236816404',
@@ -34,17 +30,4 @@ export class HomePage {
 
     });
   }
-
-
-
-  getNodes(nodeType: string, lat1, lon1, lat2, lon2, timeout = 10, out = 'json'): Observable<any> {
-    const query =
-      '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
-      '[out:' + out + ']' +
-      '[timeout:' + timeout + '];' +
-      'node[' + nodeType + '];' +
-      'out;';
-    return this.http.get<any>(this.api + encodeURIComponent(query));
-  }
-
 }
