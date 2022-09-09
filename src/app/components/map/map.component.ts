@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
-import { OsmNode } from 'src/app/models/osmNode';
+import { OsmNode } from 'src/app/models/OsmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
 
 const toiletIcon: L.Icon = L.icon({
@@ -16,7 +16,7 @@ const toiletIcon: L.Icon = L.icon({
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
-  
+
   @Output() markerClicked = new EventEmitter<string>();
 
   map;
