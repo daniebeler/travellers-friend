@@ -3,12 +3,11 @@ import * as L from 'leaflet';
 import { OsmNode } from 'src/app/models/osmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
 
-const icon: L.Icon = L.icon({
-  iconSize: [25, 41],
-  iconAnchor: [10, 41],
+const toiletIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png'
+  iconUrl: 'https://www.shareicon.net/data/48x48/2015/09/21/644170_pointer_512x512.png'
 });
 
 @Component({
@@ -87,7 +86,7 @@ export class MapComponent implements OnInit {
   setMarker(nodes: OsmNode[]) {
     this.layerGroup.clearLayers();
     nodes.forEach((node) => {
-      const marker = L.marker([node.lat, node.lon], { icon });
+      const marker = L.marker([node.lat, node.lon], { icon: toiletIcon });
       this.layerGroup.addLayer(marker).addTo(this.map);
     });
   }
