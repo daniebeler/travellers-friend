@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
 import { OsmNode } from 'src/app/models/OsmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
@@ -9,6 +9,22 @@ const toiletIcon: L.Icon = L.icon({
   popupAnchor: [2, -40],
   iconUrl:
     'https://www.shareicon.net/data/48x48/2015/09/21/644170_pointer_512x512.png',
+});
+
+const freeToiletIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl:
+    'https://img.freepik.com/premium-vector/icon-toilet-flat-bathroom-toilet-sign-wc-toilet-icon-vector-illustration_485380-483.jpg?w=2000',
+});
+
+const paidToiletIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl:
+    'https://cdn.w600.comps.canstockphoto.at/home-toilet-icon-rot-stock-illustration_csp66985768.jpg',
 });
 
 @Component({
@@ -93,8 +109,16 @@ export class MapComponent implements OnInit {
   setMarker(nodes: OsmNode[]) {
     this.layerGroup.clearLayers();
     nodes.forEach((node) => {
-      const marker = L.marker([node.lat, node.lon], { icon: toiletIcon }).on('click', event => {
-        console.log("clicked marker: ", node.lat, node.lon);
+      let markerIcon = toiletIcon;
+
+      if (node.tags.fee === 'no') {
+        markerIcon = freeToiletIcon;
+      } else if (node.tags.fee === 'yes') {
+        markerIcon = paidToiletIcon;
+      }
+
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
+        console.log('clicked marker: ', node.lat, node.lon);
         this.callParent();
       });
       this.layerGroup.addLayer(marker).addTo(this.map);
