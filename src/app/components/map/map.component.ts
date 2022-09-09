@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
 import { OsmNode } from 'src/app/models/osmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
@@ -16,6 +16,9 @@ const toiletIcon: L.Icon = L.icon({
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
+  
+  @Output() markerClicked = new EventEmitter<string>();
+
   private map: L.map;
   private layerGroup: L.LayerGroup = L.layerGroup();
   private initialized = false;
@@ -86,8 +89,15 @@ export class MapComponent implements OnInit {
   setMarker(nodes: OsmNode[]) {
     this.layerGroup.clearLayers();
     nodes.forEach((node) => {
-      const marker = L.marker([node.lat, node.lon], { icon: toiletIcon });
+      const marker = L.marker([node.lat, node.lon], { icon: toiletIcon }).on('click', event => {
+        console.log("clicked marker: ", node.lat, node.lon);
+        this.callParent();
+      });
       this.layerGroup.addLayer(marker).addTo(this.map);
     });
+  }
+
+  callParent() {
+    this.markerClicked.emit('eventDesc');
   }
 }
