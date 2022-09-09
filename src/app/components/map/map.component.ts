@@ -15,38 +15,17 @@ export class MapComponent implements OnInit, AfterViewInit {
   constructor(private overpassService: OverpassService) { }
 
   ngOnInit() {
+
     if(navigator.geolocation) {
       navigator.geolocation.watchPosition(this.setGeoLocation.bind(this));
-
-    this.map.on('moveend', () => {
-      const bounds = this.map.getBounds();
-      console.log(bounds.getSouthWest());
-      console.log(bounds.getNorthEast());
-
-
-      this.overpassService.getNodes(
-        '"amenity"="toilets"',
-        bounds.getSouthWest().lat,
-        bounds.getSouthWest().lng,
-        bounds.getNorthEast().lat,
-        bounds.getNorthEast().lng
-      ).subscribe((data) => {
-        console.log('fief is here: ');
-
-        console.log(data);
-
-      });;
-    });
     }
-   }
+  }
 
 
   setGeoLocation(position: { coords: { latitude: any; longitude: any } }) {
     const {
        coords: { latitude, longitude },
     } = position;
-
-    console.log(position);
 
     if(!this.initialized){
       this.map = L.map('map', {
@@ -55,7 +34,30 @@ export class MapComponent implements OnInit, AfterViewInit {
         renderer: L.canvas()
       });
       this.initialized = true;
+
+      this.map.on('moveend', () => {
+        const bounds = this.map.getBounds();
+        console.log(bounds.getSouthWest());
+        console.log(bounds.getNorthEast());
+
+
+        this.overpassService.getNodes(
+          '"amenity"="toilets"',
+          bounds.getSouthWest().lat,
+          bounds.getSouthWest().lng,
+          bounds.getNorthEast().lat,
+          bounds.getNorthEast().lng
+        ).subscribe((data) => {
+          console.log('fief is here: ');
+
+          console.log(data);
+
+        });;
+      });
+
     }
+
+    console.log(position);
 
     let circle = L.circle([latitude, longitude], {
       color: 'blue',
