@@ -6,9 +6,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomePage implements OnInit {
 
+  modalIsOpen = false;
+
   constructor() { }
 
   ngOnInit(): void {
 
+  }
+
+  test() {
+    console.log("test successful");
+    this.modalIsOpen = true;
+  }
+  closeModal() {
+    console.log("closing");
+    
+    this.modalIsOpen = false;
   }
 }

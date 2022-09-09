@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
-import { OsmNode } from '../models/osmNode';
+import { OsmNode } from '../models/OsmNode';
 
 @Injectable({
   providedIn: 'root'
