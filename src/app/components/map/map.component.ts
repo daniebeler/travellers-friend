@@ -59,13 +59,6 @@ export class MapComponent implements OnInit {
 
     }
 
-    L.circle([latitude, longitude], {
-      color: 'blue',
-      fillColor: 'lightblue',
-      radius: 5
-    }
-    ).addTo(this.map);
-
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       minZoom: 3,
