@@ -1,15 +1,24 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
+import { OsmNode } from 'src/app/models/osmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
+
+const toiletIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl: 'https://www.shareicon.net/data/48x48/2015/09/21/644170_pointer_512x512.png'
+});
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit {
   map;
-  private initialized: boolean = false;
+  private layerGroup: L.LayerGroup = L.layerGroup();
+  private initialized = false;
   // eslint-disable-next-line @typescript-eslint/member-ordering
   public locateOptions:  L.Control.LocateOptions = {
     flyTo: false,
@@ -26,19 +35,17 @@ export class MapComponent implements OnInit, AfterViewInit {
   constructor(private overpassService: OverpassService) { }
 
   ngOnInit() {
-
-    if(navigator.geolocation) {
+    if (navigator.geolocation) {
       navigator.geolocation.watchPosition(this.setGeoLocation.bind(this));
     }
   }
 
-
   setGeoLocation(position: { coords: { latitude: any; longitude: any } }) {
     const {
-       coords: { latitude, longitude },
+      coords: { latitude, longitude },
     } = position;
 
-    if(!this.initialized){
+    if (!this.initialized) {
       this.map = L.map('map', {
         center: [latitude, longitude],
         zoom: 13,
@@ -47,28 +54,17 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.initialized = true;
 
       this.map.on('moveend', () => {
-        const bounds = this.map.getBounds();
-        console.log(bounds.getSouthWest());
-        console.log(bounds.getNorthEast());
-
-
-        this.overpassService.getNodes(
-          '"amenity"="toilets"',
-          bounds.getSouthWest().lat,
-          bounds.getSouthWest().lng,
-          bounds.getNorthEast().lat,
-          bounds.getNorthEast().lng
-        ).subscribe((data) => {
-          console.log('fief is here: ');
-
-          console.log(data);
-
-        });;
+        this.getNewNodes();
       });
 
     }
 
-    console.log(position);
+    L.circle([latitude, longitude], {
+      color: 'blue',
+      fillColor: 'lightblue',
+      radius: 5
+    }
+    ).addTo(this.map);
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -81,30 +77,29 @@ export class MapComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.map.invalidateSize();
     }, 0);
-
-    }
-
-  ngAfterViewInit(): void {
-    // this.initMap();
   }
 
-  // private initMap(): void {
-    // this.map = L.map('map', {
-    //   center: [51.505, -0.09],
-    //   zoom: 13,
-    //   renderer: L.canvas()
-    // });
+  getNewNodes() {
+    const mapBounds = this.map.getBounds();
+    console.log('Requested new nodes');
 
-    // const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    //   maxZoom: 18,
-    //   minZoom: 3,
-    //   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    // });
+    this.overpassService.getNodes(
+      '"amenity"="toilets"',
+      mapBounds.getSouthWest().lat,
+      mapBounds.getSouthWest().lng,
+      mapBounds.getNorthEast().lat,
+      mapBounds.getNorthEast().lng
+    ).subscribe((nodes) => {
+      console.log('New nodes are here');
+      this.setMarker(nodes);
+    });
+  }
 
-    // tiles.addTo(this.map);
-
-    // setTimeout(() => {
-    //   this.map.invalidateSize();
-    // }, 0);
-  // }
+  setMarker(nodes: OsmNode[]) {
+    this.layerGroup.clearLayers();
+    nodes.forEach((node) => {
+      const marker = L.marker([node.lat, node.lon], { icon: toiletIcon });
+      this.layerGroup.addLayer(marker).addTo(this.map);
+    });
+  }
 }
