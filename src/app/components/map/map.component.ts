@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
 import { OsmNode } from 'src/app/models/osmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
@@ -19,9 +19,21 @@ export class MapComponent implements OnInit {
   
   @Output() markerClicked = new EventEmitter<string>();
 
-  private map: L.map;
+  map;
   private layerGroup: L.LayerGroup = L.layerGroup();
   private initialized = false;
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  public locateOptions:  L.Control.LocateOptions = {
+    flyTo: false,
+    keepCurrentZoomLevel: false,
+    locateOptions: {
+                 enableHighAccuracy: true,
+               },
+    icon: 'material-icons md-18 target icon',
+    clickBehavior: {inView: 'stop',
+                    outOfView: 'setView',
+                    inViewNotFollowing: 'setView'}
+  };
 
   constructor(private overpassService: OverpassService) { }
 
@@ -49,13 +61,6 @@ export class MapComponent implements OnInit {
       });
 
     }
-
-    L.circle([latitude, longitude], {
-      color: 'blue',
-      fillColor: 'lightblue',
-      radius: 5
-    }
-    ).addTo(this.map);
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,

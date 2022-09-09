@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MapComponent } from './map.component';
+import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { MapComponent } from './map.component';
     IonicModule,
     CommonModule,
     FormsModule,
-    RouterModule
+    RouterModule,
+    NgxLeafletLocateModule
   ],
   providers: [
     Geolocation
