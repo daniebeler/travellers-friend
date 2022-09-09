@@ -16,7 +16,7 @@ export class OverpassService {
 
   ) { }
 
-  getNodes(nodeType: string, lat1, lon1, lat2, lon2, timeout = 10, out = 'json'): Observable<Node[]> {
+  getNodes(nodeType: string, lat1, lon1, lat2, lon2, timeout = 10, out = 'json'): Observable<OsmNode[]> {
     const query =
       '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
       '[out:' + out + ']' +

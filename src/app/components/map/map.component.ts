@@ -1,28 +1,33 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { IonGrid } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
+import { OsmNode } from 'src/app/models/osmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
+
+const icon: L.Icon = L.icon({
+  iconSize: [25, 41],
+  iconAnchor: [10, 41],
+  popupAnchor: [2, -40],
+  iconUrl: 'https://unpkg.com/leaflet@1.5.1/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.5.1/dist/images/marker-shadow.png'
+});
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit {
   private map: L.map;
-  private initialized: boolean = false;
-
-  private nodes: any[];
+  private layerGroup: L.LayerGroup = L.layerGroup();
+  private initialized = false;
 
   constructor(private overpassService: OverpassService) { }
 
   ngOnInit() {
-
     if (navigator.geolocation) {
       navigator.geolocation.watchPosition(this.setGeoLocation.bind(this));
     }
   }
-
 
   setGeoLocation(position: { coords: { latitude: any; longitude: any } }) {
     const {
@@ -43,9 +48,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     }
 
-    console.log(position);
-
-    let circle = L.circle([latitude, longitude], {
+    L.circle([latitude, longitude], {
       color: 'blue',
       fillColor: 'lightblue',
       radius: 5
@@ -63,18 +66,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.map.invalidateSize();
     }, 0);
-
   }
-
-  ngAfterViewInit(): void {
-    // this.initMap();
-  }
-
 
   getNewNodes() {
     const mapBounds = this.map.getBounds();
-    console.log(mapBounds.getSouthWest());
-    console.log(mapBounds.getNorthEast());
+    console.log('Requested new nodes');
 
     this.overpassService.getNodes(
       '"amenity"="toilets"',
@@ -82,11 +78,17 @@ export class MapComponent implements OnInit, AfterViewInit {
       mapBounds.getSouthWest().lng,
       mapBounds.getNorthEast().lat,
       mapBounds.getNorthEast().lng
-    ).subscribe((data) => {
-      console.log('fief is here: ');
+    ).subscribe((nodes) => {
+      console.log('New nodes are here');
+      this.setMarker(nodes);
+    });
+  }
 
-      console.log(data);
-
+  setMarker(nodes: OsmNode[]) {
+    this.layerGroup.clearLayers();
+    nodes.forEach((node) => {
+      const marker = L.marker([node.lat, node.lon], { icon });
+      this.layerGroup.addLayer(marker).addTo(this.map);
     });
   }
 }
