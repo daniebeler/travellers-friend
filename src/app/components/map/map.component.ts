@@ -7,24 +7,21 @@ const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl:
-    'https://www.shareicon.net/data/48x48/2015/09/21/644170_pointer_512x512.png',
+  iconUrl: 'assets/pointer/black-toilet.svg',
 });
 
 const freeToiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl:
-    'https://img.freepik.com/premium-vector/icon-toilet-flat-bathroom-toilet-sign-wc-toilet-icon-vector-illustration_485380-483.jpg?w=2000',
+  iconUrl: 'assets/pointer/green-toilet.svg',
 });
 
 const paidToiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl:
-    'https://cdn.w600.comps.canstockphoto.at/home-toilet-icon-rot-stock-illustration_csp66985768.jpg',
+  iconUrl: 'assets/pointer/orange-toilet.svg',
 });
 
 const waterIcon: L.Icon = L.icon({
@@ -48,7 +45,7 @@ export class MapComponent implements OnInit {
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
 
-  constructor(private overpassService: OverpassService) {}
+  constructor(private overpassService: OverpassService) { }
 
   ngOnInit() {
     this.initializeMap();
@@ -71,10 +68,10 @@ export class MapComponent implements OnInit {
       renderer: L.canvas(),
     });
 
-    try{
+    try {
       L.control.locate({ flyTo: true, keepCurrentZoomLevel: true }).addTo(this.map).start();
     }
-    catch{console.log('ses');}
+    catch { console.log('ses'); }
 
     this.map.on('moveend', () => {
       this.getNewNodes();
@@ -115,7 +112,7 @@ export class MapComponent implements OnInit {
       });
 
 
-      this.overpassService
+    this.overpassService
       .getNodes(
         '"amenity"="drinking_water"',
         mapBounds.getSouthWest().lat,
