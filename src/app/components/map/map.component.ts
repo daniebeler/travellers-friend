@@ -43,6 +43,8 @@ export class MapComponent implements OnInit {
   @Output() markerClicked = new EventEmitter<string>();
 
   map;
+  toiletsLoaded = false;
+  watersLoaded = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
@@ -98,7 +100,7 @@ export class MapComponent implements OnInit {
 
     setTimeout(() => {
       this.map.invalidateSize();
-    }, 100);
+    }, 0);
   }
 
   getNodes(type: string) {
@@ -106,9 +108,14 @@ export class MapComponent implements OnInit {
   }
 
   reloadNodes() {
+    this.watersLoaded = false;
+    this.toiletsLoaded = false;
+
     const mapCenter = this.map.getBounds().getCenter();
     const mapBounds = this.map.getBounds();
     console.log('Requested new nodes');
+
+
 
     this.lastPreloadingBounds = {
       lat1: mapCenter.lat - preloadingRadius,
@@ -132,6 +139,7 @@ export class MapComponent implements OnInit {
       )
       .subscribe((nodes) => {
         console.log('New toilets are here');
+        this.toiletsLoaded = true;
         this.setToiletMarker(nodes);
       });
 
@@ -145,6 +153,7 @@ export class MapComponent implements OnInit {
         mapCenter.lng + preloadingRadius
       )
       .subscribe((nodes) => {
+        this.watersLoaded = true;
         console.log('New waters are here');
         this.setWaterMarker(nodes);
       });
