@@ -31,6 +31,8 @@ const waterIcon: L.Icon = L.icon({
   iconUrl: 'assets/pointer/water.svg',
 });
 
+const preloadingRadius = 0.25;
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -43,6 +45,7 @@ export class MapComponent implements OnInit {
   map;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
+  private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
   constructor(private overpassService: OverpassService) { }
 
@@ -67,13 +70,17 @@ export class MapComponent implements OnInit {
       renderer: L.canvas(),
     });
 
-    try {
-      L.control.locate({ flyTo: true, keepCurrentZoomLevel: true }).addTo(this.map).start();
-    }
-    catch { console.log('ses'); }
+    L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
 
     this.map.on('moveend', () => {
-      this.getNewNodes();
+      if (
+        this.map.getBounds().getSouthWest().lat < this.lastPreloadingBounds.lat1 ||
+        this.map.getBounds().getSouthWest().lng < this.lastPreloadingBounds.lng1 ||
+        this.map.getBounds().getNorthEast().lat > this.lastPreloadingBounds.lat2 ||
+        this.map.getBounds().getNorthEast().lng > this.lastPreloadingBounds.lng2
+      ) {
+        this.reloadNodes();
+      }
     });
 
     const tiles = L.tileLayer(
@@ -91,23 +98,40 @@ export class MapComponent implements OnInit {
 
     setTimeout(() => {
       this.map.invalidateSize();
-    }, 0);
+    }, 100);
   }
 
-  getNewNodes() {
+  getNodes(type: string) {
+
+  }
+
+  reloadNodes() {
+    const mapCenter = this.map.getBounds().getCenter();
     const mapBounds = this.map.getBounds();
     console.log('Requested new nodes');
+
+    this.lastPreloadingBounds = {
+      lat1: mapCenter.lat - preloadingRadius,
+      lng1: mapCenter.lng - preloadingRadius,
+      lat2: mapCenter.lat + preloadingRadius,
+      lng2: mapCenter.lng + preloadingRadius
+    };
+
+    console.log(mapCenter.lat - preloadingRadius);
+    console.log(mapCenter.lng - preloadingRadius);
+    console.log(mapCenter.lat + preloadingRadius);
+    console.log(mapCenter.lng + preloadingRadius);
 
     this.overpassService
       .getNodes(
         '"amenity"="toilets"',
-        mapBounds.getSouthWest().lat,
-        mapBounds.getSouthWest().lng,
-        mapBounds.getNorthEast().lat,
-        mapBounds.getNorthEast().lng
+        mapCenter.lat - preloadingRadius,
+        mapCenter.lng - preloadingRadius,
+        mapCenter.lat + preloadingRadius,
+        mapCenter.lng + preloadingRadius
       )
       .subscribe((nodes) => {
-        console.log('New nodes are here');
+        console.log('New toilets are here');
         this.setToiletMarker(nodes);
       });
 
@@ -115,13 +139,13 @@ export class MapComponent implements OnInit {
     this.overpassService
       .getNodes(
         '"amenity"="drinking_water"',
-        mapBounds.getSouthWest().lat,
-        mapBounds.getSouthWest().lng,
-        mapBounds.getNorthEast().lat,
-        mapBounds.getNorthEast().lng
+        mapCenter.lat - preloadingRadius,
+        mapCenter.lng - preloadingRadius,
+        mapCenter.lat + preloadingRadius,
+        mapCenter.lng + preloadingRadius
       )
       .subscribe((nodes) => {
-        console.log('New nodes are here');
+        console.log('New waters are here');
         this.setWaterMarker(nodes);
       });
   }
