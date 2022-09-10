@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ToastController } from '@ionic/angular';
 import * as L from 'leaflet';
 import { OsmNode } from 'src/app/models/OsmNode';
 import { OverpassService } from 'src/app/services/overpass.service';
@@ -52,7 +53,10 @@ export class MapComponent implements OnInit {
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
-  constructor(private overpassService: OverpassService) { }
+  constructor(
+    private overpassService: OverpassService,
+    private toastController: ToastController
+  ) { }
 
   ngOnInit() {
     this.initializeMap();
@@ -126,8 +130,8 @@ export class MapComponent implements OnInit {
       lng2: mapCenter.lng + preloadingRadius
     };
 
-    if(this.showToilets){
-      if(!this.AccessibleToiletsMode){
+    if (this.showToilets) {
+      if (!this.AccessibleToiletsMode) {
         this.overpassService
           .getNodes(
             '"amenity"="toilets"',
@@ -144,22 +148,22 @@ export class MapComponent implements OnInit {
       }
       else {
         this.overpassService
-        .getNodes(
-          '"amenity"="toilets"]["wheelchair"="yes"',
-          mapCenter.lat - preloadingRadius,
-          mapCenter.lng - preloadingRadius,
-          mapCenter.lat + preloadingRadius,
-          mapCenter.lng + preloadingRadius
-        )
-        .subscribe((nodes) => {
-          console.log('New toilets are here');
-          this.toiletsLoaded = true;
-          this.setToiletMarker(nodes);
-        });
+          .getNodes(
+            '"amenity"="toilets"]["wheelchair"="yes"',
+            mapCenter.lat - preloadingRadius,
+            mapCenter.lng - preloadingRadius,
+            mapCenter.lat + preloadingRadius,
+            mapCenter.lng + preloadingRadius
+          )
+          .subscribe((nodes) => {
+            console.log('New toilets are here');
+            this.toiletsLoaded = true;
+            this.setToiletMarker(nodes);
+          });
       }
     }
 
-    if(this.showWaters){
+    if (this.showWaters) {
       this.overpassService
         .getNodes(
           '"amenity"="drinking_water"',
@@ -211,22 +215,42 @@ export class MapComponent implements OnInit {
     this.markerClicked.emit(JSON.stringify(data));
   }
 
-  toggleWaters(){
+  toggleWaters() {
     this.showWaters = !this.showWaters;
     this.reloadNodes();
     this.waterLayerGroup.clearLayers();
+    if (this.showWaters) {
+      this.presentToast('Enabled Waters');
+    } else {
+      this.presentToast('Disabled Waters');
+    }
   }
 
-  toggleToilets(){
+  toggleToilets() {
     this.showToilets = !this.showToilets;
     this.reloadNodes();
     this.toiletLayerGroup.clearLayers();
+
+    if (this.showToilets) {
+      this.presentToast('Enabled Toilets');
+    } else {
+      this.presentToast('Disabled Toilets');
+    }
   }
 
-  toggleAccessibleMode(){
+  toggleAccessibleMode() {
     this.AccessibleToiletsMode = !this.AccessibleToiletsMode;
     this.reloadNodes();
     this.toiletLayerGroup.clearLayers();
+  }
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 1500
+    });
+
+    await toast.present();
   }
 
 }

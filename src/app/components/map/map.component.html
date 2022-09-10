@@ -32,11 +32,11 @@
       <ion-fab-button (click)="toggleAccessibleMode()">
         <i class="fa fa-wheelchair"></i>
       </ion-fab-button>
-      <ion-fab-button (click)="toggleWaters()">
+      <ion-fab-button [ngClass]="showWaters ? 'btn-blue': ''" (click)="toggleWaters()">
         <ion-icon name="water-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button (click)="toggleToilets()">
-        <i class="fa fa-restroom-simple"></i>
+      <ion-fab-button [ngClass]="showToilets ? 'btn-blue': ''" (click)="toggleToilets()">
+        <i class="fa fa-toilet"></i>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
