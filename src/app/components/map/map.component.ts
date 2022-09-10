@@ -47,6 +47,7 @@ export class MapComponent implements OnInit {
   watersLoaded = false;
   showWaters = true;
   showToilets = true;
+  AccessibleToiletsMode = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
@@ -126,9 +127,25 @@ export class MapComponent implements OnInit {
     };
 
     if(this.showToilets){
-      this.overpassService
+      if(!this.AccessibleToiletsMode){
+        this.overpassService
+          .getNodes(
+            '"amenity"="toilets"',
+            mapCenter.lat - preloadingRadius,
+            mapCenter.lng - preloadingRadius,
+            mapCenter.lat + preloadingRadius,
+            mapCenter.lng + preloadingRadius
+          )
+          .subscribe((nodes) => {
+            console.log('New toilets are here');
+            this.toiletsLoaded = true;
+            this.setToiletMarker(nodes);
+          });
+      }
+      else {
+        this.overpassService
         .getNodes(
-          '"amenity"="toilets"',
+          '"amenity"="toilets"]["wheelchair"="yes"',
           mapCenter.lat - preloadingRadius,
           mapCenter.lng - preloadingRadius,
           mapCenter.lat + preloadingRadius,
@@ -139,6 +156,7 @@ export class MapComponent implements OnInit {
           this.toiletsLoaded = true;
           this.setToiletMarker(nodes);
         });
+      }
     }
 
     if(this.showWaters){
@@ -205,8 +223,10 @@ export class MapComponent implements OnInit {
     this.toiletLayerGroup.clearLayers();
   }
 
-  filterAccessible(){
-
+  toggleAccessibleMode(){
+    this.AccessibleToiletsMode = !this.AccessibleToiletsMode;
+    this.reloadNodes();
+    this.toiletLayerGroup.clearLayers();
   }
 
 }
