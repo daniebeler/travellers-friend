@@ -3,8 +3,8 @@
     <app-map (markerClicked)="openModal($event)"></app-map>
   </div>
 
-  <ion-modal #modal [isOpen]="modalIsOpen" (willDismiss)="modalIsOpen = false" [initialBreakpoint]="0.5"
-    [breakpoints]="[0, 0.25, 0.5, 0.75]">
+  <ion-modal #modal [isOpen]="modalIsOpen" (willDismiss)="modalIsOpen = false" [initialBreakpoint]="0.3"
+    [breakpoints]="[0, 0.3, 0.5, 0.75]">
     <ng-template>
       <ion-content>
         <ion-grid>
@@ -15,14 +15,47 @@
               </h1>
             </ion-col>
           </ion-row>
-          <ion-row *ngFor="let tag of nodeTags">
+
+          <ion-row *ngIf="tags">
+            <ion-col size="4" *ngIf="tags.charge">
+              <p class="ion-text-center">Charge</p>
+              <p class="ion-text-center">{{tags.charge}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.fee === 'no'">
+              <p class="ion-text-center">Charge</p>
+              <p class="ion-text-center">free</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.wheelchair">
+              <p class="ion-text-center">Accessible</p>
+              <p class="ion-text-center">{{tags.wheelchair}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.opening_hours">
+              <p class="ion-text-center">Opening Hours</p>
+              <p class="ion-text-center">{{tags.opening_hours}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.access && tags.access !== 'yes'">
+              <p class="ion-text-center">Access</p>
+              <p class="ion-text-center">{{tags.access}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.drinking_water === 'yes'">
+              <p class="ion-text-center">Drinking Water</p>
+              <p class="ion-text-center">Yes</p>
+            </ion-col>
+          </ion-row>
+
+          <!-- <ion-row *ngFor="let tag of nodeTags">
             <ion-col class="column">
               {{tag.key}}
             </ion-col>
             <ion-col class="column">
               {{tag.value}}
             </ion-col>
-          </ion-row>
+          </ion-row> -->
 
           <ion-row>
             <ion-col style="display: flex; justify-content: center">
