@@ -9,6 +9,7 @@ export class HomePage {
 
   modalIsOpen = false;
   nodeTags: Array<any>;
+  tags: any;
   nodeId: number;
   heading = '';
 
@@ -16,23 +17,23 @@ export class HomePage {
 
   openModal(data: string) {
     this.nodeId = JSON.parse(data).id;
-    const tags = JSON.parse(data).tags;
+    this.tags = JSON.parse(data).tags;
 
-    if (tags.amenity === 'drinking_water') {
+    if (this.tags.amenity === 'drinking_water') {
       this.heading = 'Drinking Water';
-    } else if (tags.fee === 'no') {
+    } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';
-    } else if (tags.fee === 'yes') {
+    } else if (this.tags.fee === 'yes') {
       this.heading = 'Paid Toilet';
     } else {
       this.heading = 'Toilet';
     }
 
     this.nodeTags = new Array();
-    for (const tag in tags) {
-      if (tags.hasOwnProperty(tag)) {
+    for (const tag in this.tags) {
+      if (this.tags.hasOwnProperty(tag)) {
         if (tag !== 'amenity') {
-          const obj = { key: tag, value: tags[tag] };
+          const obj = { key: tag, value: this.tags[tag] };
           if (obj.key === 'access' && obj.value === 'yes') {
             obj.value = 'public';
           }
