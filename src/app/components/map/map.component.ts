@@ -21,15 +21,14 @@ const paidToiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/orange-toilet.svg',
+  iconUrl: 'assets/pointer/red-toilet.svg',
 });
 
 const waterIcon: L.Icon = L.icon({
-  iconSize: [20, 40],
+  iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl:
-    'https://www.freeiconspng.com/thumbs/water-bottle-png/water-bottle-png-8.png',
+  iconUrl: 'assets/pointer/water.svg',
 });
 
 @Component({
