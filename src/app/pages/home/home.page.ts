@@ -31,7 +31,9 @@ export class HomePage {
     this.nodeTags = new Array();
     for (const tag in tags) {
       if (tags.hasOwnProperty(tag)) {
-        this.nodeTags.push({ key: tag, value: tags[tag] });
+        if (tag !== 'amenity') {
+          this.nodeTags.push({ key: tag, value: tags[tag] });
+        }
       }
     }
     this.modalIsOpen = true;
