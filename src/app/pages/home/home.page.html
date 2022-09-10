@@ -3,8 +3,8 @@
     <app-map (markerClicked)="openModal($event)"></app-map>
   </div>
 
-  <ion-modal #modal [isOpen]="modalIsOpen" (willDismiss)="modalIsOpen = false" [initialBreakpoint]="0.5"
-    [breakpoints]="[0, 0.25, 0.5, 0.75]">
+  <ion-modal #modal [isOpen]="modalIsOpen" (willDismiss)="modalIsOpen = false" [initialBreakpoint]="0.3"
+    [breakpoints]="[0, 0.3, 0.5, 0.75]">
     <ng-template>
       <ion-content>
         <ion-grid>
@@ -28,7 +28,7 @@
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.wheelchair">
-              <p class="ion-text-center">Wheelchair</p>
+              <p class="ion-text-center">Accessible</p>
               <p class="ion-text-center">{{tags.wheelchair}}</p>
             </ion-col>
 
@@ -48,14 +48,14 @@
             </ion-col>
           </ion-row>
 
-          <ion-row *ngFor="let tag of nodeTags">
+          <!-- <ion-row *ngFor="let tag of nodeTags">
             <ion-col class="column">
               {{tag.key}}
             </ion-col>
             <ion-col class="column">
               {{tag.value}}
             </ion-col>
-          </ion-row>
+          </ion-row> -->
 
           <ion-row>
             <ion-col style="display: flex; justify-content: center">
