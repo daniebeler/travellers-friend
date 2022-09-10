@@ -9,11 +9,13 @@ export class HomePage {
 
   modalIsOpen = false;
   nodeTags: Array<any>;
+  nodeId: number;
   heading = '';
 
   constructor() { }
 
   openModal(data: string) {
+    this.nodeId = JSON.parse(data).id;
     const tags = JSON.parse(data).tags;
 
     if (tags.fee === 'no') {
@@ -33,5 +35,9 @@ export class HomePage {
       }
     }
     this.modalIsOpen = true;
+  }
+
+  goToOsm() {
+    window.open('https://www.openstreetmap.org/node/' + this.nodeId, '_blank');
   }
 }
