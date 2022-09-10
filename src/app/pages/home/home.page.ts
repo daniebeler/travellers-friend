@@ -18,12 +18,12 @@ export class HomePage {
     this.nodeId = JSON.parse(data).id;
     const tags = JSON.parse(data).tags;
 
-    if (tags.fee === 'no') {
+    if (tags.amenity === 'drinking_water') {
+      this.heading = 'Drinking Water';
+    } else if (tags.fee === 'no') {
       this.heading = 'Free Toilet';
     } else if (tags.fee === 'yes') {
       this.heading = 'Paid Toilet';
-    } else if (tags.amenity === 'drinking_water') {
-      this.heading = 'Drinking Water';
     } else {
       this.heading = 'Toilet';
     }
