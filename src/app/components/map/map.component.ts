@@ -63,7 +63,7 @@ export class MapComponent implements OnInit {
 
     this.map = L.map('map', {
       center: [latitude, longitude],
-      zoom: 20,
+      zoom: 18,
       renderer: L.canvas(),
     });
 
@@ -80,7 +80,7 @@ export class MapComponent implements OnInit {
       // eslint-disable-next-line max-len
       'https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=jf5kUBdghTSZetSsy8bqMOqYMeJ57shUT3rkMG1vGTD3EhD8tk83dglqoYPsBtvL',
       {
-        maxZoom: 18,
+        maxZoom: 20,
         minZoom: 3,
         attribution:
           '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',

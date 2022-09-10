@@ -38,6 +38,6 @@ export class HomePage {
   }
 
   goToOsm() {
-    window.open('https://www.openstreetmap.org/node/' + this.nodeId, '_blank');
+    window.open('https://www.openstreetmap.org/edit?node=' + this.nodeId, '_blank');
   }
 }

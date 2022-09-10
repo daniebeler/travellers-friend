@@ -26,3 +26,7 @@
 @import "~@ionic/angular/css/flex-utils.css";
 
 @import "~leaflet/dist/leaflet.css";
+
+ion-modal {
+  --border-radius: 16px 16px 0 0;
+}
