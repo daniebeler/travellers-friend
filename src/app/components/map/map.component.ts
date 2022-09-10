@@ -31,7 +31,7 @@ const waterIcon: L.Icon = L.icon({
   iconUrl: 'assets/pointer/water.svg',
 });
 
-const preloadingRadius = 0.25;
+const preloadingRadius = 0.1;
 
 @Component({
   selector: 'app-map',
@@ -73,12 +73,12 @@ export class MapComponent implements OnInit {
     L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
 
     this.map.on('moveend', () => {
-      if (
-        this.map.getBounds().getSouthWest().lat < this.lastPreloadingBounds.lat1 ||
-        this.map.getBounds().getSouthWest().lng < this.lastPreloadingBounds.lng1 ||
-        this.map.getBounds().getNorthEast().lat > this.lastPreloadingBounds.lat2 ||
-        this.map.getBounds().getNorthEast().lng > this.lastPreloadingBounds.lng2
-      ) {
+      if ((this.map.getZoom() > 11) && (
+        this.map.getBounds().getCenter().lat < this.lastPreloadingBounds.lat1 ||
+        this.map.getBounds().getCenter().lng < this.lastPreloadingBounds.lng1 ||
+        this.map.getBounds().getCenter().lat > this.lastPreloadingBounds.lat2 ||
+        this.map.getBounds().getCenter().lng > this.lastPreloadingBounds.lng2
+      )) {
         this.reloadNodes();
       }
     });
