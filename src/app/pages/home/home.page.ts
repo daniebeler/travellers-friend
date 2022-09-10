@@ -32,7 +32,11 @@ export class HomePage {
     for (const tag in tags) {
       if (tags.hasOwnProperty(tag)) {
         if (tag !== 'amenity') {
-          this.nodeTags.push({ key: tag, value: tags[tag] });
+          const obj = { key: tag, value: tags[tag] };
+          if (obj.key === 'access' && obj.value === 'yes') {
+            obj.value = 'public';
+          }
+          this.nodeTags.push(obj);
         }
       }
     }
