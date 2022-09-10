@@ -8,12 +8,27 @@
     <ng-template>
       <ion-content>
         <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h1 class="ion-text-center">
+                {{ heading }}
+              </h1>
+            </ion-col>
+          </ion-row>
           <ion-row *ngFor="let tag of nodeTags">
             <ion-col class="column">
               {{tag.key}}
             </ion-col>
             <ion-col class="column">
               {{tag.value}}
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-button expand="block" style="margin-top: 30px">
+                Information missing?
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>

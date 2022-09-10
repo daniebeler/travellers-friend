@@ -78,7 +78,8 @@ export class MapComponent implements OnInit {
     });
 
     const tiles = L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      // eslint-disable-next-line max-len
+      'https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=jf5kUBdghTSZetSsy8bqMOqYMeJ57shUT3rkMG1vGTD3EhD8tk83dglqoYPsBtvL',
       {
         maxZoom: 18,
         minZoom: 3,
@@ -158,6 +159,6 @@ export class MapComponent implements OnInit {
   }
 
   callParent(data: OsmNode) {
-    this.markerClicked.emit(data.tags);
+    this.markerClicked.emit(JSON.stringify(data));
   }
 }
