@@ -48,7 +48,7 @@ export class MapComponent implements OnInit {
   watersLoaded = false;
   showWaters = true;
   showToilets = true;
-  AccessibleToiletsMode = false;
+  accessibleToiletsMode = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
@@ -131,7 +131,7 @@ export class MapComponent implements OnInit {
     };
 
     if (this.showToilets) {
-      if (!this.AccessibleToiletsMode) {
+      if (!this.accessibleToiletsMode) {
         this.overpassService
           .getNodes(
             '"amenity"="toilets"',
@@ -239,7 +239,7 @@ export class MapComponent implements OnInit {
   }
 
   toggleAccessibleMode() {
-    this.AccessibleToiletsMode = !this.AccessibleToiletsMode;
+    this.accessibleToiletsMode = !this.accessibleToiletsMode;
     this.reloadNodes();
     this.toiletLayerGroup.clearLayers();
   }

@@ -29,7 +29,7 @@
       <ion-icon name="funnel-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button (click)="toggleAccessibleMode()">
+      <ion-fab-button [ngClass]="accessibleToiletsMode ? 'btn-blue': ''" (click)="toggleAccessibleMode()">
         <i class="fa fa-wheelchair"></i>
       </ion-fab-button>
       <ion-fab-button [ngClass]="showWaters ? 'btn-blue': ''" (click)="toggleWaters()">
