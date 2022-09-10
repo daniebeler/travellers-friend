@@ -70,10 +70,7 @@ export class MapComponent implements OnInit {
       renderer: L.canvas(),
     });
 
-    try {
-      L.control.locate({ flyTo: true, keepCurrentZoomLevel: true }).addTo(this.map).start();
-    }
-    catch { console.log('ses'); }
+    L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
 
     this.map.on('moveend', () => {
       if (
@@ -101,7 +98,7 @@ export class MapComponent implements OnInit {
 
     setTimeout(() => {
       this.map.invalidateSize();
-    }, 0);
+    }, 100);
   }
 
   getNodes(type: string) {
