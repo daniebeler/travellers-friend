@@ -1,3 +1,4 @@
+import { KeyValue } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-home',
@@ -7,6 +8,7 @@ import { Component, OnInit } from '@angular/core';
 export class HomePage implements OnInit {
 
   modalIsOpen = false;
+  nodeTags: Array<any>;
 
   constructor() { }
 
@@ -14,13 +16,13 @@ export class HomePage implements OnInit {
 
   }
 
-  test() {
-    console.log("test successful");
+  openModal(tags: any) {
+    this.nodeTags = new Array();
+    for (const tag in tags) {
+      if (tags.hasOwnProperty(tag)) {
+        this.nodeTags.push({ key: tag, value: tags[tag] });
+      }
+    }
     this.modalIsOpen = true;
-  }
-  closeModal() {
-    console.log("closing");
-    
-    this.modalIsOpen = false;
   }
 }

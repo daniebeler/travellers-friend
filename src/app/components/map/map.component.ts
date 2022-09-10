@@ -108,7 +108,7 @@ export class MapComponent implements OnInit {
 
   setMarker(nodes: OsmNode[]) {
     this.layerGroup.clearLayers();
-    nodes.forEach((node) => {
+    nodes.forEach((node: OsmNode) => {
       let markerIcon = toiletIcon;
 
       if (node.tags.fee === 'no') {
@@ -119,13 +119,13 @@ export class MapComponent implements OnInit {
 
       const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
         console.log('clicked marker: ', node.lat, node.lon);
-        this.callParent();
+        this.callParent(node);
       });
       this.layerGroup.addLayer(marker).addTo(this.map);
     });
   }
 
-  callParent() {
-    this.markerClicked.emit('eventDesc');
+  callParent(data: OsmNode) {
+    this.markerClicked.emit(data.tags);
   }
 }
