@@ -27,6 +27,14 @@ const paidToiletIcon: L.Icon = L.icon({
     'https://cdn.w600.comps.canstockphoto.at/home-toilet-icon-rot-stock-illustration_csp66985768.jpg',
 });
 
+const waterIcon: L.Icon = L.icon({
+  iconSize: [20, 40],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl:
+    'https://www.freeiconspng.com/thumbs/water-bottle-png/water-bottle-png-8.png',
+});
+
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -37,7 +45,8 @@ export class MapComponent implements OnInit {
   @Output() markerClicked = new EventEmitter<string>();
 
   map;
-  private layerGroup: L.LayerGroup = L.layerGroup();
+  private toiletLayerGroup: L.LayerGroup = L.layerGroup();
+  private waterLayerGroup: L.LayerGroup = L.layerGroup();
 
   constructor(private overpassService: OverpassService) {}
 
@@ -102,12 +111,26 @@ export class MapComponent implements OnInit {
       )
       .subscribe((nodes) => {
         console.log('New nodes are here');
-        this.setMarker(nodes);
+        this.setToiletMarker(nodes);
+      });
+
+
+      this.overpassService
+      .getNodes(
+        '"amenity"="drinking_water"',
+        mapBounds.getSouthWest().lat,
+        mapBounds.getSouthWest().lng,
+        mapBounds.getNorthEast().lat,
+        mapBounds.getNorthEast().lng
+      )
+      .subscribe((nodes) => {
+        console.log('New nodes are here');
+        this.setWaterMarker(nodes);
       });
   }
 
-  setMarker(nodes: OsmNode[]) {
-    this.layerGroup.clearLayers();
+  setToiletMarker(nodes: OsmNode[]) {
+    this.toiletLayerGroup.clearLayers();
     nodes.forEach((node: OsmNode) => {
       let markerIcon = toiletIcon;
 
@@ -121,7 +144,19 @@ export class MapComponent implements OnInit {
         console.log('clicked marker: ', node.lat, node.lon);
         this.callParent(node);
       });
-      this.layerGroup.addLayer(marker).addTo(this.map);
+      this.toiletLayerGroup.addLayer(marker).addTo(this.map);
+    });
+  }
+
+  setWaterMarker(nodes: OsmNode[]) {
+    this.waterLayerGroup.clearLayers();
+    nodes.forEach((node) => {
+      const markerIcon = waterIcon;
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
+        console.log('clicked marker: ', node.lat, node.lon);
+        this.callParent(node);
+      });
+      this.waterLayerGroup.addLayer(marker).addTo(this.map);
     });
   }
 
