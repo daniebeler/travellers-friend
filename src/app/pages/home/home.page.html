@@ -15,6 +15,39 @@
               </h1>
             </ion-col>
           </ion-row>
+
+          <ion-row *ngIf="tags">
+            <ion-col size="4" *ngIf="tags.charge">
+              <p class="ion-text-center">Charge</p>
+              <p class="ion-text-center">{{tags.charge}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.fee === 'no'">
+              <p class="ion-text-center">Charge</p>
+              <p class="ion-text-center">free</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.wheelchair">
+              <p class="ion-text-center">Wheelchair</p>
+              <p class="ion-text-center">{{tags.wheelchair}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.opening_hours">
+              <p class="ion-text-center">Opening Hours</p>
+              <p class="ion-text-center">{{tags.opening_hours}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.access && tags.access !== 'yes'">
+              <p class="ion-text-center">Access</p>
+              <p class="ion-text-center">{{tags.access}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.drinking_water === 'yes'">
+              <p class="ion-text-center">Drinking Water</p>
+              <p class="ion-text-center">Yes</p>
+            </ion-col>
+          </ion-row>
+
           <ion-row *ngFor="let tag of nodeTags">
             <ion-col class="column">
               {{tag.key}}
