@@ -20,10 +20,10 @@
     "@angular/platform-browser-dynamic": "^16.0.2",
     "@angular/router": "^16.0.2",
     "@ionic/angular": "^7.0.8",
-    "@runette/ngx-leaflet-locate": "^2.0.4",
+    "@runette/ngx-leaflet-locate": "^2.0.6",
     "install": "^0.13.0",
     "ionicons": "^7.1.1",
-    "leaflet": "^1.8.0",
+    "leaflet": "^1.9.4",
     "rxjs": "~7.8.1",
     "tslib": "^2.5.2",
     "zone.js": "~0.13.0"
