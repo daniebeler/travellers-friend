@@ -1,19 +1,35 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Settings } from 'src/app/models/Settings';
+import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   modalIsOpen = false;
+  isSettingsModalOpen = false;
   nodeTags: Array<any>;
   tags: any;
   nodeId: number;
   heading = '';
 
-  constructor() { }
+  settings: Settings;
+
+  constructor(
+    private settingsService: SettingsService
+  ) {
+   }
+
+
+  ngOnInit() {
+    this.settingsService.getSettings().subscribe(settings => {
+      this.settings = settings;
+      console.log("Settings updated", settings)
+    })
+  }
 
   openModal(data: string) {
     this.nodeId = JSON.parse(data).id;
@@ -44,7 +60,20 @@ export class HomePage {
     this.modalIsOpen = true;
   }
 
+  openSettingsModal() {
+    this.isSettingsModalOpen = true;
+  }
+
   goToOsm() {
     window.open('https://www.openstreetmap.org/edit?node=' + this.nodeId, '_blank');
+  }
+
+  settingsChanged(key: string, event: any) {
+
+    if (key === 'water') {
+      this.settings.water = event.target.checked
+      this.settingsService.updateSettings(this.settings)
+    }
+    console.log('change', this.settings.water)
   }
 }

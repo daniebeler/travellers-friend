@@ -1,8 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import * as L from 'leaflet';
 import { OsmNode } from 'src/app/models/OsmNode';
+import { Settings } from 'src/app/models/Settings';
 import { OverpassService } from 'src/app/services/overpass.service';
+import { SettingsService } from 'src/app/services/settings.service';
 
 const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
@@ -41,13 +43,14 @@ const preloadingRadius = 0.05;
 })
 export class MapComponent implements OnInit {
 
+  settings: Settings;
+
   @Output() markerClicked = new EventEmitter<string>();
+  @Output() openSettingsModal = new EventEmitter();
 
   map;
   toiletsLoaded = false;
   watersLoaded = false;
-  showWaters = true;
-  showToilets = true;
   accessibleToiletsMode = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
@@ -55,11 +58,17 @@ export class MapComponent implements OnInit {
 
   constructor(
     private overpassService: OverpassService,
-    private toastController: ToastController
+    private settingsService: SettingsService
   ) { }
 
   ngOnInit() {
     this.initializeMap();
+
+    this.settingsService.getSettings().subscribe(settings => {
+      this.settings = settings;
+      console.log("Settings updated map", settings)
+      this.reloadNodes();
+    })
   }
 
   initializeMap() {
@@ -130,7 +139,7 @@ export class MapComponent implements OnInit {
       lng2: mapCenter.lng + preloadingRadius
     };
 
-    if (this.showToilets) {
+    if (this.settings.toilets) {
       if (!this.accessibleToiletsMode) {
         this.overpassService
           .getNodes(
@@ -163,7 +172,7 @@ export class MapComponent implements OnInit {
       }
     }
 
-    if (this.showWaters) {
+    if (this.settings.water) {
       this.overpassService
         .getNodes(
           '"amenity"="drinking_water"',
@@ -215,42 +224,46 @@ export class MapComponent implements OnInit {
     this.markerClicked.emit(JSON.stringify(data));
   }
 
-  toggleWaters() {
-    this.showWaters = !this.showWaters;
-    this.reloadNodes();
-    this.waterLayerGroup.clearLayers();
-    if (this.showWaters) {
-      this.presentToast('Enabled Waters');
-    } else {
-      this.presentToast('Disabled Waters');
-    }
+  openSettingsModalInParent() {
+    this.openSettingsModal.emit();
   }
 
-  toggleToilets() {
-    this.showToilets = !this.showToilets;
-    this.reloadNodes();
-    this.toiletLayerGroup.clearLayers();
+  // toggleWaters() {
+  //   this.settings.water = !this.settings.water;
+  //   this.reloadNodes();
+  //   this.waterLayerGroup.clearLayers();
+  //   if (this.showWaters) {
+  //     this.presentToast('Enabled Waters');
+  //   } else {
+  //     this.presentToast('Disabled Waters');
+  //   }
+  // }
 
-    if (this.showToilets) {
-      this.presentToast('Enabled Toilets');
-    } else {
-      this.presentToast('Disabled Toilets');
-    }
-  }
+  // toggleToilets() {
+  //   this.showToilets = !this.showToilets;
+  //   this.reloadNodes();
+  //   this.toiletLayerGroup.clearLayers();
 
-  toggleAccessibleMode() {
-    this.accessibleToiletsMode = !this.accessibleToiletsMode;
-    this.reloadNodes();
-    this.toiletLayerGroup.clearLayers();
-  }
+  //   if (this.showToilets) {
+  //     this.presentToast('Enabled Toilets');
+  //   } else {
+  //     this.presentToast('Disabled Toilets');
+  //   }
+  // }
 
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 1500
-    });
+  // toggleAccessibleMode() {
+  //   this.accessibleToiletsMode = !this.accessibleToiletsMode;
+  //   this.reloadNodes();
+  //   this.toiletLayerGroup.clearLayers();
+  // }
 
-    await toast.present();
-  }
+  // async presentToast(message: string) {
+  //   const toast = await this.toastController.create({
+  //     message,
+  //     duration: 1500
+  //   });
+
+  //   await toast.present();
+  // }
 
 }
