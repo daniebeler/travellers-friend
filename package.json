@@ -19,6 +19,7 @@
     "@angular/platform-browser": "^16.0.2",
     "@angular/platform-browser-dynamic": "^16.0.2",
     "@angular/router": "^16.0.2",
+    "@angular/service-worker": "^16.0.2",
     "@ionic/angular": "^7.0.8",
     "@runette/ngx-leaflet-locate": "^2.0.6",
     "install": "^0.13.0",
