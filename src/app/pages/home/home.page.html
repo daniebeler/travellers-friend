@@ -1,3 +1,11 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Travellers Friend</ion-title>
+    <ion-progress-bar *ngIf="isLoadingData" type="indeterminate"></ion-progress-bar>
+  </ion-toolbar>
+</ion-header>
+
+
 <ion-content [fullscreen]="true">
   <div id="container">
     <app-map

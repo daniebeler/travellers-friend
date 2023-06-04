@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class SettingsService {
 
   private settings = new BehaviorSubject<Settings>(new Settings());
+  private isLoadingData = new BehaviorSubject<boolean>(false);
 
   constructor() { }
 
@@ -17,5 +18,13 @@ export class SettingsService {
 
   updateSettings(newSettings: Settings) {
     this.settings.next(newSettings);
+  }
+
+  getLoadingState(): Observable<boolean> {
+    return this.isLoadingData;
+  }
+
+  updateLoadingState(newState: boolean) {
+    this.isLoadingData.next(newState);
   }
 }

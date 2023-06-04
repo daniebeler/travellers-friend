@@ -15,6 +15,7 @@ export class HomePage implements OnInit {
   tags: any;
   nodeId: number;
   heading = '';
+  isLoadingData = false;
 
   settings: Settings;
 
@@ -28,6 +29,10 @@ export class HomePage implements OnInit {
     this.settingsService.getSettings().subscribe(settings => {
       this.settings = settings;
       console.log("Settings updated", settings)
+    })
+
+    this.settingsService.getLoadingState().subscribe(loadingState => {
+      this.isLoadingData = loadingState;
     })
   }
 
