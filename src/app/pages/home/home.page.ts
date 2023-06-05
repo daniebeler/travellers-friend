@@ -79,6 +79,11 @@ export class HomePage implements OnInit {
       this.settings.water = event.target.checked
       this.settingsService.updateSettings(this.settings)
     }
+
+    if (key === 'toilets') {
+      this.settings.toilets = event.target.checked
+      this.settingsService.updateSettings(this.settings)
+    }
     console.log('change', this.settings.water)
   }
 }

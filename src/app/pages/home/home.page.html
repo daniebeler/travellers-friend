@@ -1,10 +1,20 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Travellers Friend</ion-title>
-    <ion-progress-bar *ngIf="isLoadingData" type="indeterminate"></ion-progress-bar>
+    <ion-item slot="start">
+      <img
+        src="../../../assets/icon/favicon.png"
+        height="40"
+        width="40"
+        alt=""
+      />
+    </ion-item>
+    <ion-title class="">Traveller's Friend</ion-title>
+    <ion-progress-bar
+      *ngIf="isLoadingData"
+      type="indeterminate"
+    ></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
-
 
 <ion-content [fullscreen]="true">
   <div id="container">
@@ -22,11 +32,13 @@
     [breakpoints]="[0, 0.3, 0.5, 0.75]"
   >
     <ng-template>
-      <ion-content>
+      <ion-content class="ion-padding">
         <ion-grid>
           <ion-row>
             <ion-col>
-              <h1 class="ion-text-center">{{ heading }}</h1>
+              <h1 class="ion-text-center bold ion-text-uppercase">
+                {{ heading }}
+              </h1>
             </ion-col>
           </ion-row>
 
@@ -81,19 +93,33 @@
     [breakpoints]="[0, 0.3, 0.5, 0.75]"
   >
     <ng-template>
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Modal</ion-title>
-          <ion-buttons slot="end">
-            <ion-button>Close</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
       <ion-content class="ion-padding">
-        <ion-checkbox [checked]="settings.water" (ionChange)="settingsChanged('water', $event)" labelPlacement="end">Drinking water</ion-checkbox>
-        <br />
-        <ion-checkbox labelPlacement="end">Toilets</ion-checkbox>
-        <br />
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h1 class="ion-text-center bold ion-text-uppercase">Filter</h1>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-checkbox
+                [checked]="settings.water"
+                (ionChange)="settingsChanged('water', $event)"
+                labelPlacement="end"
+                >Drinking water</ion-checkbox
+              >
+              <br />
+              <ion-checkbox
+                [checked]="settings.toilets"
+                (ionChange)="settingsChanged('toilets', $event)"
+                labelPlacement="end"
+                >Toilets</ion-checkbox
+              >
+              <br />
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-content>
     </ng-template>
   </ion-modal>
