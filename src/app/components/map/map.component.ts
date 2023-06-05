@@ -119,13 +119,17 @@ export class MapComponent implements OnInit {
     }, 0);
   }
 
-  getNodes(type: string) {
-
-  }
-
   reloadNodes() {
     this.watersLoaded = false;
     this.toiletsLoaded = false;
+
+    if (!this.settings.toilets) {
+      this.toiletLayerGroup.clearLayers();
+    }
+
+    if (!this.settings.water) {
+      this.waterLayerGroup.clearLayers();
+    }
 
     this.updateLoadingState()
 
@@ -142,6 +146,7 @@ export class MapComponent implements OnInit {
     };
 
     if (this.settings.toilets) {
+
       if (!this.accessibleToiletsMode) {
         this.overpassService
           .getNodes(
