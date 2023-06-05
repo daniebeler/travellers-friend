@@ -95,7 +95,7 @@ export class MapComponent implements OnInit {
     this.map = L.map('map', {
       center: [latitude, longitude],
       zoom: 18,
-      renderer: L.canvas(),
+      preferCanvas: true
     });
 
     L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
@@ -223,6 +223,7 @@ export class MapComponent implements OnInit {
           mapCenter.lng + preloadingRadius
         )
         .subscribe((nodes) => {
+          console.log(nodes)
           this.bikeStationsLoaded = true;
           this.updateLoadingState()
           console.log('New bikeStations are here');
