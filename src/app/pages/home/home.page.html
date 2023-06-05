@@ -117,6 +117,12 @@
                 >Toilets</ion-checkbox
               >
               <br />
+              <ion-checkbox
+                [checked]="settings.bikeStations"
+                (ionChange)="settingsChanged('bikeStations', $event)"
+                labelPlacement="end"
+                >Bike Stations</ion-checkbox
+              >
             </ion-col>
           </ion-row>
         </ion-grid>

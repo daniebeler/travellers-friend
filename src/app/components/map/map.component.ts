@@ -34,6 +34,14 @@ const waterIcon: L.Icon = L.icon({
   iconUrl: 'assets/pointer/water.svg',
 });
 
+
+const bikeStationsIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl: 'assets/pointer/bike-station.svg',
+});
+
 const preloadingRadius = 0.05;
 
 @Component({
@@ -51,9 +59,11 @@ export class MapComponent implements OnInit {
   map;
   toiletsLoaded = false;
   watersLoaded = false;
+  bikeStationsLoaded = false;
   accessibleToiletsMode = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
+  private bikeStationsLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
   constructor(
@@ -131,6 +141,10 @@ export class MapComponent implements OnInit {
       this.waterLayerGroup.clearLayers();
     }
 
+    if (!this.settings.bikeStations) {
+      this.bikeStationsLayerGroup.clearLayers();
+    }
+
     this.updateLoadingState()
 
     const mapCenter = this.map.getBounds().getCenter();
@@ -197,6 +211,24 @@ export class MapComponent implements OnInit {
           this.setWaterMarker(nodes);
         });
     }
+
+
+    if (this.settings.bikeStations) {
+      this.overpassService
+        .getNodes(
+          '"amenity"="bicycle_repair_station"',
+          mapCenter.lat - preloadingRadius,
+          mapCenter.lng - preloadingRadius,
+          mapCenter.lat + preloadingRadius,
+          mapCenter.lng + preloadingRadius
+        )
+        .subscribe((nodes) => {
+          this.bikeStationsLoaded = true;
+          this.updateLoadingState()
+          console.log('New bikeStations are here');
+          this.setBikeStationsMarker(nodes);
+        });
+    }
   }
 
   setToiletMarker(nodes: OsmNode[]) {
@@ -230,6 +262,19 @@ export class MapComponent implements OnInit {
     });
   }
 
+
+  setBikeStationsMarker(nodes: OsmNode[]) {
+    this.bikeStationsLayerGroup.clearLayers();
+    nodes.forEach((node) => {
+      const markerIcon = bikeStationsIcon;
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
+        console.log('clicked marker: ', node.lat, node.lon);
+        this.callParent(node);
+      });
+      this.bikeStationsLayerGroup.addLayer(marker).addTo(this.map);
+    });
+  }
+
   callParent(data: OsmNode) {
     this.markerClicked.emit(JSON.stringify(data));
   }
@@ -239,46 +284,7 @@ export class MapComponent implements OnInit {
   }
 
   updateLoadingState() {
-    const newLoadingState = !this.watersLoaded && this.settings.water || (!this.toiletsLoaded && this.settings.toilets);
+    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations);
     this.settingsService.updateLoadingState(newLoadingState)
   }
-
-  // toggleWaters() {
-  //   this.settings.water = !this.settings.water;
-  //   this.reloadNodes();
-  //   this.waterLayerGroup.clearLayers();
-  //   if (this.showWaters) {
-  //     this.presentToast('Enabled Waters');
-  //   } else {
-  //     this.presentToast('Disabled Waters');
-  //   }
-  // }
-
-  // toggleToilets() {
-  //   this.showToilets = !this.showToilets;
-  //   this.reloadNodes();
-  //   this.toiletLayerGroup.clearLayers();
-
-  //   if (this.showToilets) {
-  //     this.presentToast('Enabled Toilets');
-  //   } else {
-  //     this.presentToast('Disabled Toilets');
-  //   }
-  // }
-
-  // toggleAccessibleMode() {
-  //   this.accessibleToiletsMode = !this.accessibleToiletsMode;
-  //   this.reloadNodes();
-  //   this.toiletLayerGroup.clearLayers();
-  // }
-
-  // async presentToast(message: string) {
-  //   const toast = await this.toastController.create({
-  //     message,
-  //     duration: 1500
-  //   });
-
-  //   await toast.present();
-  // }
-
 }
