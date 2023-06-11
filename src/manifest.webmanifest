@@ -2,7 +2,7 @@
   "name": "Travellers Friend",
   "short_name": "Travellers Friend",
   "theme_color": "#F24713",
-  "background_color": "#fafafa",
+  "background_color": "#f4f5f8",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
