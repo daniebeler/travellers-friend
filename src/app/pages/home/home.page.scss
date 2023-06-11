@@ -23,3 +23,14 @@ ion-checkbox {
 ion-toolbar {
   --background: var(--ion-color-light);
 }
+
+.block {
+  width: 100%;
+  height: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+ion-modal {
+  --height: auto;
+}

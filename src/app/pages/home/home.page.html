@@ -27,11 +27,11 @@
   <ion-modal
     [isOpen]="modalIsOpen"
     (willDismiss)="modalIsOpen = false"
-    [initialBreakpoint]="0.3"
-    [breakpoints]="[0, 0.3, 0.5, 0.75]"
+    [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]"
   >
     <ng-template>
-      <ion-content class="ion-padding">
+      <div class="block ion-padding">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -81,18 +81,18 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-content>
+      </div>
     </ng-template>
   </ion-modal>
 
   <ion-modal
     [isOpen]="isSettingsModalOpen"
     (willDismiss)="isSettingsModalOpen = false"
-    [initialBreakpoint]="0.3"
-    [breakpoints]="[0, 0.3, 0.5, 0.75]"
+    [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]"
   >
     <ng-template>
-      <ion-content class="ion-padding">
+      <div class="block ion-padding">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -125,7 +125,7 @@
             </ion-col>
           </ion-row>
         </ion-grid>
-      </ion-content>
+      </div>
     </ng-template>
   </ion-modal>
 </ion-content>
