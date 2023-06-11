@@ -1,13 +1,13 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-item class="logo-wrapper" slot="start" lines="none">
+  <ion-toolbar mode="ios">
+    <!-- <ion-item class="logo-wrapper" slot="start" lines="none">
       <img
         src="../../../assets/icon/favicon.png"
         height="40"
         width="40"
         alt=""
       />
-    </ion-item>
+    </ion-item> -->
     <ion-title class="">Traveller's Friend</ion-title>
     <ion-progress-bar
       *ngIf="isLoadingData"
@@ -16,7 +16,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
   <div id="container">
     <app-map
       (markerClicked)="openModal($event)"
