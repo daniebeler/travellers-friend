@@ -71,10 +71,6 @@ export class HomePage implements OnInit {
     this.isSettingsModalOpen = true;
   }
 
-  goToOsm() {
-    window.open('https://www.openstreetmap.org/edit?node=' + this.nodeId, '_blank');
-  }
-
   settingsChanged(key: string, event: any) {
 
     if (key === 'water') {

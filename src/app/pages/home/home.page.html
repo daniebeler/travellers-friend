@@ -76,8 +76,8 @@
 
           <ion-row>
             <ion-col style="display: flex; justify-content: center">
-              <ion-button (click)="goToOsm()" style="margin-top: 30px">
-                Information missing?
+              <ion-button class="add-info-btn" shape="round" [href]="'https://www.openstreetmap.org/edit?node=' + nodeId" target="_blank" style="margin-top: 30px">
+                Add missing information
               </ion-button>
             </ion-col>
           </ion-row>
