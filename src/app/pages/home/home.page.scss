@@ -19,9 +19,9 @@ ion-checkbox {
   margin-left: 20px;
 }
 
-
 ion-toolbar {
   --background: var(--ion-color-light);
+  --min-height: 60px;
 }
 
 .block {
