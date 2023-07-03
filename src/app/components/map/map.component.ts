@@ -76,7 +76,6 @@ export class MapComponent implements OnInit {
 
     this.settingsService.getSettings().subscribe(settings => {
       this.settings = settings;
-      console.log("Settings updated map", settings)
       this.reloadNodes();
     })
   }
@@ -95,6 +94,7 @@ export class MapComponent implements OnInit {
     this.map = L.map('map', {
       center: [latitude, longitude],
       zoom: 18,
+      attributionControl: false,
       preferCanvas: true
     });
 
@@ -148,9 +148,6 @@ export class MapComponent implements OnInit {
     this.updateLoadingState()
 
     const mapCenter = this.map.getBounds().getCenter();
-    console.log('Requested new nodes');
-
-
 
     this.lastPreloadingBounds = {
       lat1: mapCenter.lat - preloadingRadius,
@@ -171,7 +168,6 @@ export class MapComponent implements OnInit {
             mapCenter.lng + preloadingRadius
           )
           .subscribe((nodes) => {
-            console.log('New toilets are here');
             this.toiletsLoaded = true;
             this.updateLoadingState()
             this.setToiletMarker(nodes);
@@ -187,7 +183,6 @@ export class MapComponent implements OnInit {
             mapCenter.lng + preloadingRadius
           )
           .subscribe((nodes) => {
-            console.log('New toilets are here');
             this.toiletsLoaded = true;
             this.updateLoadingState()
             this.setToiletMarker(nodes);
@@ -207,7 +202,6 @@ export class MapComponent implements OnInit {
         .subscribe((nodes) => {
           this.watersLoaded = true;
           this.updateLoadingState()
-          console.log('New waters are here');
           this.setWaterMarker(nodes);
         });
     }
@@ -223,10 +217,8 @@ export class MapComponent implements OnInit {
           mapCenter.lng + preloadingRadius
         )
         .subscribe((nodes) => {
-          console.log(nodes)
           this.bikeStationsLoaded = true;
           this.updateLoadingState()
-          console.log('New bikeStations are here');
           this.setBikeStationsMarker(nodes);
         });
     }
@@ -244,7 +236,6 @@ export class MapComponent implements OnInit {
       }
 
       const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        console.log('clicked marker: ', node.lat, node.lon);
         this.callParent(node);
       });
       this.toiletLayerGroup.addLayer(marker).addTo(this.map);
@@ -256,7 +247,6 @@ export class MapComponent implements OnInit {
     nodes.forEach((node) => {
       const markerIcon = waterIcon;
       const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        console.log('clicked marker: ', node.lat, node.lon);
         this.callParent(node);
       });
       this.waterLayerGroup.addLayer(marker).addTo(this.map);
@@ -269,7 +259,6 @@ export class MapComponent implements OnInit {
     nodes.forEach((node) => {
       const markerIcon = bikeStationsIcon;
       const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        console.log('clicked marker: ', node.lat, node.lon);
         this.callParent(node);
       });
       this.bikeStationsLayerGroup.addLayer(marker).addTo(this.map);

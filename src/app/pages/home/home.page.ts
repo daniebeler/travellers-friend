@@ -22,13 +22,12 @@ export class HomePage implements OnInit {
   constructor(
     private settingsService: SettingsService
   ) {
-   }
+  }
 
 
   ngOnInit() {
     this.settingsService.getSettings().subscribe(settings => {
       this.settings = settings;
-      console.log("Settings updated", settings)
     })
 
     this.settingsService.getLoadingState().subscribe(loadingState => {
