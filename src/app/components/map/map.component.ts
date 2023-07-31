@@ -71,33 +71,39 @@ export class MapComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.initializeMap();
 
-    this.settingsService.getSettings().subscribe(settings => {
-      this.settings = settings;
-      this.reloadNodes();
-    })
-  }
-
-  initializeMap() {
-    let latitude = 47.404391;
-    let longitude = 9.744025;
+    this.initializeMap()
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
-        latitude = position.coords.latitude;
-        longitude = position.coords.longitude;
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+
+
+        this.map.flyTo([latitude, longitude])
       });
     }
 
-    this.map = L.map('map', {
-      center: [latitude, longitude],
-      zoom: 18,
-      attributionControl: false,
-      preferCanvas: true
-    });
 
-    // L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
+    this.settingsService.getSettings().subscribe(settings => {
+      this.settings = settings;
+      // this.reloadNodes();
+    })
+  }
+
+  initializeMap(latitude: number = 47.404391, longitude: number = 9.744025) {
+    console.log("init started")
+
+      this.map = L.map('map', {
+        center: [latitude, longitude],
+        zoom: 18,
+        attributionControl: false,
+        preferCanvas: true
+      });
+
+
+
+    L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
 
     this.map.on('moveend', () => {
       if ((this.map.getZoom() > 11) && (
