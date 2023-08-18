@@ -1,13 +1,5 @@
 <ion-header>
   <ion-toolbar mode="ios">
-    <!-- <ion-item class="logo-wrapper" slot="start" lines="none">
-      <img
-        src="../../../assets/icon/favicon.png"
-        height="40"
-        width="40"
-        alt=""
-      />
-    </ion-item> -->
     <ion-title class="">Traveller's Friend</ion-title>
     <ion-progress-bar
       *ngIf="isLoadingData"
@@ -121,6 +113,13 @@
                 (ionChange)="settingsChanged('bikeStations', $event)"
                 labelPlacement="end"
                 >Bike Stations</ion-checkbox
+              >
+              <br />
+              <ion-checkbox
+                [checked]="settings.atm"
+                (ionChange)="settingsChanged('atm', $event)"
+                labelPlacement="end"
+                >ATMs</ion-checkbox
               >
             </ion-col>
           </ion-row>

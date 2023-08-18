@@ -41,6 +41,13 @@ const bikeStationsIcon: L.Icon = L.icon({
   iconUrl: 'assets/pointer/bike-station.svg',
 });
 
+const atmIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl: 'assets/pointer/atm.svg',
+});
+
 const preloadingRadius = 0.05;
 
 @Component({
@@ -59,10 +66,12 @@ export class MapComponent implements OnInit {
   toiletsLoaded = false;
   watersLoaded = false;
   bikeStationsLoaded = false;
+  atmsLoaded = false;
   accessibleToiletsMode = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
   private bikeStationsLayerGroup: L.LayerGroup = L.layerGroup();
+  private atmLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
   constructor(
@@ -150,6 +159,10 @@ export class MapComponent implements OnInit {
       this.bikeStationsLayerGroup.clearLayers();
     }
 
+    if (!this.settings.atm) {
+      this.atmLayerGroup.clearLayers();
+    }
+
     this.updateLoadingState()
 
     const mapCenter = this.map.getBounds().getCenter();
@@ -227,6 +240,22 @@ export class MapComponent implements OnInit {
           this.setBikeStationsMarker(nodes);
         });
     }
+
+    if (this.settings.atm) {
+      this.overpassService
+        .getNodes(
+          '"amenity"="atm"',
+          mapCenter.lat - preloadingRadius,
+          mapCenter.lng - preloadingRadius,
+          mapCenter.lat + preloadingRadius,
+          mapCenter.lng + preloadingRadius
+        )
+        .subscribe((nodes) => {
+          this.atmsLoaded = true;
+          this.updateLoadingState()
+          this.setAtmMarker(nodes);
+        });
+    }
   }
 
   setToiletMarker(nodes: OsmNode[]) {
@@ -270,6 +299,17 @@ export class MapComponent implements OnInit {
     });
   }
 
+  setAtmMarker(nodes: OsmNode[]) {
+    this.atmLayerGroup.clearLayers();
+    nodes.forEach((node) => {
+      const markerIcon = atmIcon;
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
+        this.callParent(node);
+      });
+      this.atmLayerGroup.addLayer(marker).addTo(this.map);
+    });
+  }
+
   callParent(data: OsmNode) {
     this.markerClicked.emit(JSON.stringify(data));
   }
@@ -279,7 +319,7 @@ export class MapComponent implements OnInit {
   }
 
   updateLoadingState() {
-    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations);
+    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations) || (!this.atmsLoaded && this.settings.atm);
     this.settingsService.updateLoadingState(newLoadingState)
   }
 }

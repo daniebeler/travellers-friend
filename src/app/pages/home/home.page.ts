@@ -43,6 +43,8 @@ export class HomePage implements OnInit {
       this.heading = 'Drinking Water';
     } else if (this.tags.amenity === 'bicycle_repair_station') {
       this.heading = 'Bike Repair Station'
+    } else if (this.tags.amenity === 'atm') {
+      this.heading = 'ATM machine'
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';
     } else if (this.tags.fee === 'yes') {
@@ -84,6 +86,11 @@ export class HomePage implements OnInit {
 
     if (key === 'bikeStations') {
       this.settings.bikeStations = event.target.checked
+      this.settingsService.updateSettings(this.settings)
+    }
+
+    if (key === 'atm') {
+      this.settings.atm = event.target.checked
       this.settingsService.updateSettings(this.settings)
     }
   }
