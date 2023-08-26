@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
 import { OverpassService } from 'src/app/services/overpass.service';
 import { SettingsService } from 'src/app/services/settings.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
@@ -76,7 +77,8 @@ export class MapComponent implements OnInit {
 
   constructor(
     private overpassService: OverpassService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private storageService: StorageService
   ) { }
 
   ngOnInit() {
@@ -103,18 +105,23 @@ export class MapComponent implements OnInit {
   initializeMap(latitude: number = 47.404391, longitude: number = 9.744025) {
     console.log("init started")
 
+    const savedPosition = this.storageService.getCoordinates()
+    const lat = savedPosition.lat
+    const long = savedPosition.long
+
       this.map = L.map('map', {
-        center: [latitude, longitude],
+        center: [lat, long],
         zoom: 18,
         attributionControl: false,
         preferCanvas: true
       });
 
-
-
     L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
 
     this.map.on('moveend', () => {
+
+      this.storageService.setCoordinates(this.map.getBounds().getCenter().lat, this.map.getBounds().getCenter().lng)
+
       if ((this.map.getZoom() > 11) && (
         this.map.getBounds().getCenter().lat < this.lastPreloadingBounds.lat1 ||
         this.map.getBounds().getCenter().lng < this.lastPreloadingBounds.lng1 ||
