@@ -34,6 +34,11 @@
                 "input": "src",
                 "output": "/"
               },
+              {
+                "glob": "robots.txt",
+                "input": "src",
+                "output": "/"
+              },
               "src/manifest.webmanifest"
             ],
             "styles": [
