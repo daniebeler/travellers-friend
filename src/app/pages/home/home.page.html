@@ -121,6 +121,14 @@
                 labelPlacement="end"
                 >ATMs</ion-checkbox
               >
+
+              <br />
+              <ion-checkbox
+                [checked]="settings.tabletennis"
+                (ionChange)="settingsChanged('tabletennis', $event)"
+                labelPlacement="end"
+                >Table tennis</ion-checkbox
+              >
             </ion-col>
           </ion-row>
         </ion-grid>

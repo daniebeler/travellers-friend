@@ -45,6 +45,8 @@ export class HomePage implements OnInit {
       this.heading = 'Bike Repair Station'
     } else if (this.tags.amenity === 'atm') {
       this.heading = 'ATM machine'
+    }else if (this.tags.leisure === 'pitch') {
+      this.heading = 'Table Tennis Table'
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';
     } else if (this.tags.fee === 'yes') {
@@ -91,6 +93,11 @@ export class HomePage implements OnInit {
 
     if (key === 'atm') {
       this.settings.atm = event.target.checked
+      this.settingsService.updateSettings(this.settings)
+    }
+
+    if (key === 'tabletennis') {
+      this.settings.tabletennis = event.target.checked
       this.settingsService.updateSettings(this.settings)
     }
   }

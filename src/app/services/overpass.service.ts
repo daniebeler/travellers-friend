@@ -27,4 +27,16 @@ export class OverpassService {
       data => data.elements.map(element => new OsmNode(element)))
     );
   }
+
+  getNodes2(nodeType1: string, nodeType2: string, lat1, lon1, lat2, lon2, timeout = 10, out = 'json'): Observable<OsmNode[]> {
+    const query =
+      '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
+      '[out:' + out + ']' +
+      '[timeout:' + timeout + '];' +
+      'node[' + nodeType1 + '][' + nodeType2 + '];' +
+      'out;';
+    return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(
+      data => data.elements.map(element => new OsmNode(element)))
+    );
+  }
 }

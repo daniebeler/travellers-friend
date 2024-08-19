@@ -3,4 +3,5 @@ export class Settings {
   public toilets = true;
   public bikeStations = false;
   public atm = false;
+  public tabletennis = false;
 }

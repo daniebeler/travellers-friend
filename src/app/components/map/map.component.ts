@@ -49,6 +49,13 @@ const atmIcon: L.Icon = L.icon({
   iconUrl: 'assets/pointer/atm.svg',
 });
 
+const tabletennisIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl: 'assets/pointer/tabletennis.svg',
+});
+
 const preloadingRadius = 0.05;
 
 @Component({
@@ -68,11 +75,13 @@ export class MapComponent implements OnInit {
   watersLoaded = false;
   bikeStationsLoaded = false;
   atmsLoaded = false;
+  tabletennisLoaded = false;
   accessibleToiletsMode = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
   private bikeStationsLayerGroup: L.LayerGroup = L.layerGroup();
   private atmLayerGroup: L.LayerGroup = L.layerGroup();
+  private tabletennisLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
   constructor(
@@ -109,12 +118,12 @@ export class MapComponent implements OnInit {
     const lat = savedPosition.lat
     const long = savedPosition.long
 
-      this.map = L.map('map', {
-        center: [lat, long],
-        zoom: 18,
-        attributionControl: false,
-        preferCanvas: true
-      });
+    this.map = L.map('map', {
+      center: [lat, long],
+      zoom: 18,
+      attributionControl: false,
+      preferCanvas: true
+    });
 
     L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
 
@@ -168,6 +177,10 @@ export class MapComponent implements OnInit {
 
     if (!this.settings.atm) {
       this.atmLayerGroup.clearLayers();
+    }
+
+    if (!this.settings.tabletennis) {
+      this.tabletennisLayerGroup.clearLayers();
     }
 
     this.updateLoadingState()
@@ -263,6 +276,23 @@ export class MapComponent implements OnInit {
           this.setAtmMarker(nodes);
         });
     }
+
+    if (this.settings.tabletennis) {
+      this.overpassService
+        .getNodes2(
+          '"leisure"="pitch"',
+          '"sport"="table_tennis"',
+          mapCenter.lat - preloadingRadius,
+          mapCenter.lng - preloadingRadius,
+          mapCenter.lat + preloadingRadius,
+          mapCenter.lng + preloadingRadius
+        )
+        .subscribe((nodes) => {
+          this.tabletennisLoaded = true;
+          this.updateLoadingState()
+          this.setTabletennisMarker(nodes);
+        });
+    }
   }
 
   setToiletMarker(nodes: OsmNode[]) {
@@ -317,6 +347,17 @@ export class MapComponent implements OnInit {
     });
   }
 
+  setTabletennisMarker(nodes: OsmNode[]) {
+    this.tabletennisLayerGroup.clearLayers();
+    nodes.forEach((node) => {
+      const markerIcon = tabletennisIcon;
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
+        this.callParent(node);
+      });
+      this.tabletennisLayerGroup.addLayer(marker).addTo(this.map);
+    });
+  }
+
   callParent(data: OsmNode) {
     this.markerClicked.emit(JSON.stringify(data));
   }
@@ -326,7 +367,7 @@ export class MapComponent implements OnInit {
   }
 
   updateLoadingState() {
-    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations) || (!this.atmsLoaded && this.settings.atm);
+    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations) || (!this.atmsLoaded && this.settings.atm) || (!this.tabletennisLoaded && this.settings.tabletennis);
     this.settingsService.updateLoadingState(newLoadingState)
   }
 }
