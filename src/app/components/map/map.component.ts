@@ -1,5 +1,6 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
+import { Subject } from 'rxjs';
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
 import { OverpassService } from 'src/app/services/overpass.service';
@@ -84,6 +85,23 @@ export class MapComponent implements OnInit {
   private tabletennisLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
+  private tiles = L.tileLayer(
+    // eslint-disable-next-line max-len
+    'https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=jf5kUBdghTSZetSsy8bqMOqYMeJ57shUT3rkMG1vGTD3EhD8tk83dglqoYPsBtvL',
+    {
+      maxZoom: 20,
+      minZoom: 3,
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }
+  );
+
+  private sateliteTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 20,
+    minZoom: 3,
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  });
+
   constructor(
     private overpassService: OverpassService,
     private settingsService: SettingsService,
@@ -109,6 +127,16 @@ export class MapComponent implements OnInit {
       this.settings = settings;
       // this.reloadNodes();
     })
+
+    this.settingsService.getTileMode().subscribe(v => {
+      if (v == 1) {
+        this.map.removeLayer(this.sateliteTiles)
+        this.map.addLayer(this.tiles)
+      } else {
+        this.map.addLayer(this.sateliteTiles)
+        this.map.removeLayer(this.tiles)
+      }
+    });
   }
 
   initializeMap(latitude: number = 47.404391, longitude: number = 9.744025) {
@@ -141,18 +169,7 @@ export class MapComponent implements OnInit {
       }
     });
 
-    const tiles = L.tileLayer(
-      // eslint-disable-next-line max-len
-      'https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}{r}.png?access-token=jf5kUBdghTSZetSsy8bqMOqYMeJ57shUT3rkMG1vGTD3EhD8tk83dglqoYPsBtvL',
-      {
-        maxZoom: 20,
-        minZoom: 3,
-        attribution:
-          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      }
-    );
-
-    tiles.addTo(this.map);
+    this.map.addLayer(this.tiles)
 
     setTimeout(() => {
       this.map.invalidateSize();

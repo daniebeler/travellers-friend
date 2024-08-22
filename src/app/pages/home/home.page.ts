@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -11,6 +12,7 @@ export class HomePage implements OnInit {
 
   modalIsOpen = false;
   isSettingsModalOpen = false;
+  isTileLayerModalOpen = false;
   nodeTags: Array<any>;
   tags: any;
   nodeId: number;
@@ -72,6 +74,14 @@ export class HomePage implements OnInit {
 
   openSettingsModal() {
     this.isSettingsModalOpen = true;
+  }
+
+  openTileLayerModal() {
+    this.isTileLayerModalOpen = true;
+  }
+
+  tileLayerChanged(mode: number) {
+    this.settingsService.updateTileMode(mode);
   }
 
   settingsChanged(key: string, event: any) {

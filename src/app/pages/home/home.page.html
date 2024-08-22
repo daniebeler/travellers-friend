@@ -16,6 +16,18 @@
     ></app-map>
   </div>
 
+  <ion-fab style="bottom: 2em; right: 2em;" vertical="top" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openTileLayerModal()">
+      <ion-icon name="layers"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab style="bottom: 2em; right: 2em;" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openSettingsModal()">
+      <ion-icon name="filter-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
   <ion-modal
     [isOpen]="modalIsOpen"
     (willDismiss)="modalIsOpen = false"
@@ -129,6 +141,37 @@
                 labelPlacement="end"
                 >Table tennis</ion-checkbox
               >
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal
+    [isOpen]="isTileLayerModalOpen"
+    (willDismiss)="isTileLayerModalOpen = false"
+    [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]"
+  >
+    <ng-template>
+      <div class="block ion-padding">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h1 class="ion-text-center bold ion-text-uppercase">Map type</h1>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-button (click)="tileLayerChanged(0)">
+                Satelite
+              </ion-button>
+              <br />
+              <ion-button (click)="tileLayerChanged(1)">
+                Default
+              </ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>

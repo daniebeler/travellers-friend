@@ -9,6 +9,7 @@ export class SettingsService {
 
   private settings = new BehaviorSubject<Settings>(new Settings());
   private isLoadingData = new BehaviorSubject<boolean>(false);
+  private tileMode = new BehaviorSubject<number>(0);
 
   constructor() { }
 
@@ -26,5 +27,13 @@ export class SettingsService {
 
   updateLoadingState(newState: boolean) {
     this.isLoadingData.next(newState);
+  }
+
+  getTileMode(): Observable<number> {
+    return this.tileMode;
+  }
+
+  updateTileMode(newTileMode: number) {
+    this.tileMode.next(newTileMode)
   }
 }
