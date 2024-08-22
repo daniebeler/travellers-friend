@@ -21,6 +21,8 @@ export class HomePage implements OnInit {
 
   settings: Settings;
 
+  tileMode = 0;
+
   constructor(
     private settingsService: SettingsService
   ) {
@@ -30,6 +32,10 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.settingsService.getSettings().subscribe(settings => {
       this.settings = settings;
+    })
+
+    this.settingsService.getTileMode().subscribe(tileMode => {
+      this.tileMode = tileMode;
     })
 
     this.settingsService.getLoadingState().subscribe(loadingState => {

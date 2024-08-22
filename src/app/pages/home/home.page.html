@@ -1,19 +1,13 @@
 <ion-header>
   <ion-toolbar mode="ios">
     <ion-title class="">Traveller's Friend</ion-title>
-    <ion-progress-bar
-      *ngIf="isLoadingData"
-      type="indeterminate"
-    ></ion-progress-bar>
+    <ion-progress-bar *ngIf="isLoadingData" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
   <div id="container">
-    <app-map
-      (markerClicked)="openModal($event)"
-      (openSettingsModal)="openSettingsModal()"
-    ></app-map>
+    <app-map (markerClicked)="openModal($event)" (openSettingsModal)="openSettingsModal()"></app-map>
   </div>
 
   <ion-fab style="bottom: 2em; right: 2em;" vertical="top" horizontal="end" slot="fixed">
@@ -24,16 +18,11 @@
 
   <ion-fab style="bottom: 2em; right: 2em;" vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button (click)="openSettingsModal()">
-      <ion-icon name="filter-outline"></ion-icon>
+      <ion-icon name="filter"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
-  <ion-modal
-    [isOpen]="modalIsOpen"
-    (willDismiss)="modalIsOpen = false"
-    [initialBreakpoint]="1"
-    [breakpoints]="[0, 1]"
-  >
+  <ion-modal [isOpen]="modalIsOpen" (willDismiss)="modalIsOpen = false" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
     <ng-template>
       <div class="block ion-padding">
         <ion-grid>
@@ -79,7 +68,8 @@
 
           <ion-row>
             <ion-col style="display: flex; justify-content: center">
-              <ion-button class="add-info-btn" shape="round" [href]="'https://www.openstreetmap.org/edit?node=' + nodeId" target="_blank" style="margin-top: 30px">
+              <ion-button class="add-info-btn" shape="round"
+                [href]="'https://www.openstreetmap.org/edit?node=' + nodeId" target="_blank" style="margin-top: 30px">
                 Add missing information
               </ion-button>
             </ion-col>
@@ -89,12 +79,8 @@
     </ng-template>
   </ion-modal>
 
-  <ion-modal
-    [isOpen]="isSettingsModalOpen"
-    (willDismiss)="isSettingsModalOpen = false"
-    [initialBreakpoint]="1"
-    [breakpoints]="[0, 1]"
-  >
+  <ion-modal [isOpen]="isSettingsModalOpen" (willDismiss)="isSettingsModalOpen = false" [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]">
     <ng-template>
       <div class="block ion-padding">
         <ion-grid>
@@ -106,41 +92,21 @@
 
           <ion-row>
             <ion-col>
-              <ion-checkbox
-                [checked]="settings.water"
-                (ionChange)="settingsChanged('water', $event)"
-                labelPlacement="end"
-                >Drinking water</ion-checkbox
-              >
+              <ion-checkbox [checked]="settings.water" (ionChange)="settingsChanged('water', $event)"
+                labelPlacement="end">Drinking water</ion-checkbox>
               <br />
-              <ion-checkbox
-                [checked]="settings.toilets"
-                (ionChange)="settingsChanged('toilets', $event)"
-                labelPlacement="end"
-                >Toilets</ion-checkbox
-              >
+              <ion-checkbox [checked]="settings.toilets" (ionChange)="settingsChanged('toilets', $event)"
+                labelPlacement="end">Toilets</ion-checkbox>
               <br />
-              <ion-checkbox
-                [checked]="settings.bikeStations"
-                (ionChange)="settingsChanged('bikeStations', $event)"
-                labelPlacement="end"
-                >Bike Stations</ion-checkbox
-              >
+              <ion-checkbox [checked]="settings.bikeStations" (ionChange)="settingsChanged('bikeStations', $event)"
+                labelPlacement="end">Bike Stations</ion-checkbox>
               <br />
-              <ion-checkbox
-                [checked]="settings.atm"
-                (ionChange)="settingsChanged('atm', $event)"
-                labelPlacement="end"
-                >ATMs</ion-checkbox
-              >
+              <ion-checkbox [checked]="settings.atm" (ionChange)="settingsChanged('atm', $event)"
+                labelPlacement="end">ATMs</ion-checkbox>
 
               <br />
-              <ion-checkbox
-                [checked]="settings.tabletennis"
-                (ionChange)="settingsChanged('tabletennis', $event)"
-                labelPlacement="end"
-                >Table tennis</ion-checkbox
-              >
+              <ion-checkbox [checked]="settings.tabletennis" (ionChange)="settingsChanged('tabletennis', $event)"
+                labelPlacement="end">Table tennis</ion-checkbox>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -148,12 +114,8 @@
     </ng-template>
   </ion-modal>
 
-  <ion-modal
-    [isOpen]="isTileLayerModalOpen"
-    (willDismiss)="isTileLayerModalOpen = false"
-    [initialBreakpoint]="1"
-    [breakpoints]="[0, 1]"
-  >
+  <ion-modal [isOpen]="isTileLayerModalOpen" (willDismiss)="isTileLayerModalOpen = false" [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]">
     <ng-template>
       <div class="block ion-padding">
         <ion-grid>
@@ -164,15 +126,22 @@
           </ion-row>
 
           <ion-row>
-            <ion-col>
-              <ion-button (click)="tileLayerChanged(0)">
-                Satelite
-              </ion-button>
-              <br />
-              <ion-button (click)="tileLayerChanged(1)">
-                Default
-              </ion-button>
+            <ion-col size="auto">
+              <div (click)="tileLayerChanged(0)" class="tile-button-wrapper"
+                [ngClass]="{'active-tile-button': tileMode === 0}">
+                <img class="tile-img" src="../../../assets/images/satelite-tiles.png">
+                <p>Satelite</p>
+              </div>
             </ion-col>
+
+            <ion-col size="auto">
+              <div (click)="tileLayerChanged(1)" class="tile-button-wrapper"
+                [ngClass]="{'active-tile-button': tileMode === 1}">
+                <img class="tile-img" src="../../../assets/images/default-tiles.png">
+                <p>Normal</p>
+              </div>
+            </ion-col>
+
           </ion-row>
         </ion-grid>
       </div>
