@@ -116,16 +116,13 @@ export class MapComponent implements OnInit {
       navigator.geolocation.getCurrentPosition((position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-
-
         this.map.flyTo([latitude, longitude])
       });
     }
 
-
     this.settingsService.getSettings().subscribe(settings => {
       this.settings = settings;
-      // this.reloadNodes();
+      this.reloadNodes();
     })
 
     this.settingsService.getTileMode().subscribe(v => {

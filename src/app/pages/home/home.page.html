@@ -1,6 +1,9 @@
 <ion-header>
-  <ion-toolbar mode="ios">
+  <ion-toolbar mode="md">
     <ion-title class="">Traveller's Friend</ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="menu-item" (click)="openAboutModal()">About</ion-button>
+    </ion-buttons>
     <ion-progress-bar *ngIf="isLoadingData" type="indeterminate"></ion-progress-bar>
   </ion-toolbar>
 </ion-header>
@@ -140,6 +143,41 @@
                 <img class="tile-img" src="../../../assets/images/default-tiles.png">
                 <p>Normal</p>
               </div>
+            </ion-col>
+
+          </ion-row>
+        </ion-grid>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <ion-modal [isOpen]="isAboutModalOpen" (willDismiss)="isAboutModalOpen = false" [initialBreakpoint]="1"
+    [breakpoints]="[0, 1]">
+    <ng-template>
+      <div class="block ion-padding">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <h1 class="ion-text-center bold ion-text-uppercase">About</h1>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <p>
+                Travellers Friend was created during the
+                <a href="https://digitaleinitiativen.at/initiativen/ummahuesla-hackathon/" target="_blank">Umma Hüsla
+                  Hackathon</a>
+                2022 by Daniel, Mathias and Jakob.
+              </p>
+              <p>
+
+
+                The source code is available on
+                <a href="https://github.com/daniebeler/travellers-friend" target="_blank">Github</a>.
+              </p>
+
+
             </ion-col>
 
           </ion-row>
