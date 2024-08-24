@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
-import { Subject } from 'rxjs';
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
 import { OverpassService } from 'src/app/services/overpass.service';
@@ -244,8 +243,9 @@ export class MapComponent implements OnInit {
 
     if (this.settings.water) {
       this.overpassService
-        .getNodes(
+        .getNodesOr(
           '"amenity"="drinking_water"',
+          '"man_made"="water_tap"',
           mapCenter.lat - preloadingRadius,
           mapCenter.lng - preloadingRadius,
           mapCenter.lat + preloadingRadius,
