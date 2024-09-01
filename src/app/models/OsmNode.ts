@@ -5,10 +5,10 @@ export class OsmNode {
     public lon: number;
     public tags: any;
 
-    constructor(node: any) {
-        this.id = node.id;
-        this.lat = node.lat;
-        this.lon = node.lon;
-        this.tags = node.tags;
+    constructor(id: number, lat: number, lon: number, tags: any) {
+        this.id = id;
+        this.lat = lat;
+        this.lon = lon;
+        this.tags = tags;
     }
 }

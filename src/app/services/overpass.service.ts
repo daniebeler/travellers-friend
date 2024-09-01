@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { OsmNode } from '../models/OsmNode';
+import { ResponseAdapter } from '../adapter/response-adapter';
 
 const TIMEOUT = 10;
 
@@ -16,7 +17,7 @@ export class OverpassService {
 
   constructor(
     private http: HttpClient,
-
+    private responseAdapter: ResponseAdapter
   ) { }
 
   getNodes(nodeType: string, lat1, lon1, lat2, lon2): Observable<OsmNode[]> {
@@ -24,10 +25,10 @@ export class OverpassService {
       '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
       '[out:json]' +
       '[timeout:' + TIMEOUT + '];' +
-      'node[' + nodeType + '];' +
-      'out;';
+      '(node[' + nodeType + ']; way[' + nodeType + '];);' +
+      'out center;';
     return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(
-      data => data.elements.map(element => new OsmNode(element)))
+      data => data.elements.map(element => this.responseAdapter.adapt(element)))
     );
   }
 
@@ -36,10 +37,11 @@ export class OverpassService {
       '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
       '[out:json]' +
       '[timeout:' + TIMEOUT + '];' +
-      'node[' + nodeType1 + '][' + nodeType2 + '];' +
-      'out;';
+      '(node[' + nodeType1 + '][' + nodeType2 + '];' +
+      'way[' + nodeType1 + '][' + nodeType2 + '];);' +
+      'out center;';
     return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(
-      data => data.elements.map(element => new OsmNode(element)))
+      data => data.elements.map(element => this.responseAdapter.adapt(element)))
     );
   }
 
@@ -49,10 +51,12 @@ export class OverpassService {
       '[out:json]' +
       '[timeout:' + TIMEOUT + '];' +
       '(node[' + nodeType1 + '];' +
-      'node[' + nodeType2 + '];);' +
-      'out;';
+      'way[' + nodeType1 + '];' +
+      'node[' + nodeType1 + '];' +
+      'way[' + nodeType2 + '];);' +
+      'out center;';
     return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(
-      data => data.elements.map(element => new OsmNode(element)))
+      data => data.elements.map(element => this.responseAdapter.adapt(element)))
     );
   }
 }
