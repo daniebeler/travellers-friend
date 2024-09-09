@@ -80,6 +80,15 @@
 
           </ion-row>
 
+          <ion-row *ngIf="tags.website">
+
+            <ion-col style="display: flex; flex-direction: column; align-items: center;">
+              <p class="ion-text-center">Website</p>
+              <a class="ion-text-center" href="{{tags.website}}" target="_blank"
+                rel="noopener noreferrer">{{tags.website}}</a>
+            </ion-col>
+          </ion-row>
+
           <ion-row>
             <ion-col style="display: flex; justify-content: center">
               <ion-button class="add-info-btn" shape="round"
