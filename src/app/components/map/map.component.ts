@@ -10,28 +10,28 @@ const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/black-toilet.svg',
+  iconUrl: 'assets/pointer/toilet-new.svg',
 });
 
 const freeToiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/green-toilet.svg',
+  iconUrl: 'assets/pointer/toilet-free-new.svg',
 });
 
 const paidToiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/red-toilet.svg',
+  iconUrl: 'assets/pointer/toilet-paid-new.svg',
 });
 
 const waterIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/water.svg',
+  iconUrl: 'assets/pointer/water-new.svg',
 });
 
 
@@ -39,21 +39,21 @@ const bikeStationsIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/bike-station.svg',
+  iconUrl: 'assets/pointer/bike-station-new.svg',
 });
 
 const atmIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/atm.svg',
+  iconUrl: 'assets/pointer/atm-new.svg',
 });
 
 const tabletennisIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
   popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/tabletennis.svg',
+  iconUrl: 'assets/pointer/table-tennis-new.svg',
 });
 
 const preloadingRadius = 0.05;
