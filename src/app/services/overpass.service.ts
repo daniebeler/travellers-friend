@@ -52,7 +52,7 @@ export class OverpassService {
       '[timeout:' + TIMEOUT + '];' +
       '(node[' + nodeType1 + '];' +
       'way[' + nodeType1 + '];' +
-      'node[' + nodeType1 + '];' +
+      'node[' + nodeType2 + '];' +
       'way[' + nodeType2 + '];);' +
       'out center;';
     return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(

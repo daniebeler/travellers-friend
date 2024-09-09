@@ -53,7 +53,9 @@ export class HomePage implements OnInit {
       this.heading = 'Bike Repair Station'
     } else if (this.tags.amenity === 'atm') {
       this.heading = 'ATM machine'
-    }else if (this.tags.leisure === 'pitch') {
+    } else if (this.tags.amenity === 'bank') {
+      this.heading = 'Bank with ATM'
+    } else if (this.tags.leisure === 'pitch') {
       this.heading = 'Table Tennis Table'
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';

@@ -277,8 +277,9 @@ export class MapComponent implements OnInit {
 
     if (this.settings.atm) {
       this.overpassService
-        .getNodes(
+        .getNodesOr(
           '"amenity"="atm"',
+          '"amenity"="bank"]["atm"!~"no"',
           mapCenter.lat - preloadingRadius,
           mapCenter.lng - preloadingRadius,
           mapCenter.lat + preloadingRadius,

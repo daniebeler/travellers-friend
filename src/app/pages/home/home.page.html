@@ -67,6 +67,17 @@
               <p class="ion-text-center">Drinking Water</p>
               <p class="ion-text-center">Yes</p>
             </ion-col>
+
+            <ion-col size="4" *ngIf="tags.operator">
+              <p class="ion-text-center">Operator</p>
+              <p class="ion-text-center">{{tags.operator}}</p>
+            </ion-col>
+
+            <ion-col size="4" *ngIf="tags.name">
+              <p class="ion-text-center">Name</p>
+              <p class="ion-text-center">{{tags.name}}</p>
+            </ion-col>
+
           </ion-row>
 
           <ion-row>
