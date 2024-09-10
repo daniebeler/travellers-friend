@@ -2,6 +2,12 @@
   height: 100%;
 }
 
+.about-modal a {
+  color: var(--color-traveller);
+  font-weight: bold;
+  text-decoration: none;
+}
+
 .column {
   padding: 20px;
 }
@@ -9,6 +15,7 @@
 .add-info-btn {
   text-transform: initial;
   --box-shadow: none;
+  border-radius: 9px;
 }
 
 .toolbar-img {
@@ -77,6 +84,17 @@ ion-fab-button {
   p {
     color: var(--ion-color-primary);
   }
+}
+
+.checkboxes-wrapper {
+  display: block;
+}
+
+ion-checkbox {
+  clear: both;
+  float: left;
+  margin-top: 6px;
+  --size: 20px;
 }
 
 .water-checkbox {

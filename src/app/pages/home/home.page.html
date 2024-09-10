@@ -112,31 +112,29 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <h1 class="ion-text-center bold ion-text-uppercase">Filter</h1>
+              <app-headline headline="Filter" color="#000" />
             </ion-col>
           </ion-row>
 
           <ion-row>
-            <ion-col>
+            <ion-col class="checkboxes-wrapper">
               <ion-checkbox class="water-checkbox" [checked]="settings.water"
                 (ionChange)="settingsChanged('water', $event)" labelPlacement="end">Drinking Water</ion-checkbox>
-              <br />
+
               <ion-checkbox class="toilet-checkbox" [checked]="settings.toilets"
                 (ionChange)="settingsChanged('toilets', $event)" labelPlacement="end">Toilets</ion-checkbox>
-              <br />
+
               <ion-checkbox class="bike-checkbox" [checked]="settings.bikeStations"
                 (ionChange)="settingsChanged('bikeStations', $event)" labelPlacement="end">Bike Repair
                 Stations</ion-checkbox>
-              <br />
+
               <ion-checkbox class="atm-checkbox" [checked]="settings.atm" (ionChange)="settingsChanged('atm', $event)"
                 labelPlacement="end">ATMs</ion-checkbox>
 
-              <br />
               <ion-checkbox class="tabletennis-checkbox" [checked]="settings.tabletennis"
                 (ionChange)="settingsChanged('tabletennis', $event)" labelPlacement="end">Table Tennis
                 Tables</ion-checkbox>
 
-              <br />
               <ion-checkbox class="fitness-checkbox" [checked]="settings.fitness"
                 (ionChange)="settingsChanged('fitness', $event)" labelPlacement="end">Outdoor Gyms</ion-checkbox>
             </ion-col>
@@ -153,7 +151,7 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <h1 class="ion-text-center bold ion-text-uppercase">Map type</h1>
+              <app-headline headline="Map type" color="#000" />
             </ion-col>
           </ion-row>
 
@@ -183,11 +181,11 @@
   <ion-modal [isOpen]="isAboutModalOpen" (willDismiss)="isAboutModalOpen = false" [initialBreakpoint]="1"
     [breakpoints]="[0, 1]">
     <ng-template>
-      <div class="block ion-padding">
+      <div class="block ion-padding about-modal">
         <ion-grid>
           <ion-row>
             <ion-col>
-              <h1 class="ion-text-center bold ion-text-uppercase">About</h1>
+              <app-headline headline="About" color="#F24713"></app-headline>
             </ion-col>
           </ion-row>
 
