@@ -18,6 +18,7 @@ export class HomePage implements OnInit {
   nodeId: number;
   heading = '';
   modalClass = '';
+  modalColor = '';
   isLoadingData = false;
 
   settings: Settings;
@@ -51,30 +52,39 @@ export class HomePage implements OnInit {
     if (this.tags.amenity === 'drinking_water') {
       this.heading = 'Drinking Water';
       this.modalClass = 'water-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-water');
     } else if (this.tags.amenity === 'bicycle_repair_station') {
       this.heading = 'Bike Repair Station'
       this.modalClass = 'bike-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-bike');
     } else if (this.tags.amenity === 'atm') {
       this.heading = 'ATM machine'
       this.modalClass = 'atm-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-atm');
     } else if (this.tags.amenity === 'bank') {
       this.heading = 'Bank with ATM'
       this.modalClass = 'atm-modal';
-    }else if (this.tags.leisure === 'fitness_station') {
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-atm');
+    } else if (this.tags.leisure === 'fitness_station') {
       this.heading = 'Outdoor Gym'
       this.modalClass = 'fitness-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-fitness');
     } else if (this.tags.leisure === 'pitch') {
       this.heading = 'Table Tennis Table'
       this.modalClass = 'tabletennis-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-tennistable');
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';
       this.modalClass = 'toilet-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-toilet');
     } else if (this.tags.fee === 'yes') {
       this.heading = 'Paid Toilet';
       this.modalClass = 'toilet-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-toilet');
     } else {
       this.heading = 'Toilet';
       this.modalClass = 'toilet-modal';
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-toilet');
     }
 
     this.nodeTags = new Array();

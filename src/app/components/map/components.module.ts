@@ -5,13 +5,16 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MapComponent } from './map.component';
 import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
+import { HeadlineComponent } from '../headline/headline.component';
 
 @NgModule({
   declarations: [
-    MapComponent
+    MapComponent,
+    HeadlineComponent
   ],
   exports: [
-    MapComponent
+    MapComponent,
+    HeadlineComponent
   ],
   imports: [
     IonicModule,

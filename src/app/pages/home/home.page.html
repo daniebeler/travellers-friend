@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar mode="md">
-    <ion-title class="">Traveller's Friend</ion-title>
+    <img class="toolbar-img" src="../../../assets/images/logo-text.png">
     <ion-buttons slot="end">
       <ion-button class="menu-item" (click)="openAboutModal()">About</ion-button>
     </ion-buttons>
@@ -31,9 +31,7 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <h1 class="ion-text-center bold ion-text-uppercase">
-                {{ heading }}
-              </h1>
+              <app-headline headline="{{ heading }}" color="{{modalColor}}"></app-headline>
             </ion-col>
           </ion-row>
 
@@ -120,25 +118,27 @@
 
           <ion-row>
             <ion-col>
-              <ion-checkbox class="water-checkbox" [checked]="settings.water" (ionChange)="settingsChanged('water', $event)"
-                labelPlacement="end">Drinking Water</ion-checkbox>
+              <ion-checkbox class="water-checkbox" [checked]="settings.water"
+                (ionChange)="settingsChanged('water', $event)" labelPlacement="end">Drinking Water</ion-checkbox>
               <br />
-              <ion-checkbox class="toilet-checkbox" [checked]="settings.toilets" (ionChange)="settingsChanged('toilets', $event)"
-                labelPlacement="end">Toilets</ion-checkbox>
+              <ion-checkbox class="toilet-checkbox" [checked]="settings.toilets"
+                (ionChange)="settingsChanged('toilets', $event)" labelPlacement="end">Toilets</ion-checkbox>
               <br />
-              <ion-checkbox class="bike-checkbox" [checked]="settings.bikeStations" (ionChange)="settingsChanged('bikeStations', $event)"
-                labelPlacement="end">Bike Repair Stations</ion-checkbox>
+              <ion-checkbox class="bike-checkbox" [checked]="settings.bikeStations"
+                (ionChange)="settingsChanged('bikeStations', $event)" labelPlacement="end">Bike Repair
+                Stations</ion-checkbox>
               <br />
               <ion-checkbox class="atm-checkbox" [checked]="settings.atm" (ionChange)="settingsChanged('atm', $event)"
                 labelPlacement="end">ATMs</ion-checkbox>
 
               <br />
-              <ion-checkbox class="tabletennis-checkbox" [checked]="settings.tabletennis" (ionChange)="settingsChanged('tabletennis', $event)"
-                labelPlacement="end">Table Tennis Tables</ion-checkbox>
+              <ion-checkbox class="tabletennis-checkbox" [checked]="settings.tabletennis"
+                (ionChange)="settingsChanged('tabletennis', $event)" labelPlacement="end">Table Tennis
+                Tables</ion-checkbox>
 
-                <br />
-              <ion-checkbox class="fitness-checkbox" [checked]="settings.fitness" (ionChange)="settingsChanged('fitness', $event)"
-                labelPlacement="end">Outdoor Gyms</ion-checkbox>
+              <br />
+              <ion-checkbox class="fitness-checkbox" [checked]="settings.fitness"
+                (ionChange)="settingsChanged('fitness', $event)" labelPlacement="end">Outdoor Gyms</ion-checkbox>
             </ion-col>
           </ion-row>
         </ion-grid>
