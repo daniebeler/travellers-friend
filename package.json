@@ -22,9 +22,11 @@
     "@angular/service-worker": "^18.2.0",
     "@ionic/angular": "^7.6.0",
     "@runette/ngx-leaflet-locate": "^2.0.6",
+    "@types/leaflet.markercluster": "^1.5.4",
     "install": "^0.13.0",
     "ionicons": "^7.2.1",
     "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3",
     "rxjs": "~7.8.1",
     "tslib": "^2.6.2",
     "zone.js": "~0.14.10"

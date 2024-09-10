@@ -16,7 +16,7 @@
 @import "~@ionic/angular/css/normalize.css";
 @import "~@ionic/angular/css/structure.css";
 @import "~@ionic/angular/css/typography.css";
-@import '~@ionic/angular/css/display.css';
+@import "~@ionic/angular/css/display.css";
 
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
@@ -75,7 +75,63 @@
   font-family: "custom-medium", sans-serif;
 }
 
-
 ion-modal {
   --border-radius: 16px 16px 0 0;
+}
+
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+  -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+  -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+  -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+.leaflet-cluster-spider-leg {
+  /* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */
+  -webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out,
+    -webkit-stroke-opacity 0.3s ease-in;
+  -moz-transition: -moz-stroke-dashoffset 0.3s ease-out,
+    -moz-stroke-opacity 0.3s ease-in;
+  -o-transition: -o-stroke-dashoffset 0.3s ease-out,
+    -o-stroke-opacity 0.3s ease-in;
+  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+}
+
+.toilet-cluster {
+  background-color: var(--color-toilet);
+}
+
+.water-cluster {
+  background-color: var(--color-water);
+}
+
+.bike-cluster {
+  background-color: var(--color-bike);
+}
+
+.atm-cluster {
+  background-color: var(--color-atm);
+}
+
+.tabletennis-cluster {
+  background-color: var(--color-tabletennis);
+}
+
+.fitness-cluster {
+  background-color: var(--color-fitness);
+}
+
+
+.marker-cluster {
+  background-clip: padding-box;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.marker-cluster div {
+  color: white;
+  border-radius: 15px;
 }

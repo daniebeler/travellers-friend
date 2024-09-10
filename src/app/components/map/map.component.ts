@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
+import 'leaflet.markercluster';
+
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
 import { OverpassService } from 'src/app/services/overpass.service';
@@ -85,12 +87,69 @@ export class MapComponent implements OnInit {
   tabletennisLoaded = false;
   fitnessLoaded = false;
   accessibleToiletsMode = false;
-  private toiletLayerGroup: L.LayerGroup = L.layerGroup();
-  private waterLayerGroup: L.LayerGroup = L.layerGroup();
-  private bikeStationsLayerGroup: L.LayerGroup = L.layerGroup();
-  private atmLayerGroup: L.LayerGroup = L.layerGroup();
-  private tabletennisLayerGroup: L.LayerGroup = L.layerGroup();
-  private fitnessLayerGroup: L.LayerGroup = L.layerGroup();
+
+
+  private toiletLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: (cluster) => {
+      return L.divIcon({
+        html: `<div>${cluster.getChildCount()}</div>`,
+        className: 'toilet-cluster marker-cluster',
+        iconSize: L.point(40, 40)
+      });
+    }
+  });
+
+  private waterLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: (cluster) => {
+      return L.divIcon({
+        html: `<div>${cluster.getChildCount()}</div>`,
+        className: 'water-cluster marker-cluster',
+        iconSize: L.point(40, 40)
+      });
+    }
+  });
+
+  private bikeStationsLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: (cluster) => {
+      return L.divIcon({
+        html: `<div>${cluster.getChildCount()}</div>`,
+        className: 'bike-cluster marker-cluster',
+        iconSize: L.point(40, 40)
+      });
+    }
+  });
+
+  private atmLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: (cluster) => {
+      return L.divIcon({
+        html: `<div>${cluster.getChildCount()}</div>`,
+        className: 'atm-cluster marker-cluster',
+        iconSize: L.point(40, 40)
+      });
+    }
+  });
+
+  private tabletennisLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: (cluster) => {
+      return L.divIcon({
+        html: `<div>${cluster.getChildCount()}</div>`,
+        className: 'tabletennis-cluster marker-cluster',
+        iconSize: L.point(40, 40)
+      });
+    }
+  });
+
+  private fitnessLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+    iconCreateFunction: (cluster) => {
+      return L.divIcon({
+        html: `<div>${cluster.getChildCount()}</div>`,
+        className: 'fitness-cluster marker-cluster',
+        iconSize: L.point(40, 40)
+      });
+    }
+  });
+
+
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
   private tiles = L.tileLayer(
