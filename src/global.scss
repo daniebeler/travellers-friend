@@ -100,28 +100,33 @@ ion-modal {
 
 .toilet-cluster {
   background-color: var(--color-toilet);
+  color: var(--color-toilet);
 }
 
 .water-cluster {
   background-color: var(--color-water);
+  color: var(--color-water);
 }
 
 .bike-cluster {
   background-color: var(--color-bike);
+  color: var(--color-bike);
 }
 
 .atm-cluster {
   background-color: var(--color-atm);
+  color: var(--color-atm);
 }
 
 .tabletennis-cluster {
   background-color: var(--color-tabletennis);
+  color: var(--color-tabletennis);
 }
 
 .fitness-cluster {
   background-color: var(--color-fitness);
+  color: var(--color-fitness);
 }
-
 
 .marker-cluster {
   background-clip: padding-box;
@@ -132,6 +137,13 @@ ion-modal {
 }
 
 .marker-cluster div {
-  color: white;
-  border-radius: 15px;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: bold;
 }

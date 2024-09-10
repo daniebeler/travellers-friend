@@ -27,7 +27,7 @@
 
   <ion-modal [isOpen]="modalIsOpen" (willDismiss)="modalIsOpen = false" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
     <ng-template>
-      <div class="block ion-padding {{modalClass}}">
+      <div class="ion-padding {{modalClass}}">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -108,7 +108,7 @@
   <ion-modal [isOpen]="isSettingsModalOpen" (willDismiss)="isSettingsModalOpen = false" [initialBreakpoint]="1"
     [breakpoints]="[0, 1]">
     <ng-template>
-      <div class="block ion-padding">
+      <div class="ion-padding">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -117,7 +117,7 @@
           </ion-row>
 
           <ion-row>
-            <ion-col class="checkboxes-wrapper">
+            <ion-col>
               <ion-checkbox class="water-checkbox" [checked]="settings.water"
                 (ionChange)="settingsChanged('water', $event)" labelPlacement="end">Drinking Water</ion-checkbox>
 
@@ -147,7 +147,7 @@
   <ion-modal [isOpen]="isTileLayerModalOpen" (willDismiss)="isTileLayerModalOpen = false" [initialBreakpoint]="1"
     [breakpoints]="[0, 1]">
     <ng-template>
-      <div class="block ion-padding">
+      <div class="ion-padding">
         <ion-grid>
           <ion-row>
             <ion-col>
@@ -181,7 +181,7 @@
   <ion-modal [isOpen]="isAboutModalOpen" (willDismiss)="isAboutModalOpen = false" [initialBreakpoint]="1"
     [breakpoints]="[0, 1]">
     <ng-template>
-      <div class="block ion-padding about-modal">
+      <div class="ion-padding about-modal">
         <ion-grid>
           <ion-row>
             <ion-col>
