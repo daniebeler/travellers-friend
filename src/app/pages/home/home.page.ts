@@ -56,7 +56,7 @@ export class HomePage implements OnInit {
     } else if (this.tags.amenity === 'bank') {
       this.heading = 'Bank with ATM'
     }else if (this.tags.leisure === 'fitness_station') {
-      this.heading = 'Fitness Station'
+      this.heading = 'Outdoor Gym'
     } else if (this.tags.leisure === 'pitch') {
       this.heading = 'Table Tennis Table'
     } else if (this.tags.fee === 'no') {

@@ -68,6 +68,11 @@
               <p class="ion-text-center">Yes</p>
             </ion-col>
 
+            <ion-col size="4" *ngIf="tags.fitness_station">
+              <p class="ion-text-center">Fitness station</p>
+              <p class="ion-text-center">{{tags.fitness_station}}</p>
+            </ion-col>
+
             <ion-col size="4" *ngIf="tags.operator">
               <p class="ion-text-center">Operator</p>
               <p class="ion-text-center">{{tags.operator}}</p>
@@ -116,7 +121,7 @@
           <ion-row>
             <ion-col>
               <ion-checkbox [checked]="settings.water" (ionChange)="settingsChanged('water', $event)"
-                labelPlacement="end">Drinking water</ion-checkbox>
+                labelPlacement="end">Drinking Water</ion-checkbox>
               <br />
               <ion-checkbox [checked]="settings.toilets" (ionChange)="settingsChanged('toilets', $event)"
                 labelPlacement="end">Toilets</ion-checkbox>
@@ -129,11 +134,11 @@
 
               <br />
               <ion-checkbox [checked]="settings.tabletennis" (ionChange)="settingsChanged('tabletennis', $event)"
-                labelPlacement="end">Table tennis</ion-checkbox>
+                labelPlacement="end">Table Tennis Tables</ion-checkbox>
 
                 <br />
               <ion-checkbox [checked]="settings.fitness" (ionChange)="settingsChanged('fitness', $event)"
-                labelPlacement="end">Fitness station</ion-checkbox>
+                labelPlacement="end">Outdoor Gyms</ion-checkbox>
             </ion-col>
           </ion-row>
         </ion-grid>
