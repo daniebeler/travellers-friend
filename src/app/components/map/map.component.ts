@@ -146,7 +146,8 @@ export class MapComponent implements OnInit {
       center: [lat, long],
       zoom: 18,
       attributionControl: false,
-      preferCanvas: true
+      preferCanvas: true,
+      zoomControl: false
     });
 
     L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
