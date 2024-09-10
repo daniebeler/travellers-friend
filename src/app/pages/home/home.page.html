@@ -130,6 +130,10 @@
               <br />
               <ion-checkbox [checked]="settings.tabletennis" (ionChange)="settingsChanged('tabletennis', $event)"
                 labelPlacement="end">Table tennis</ion-checkbox>
+
+                <br />
+              <ion-checkbox [checked]="settings.fitness" (ionChange)="settingsChanged('fitness', $event)"
+                labelPlacement="end">Fitness station</ion-checkbox>
             </ion-col>
           </ion-row>
         </ion-grid>

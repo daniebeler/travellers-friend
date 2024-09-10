@@ -55,6 +55,8 @@ export class HomePage implements OnInit {
       this.heading = 'ATM machine'
     } else if (this.tags.amenity === 'bank') {
       this.heading = 'Bank with ATM'
+    }else if (this.tags.leisure === 'fitness_station') {
+      this.heading = 'Fitness Station'
     } else if (this.tags.leisure === 'pitch') {
       this.heading = 'Table Tennis Table'
     } else if (this.tags.fee === 'no') {
@@ -120,6 +122,11 @@ export class HomePage implements OnInit {
 
     if (key === 'tabletennis') {
       this.settings.tabletennis = event.target.checked
+      this.settingsService.updateSettings(this.settings)
+    }
+
+    if (key === 'fitness') {
+      this.settings.fitness = event.target.checked
       this.settingsService.updateSettings(this.settings)
     }
   }

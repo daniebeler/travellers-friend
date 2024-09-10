@@ -4,4 +4,5 @@ export class Settings {
   public bikeStations = false;
   public atm = false;
   public tabletennis = false;
+  public fitness = false;
 }

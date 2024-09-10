@@ -56,6 +56,13 @@ const tabletennisIcon: L.Icon = L.icon({
   iconUrl: 'assets/pointer/table-tennis-new.svg',
 });
 
+const fitnessIcon: L.Icon = L.icon({
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [2, -40],
+  iconUrl: 'assets/pointer/fitness.svg',
+});
+
 const preloadingRadius = 0.05;
 
 @Component({
@@ -76,12 +83,14 @@ export class MapComponent implements OnInit {
   bikeStationsLoaded = false;
   atmsLoaded = false;
   tabletennisLoaded = false;
+  fitnessLoaded = false;
   accessibleToiletsMode = false;
   private toiletLayerGroup: L.LayerGroup = L.layerGroup();
   private waterLayerGroup: L.LayerGroup = L.layerGroup();
   private bikeStationsLayerGroup: L.LayerGroup = L.layerGroup();
   private atmLayerGroup: L.LayerGroup = L.layerGroup();
   private tabletennisLayerGroup: L.LayerGroup = L.layerGroup();
+  private fitnessLayerGroup: L.LayerGroup = L.layerGroup();
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
   private tiles = L.tileLayer(
@@ -197,6 +206,10 @@ export class MapComponent implements OnInit {
       this.tabletennisLayerGroup.clearLayers();
     }
 
+    if (!this.settings.fitness) {
+      this.fitnessLayerGroup.clearLayers();
+    }
+
     this.updateLoadingState()
 
     const mapCenter = this.map.getBounds().getCenter();
@@ -309,6 +322,22 @@ export class MapComponent implements OnInit {
           this.setTabletennisMarker(nodes);
         });
     }
+
+    if (this.settings.fitness) {
+      this.overpassService
+        .getNodes(
+          '"leisure"="fitness_station"',
+          mapCenter.lat - preloadingRadius,
+          mapCenter.lng - preloadingRadius,
+          mapCenter.lat + preloadingRadius,
+          mapCenter.lng + preloadingRadius
+        )
+        .subscribe((nodes) => {
+          this.fitnessLoaded = true;
+          this.updateLoadingState()
+          this.setFitnessMarker(nodes);
+        });
+    }
   }
 
   setToiletMarker(nodes: OsmNode[]) {
@@ -374,6 +403,17 @@ export class MapComponent implements OnInit {
     });
   }
 
+  setFitnessMarker(nodes: OsmNode[]) {
+    this.fitnessLayerGroup.clearLayers();
+    nodes.forEach((node) => {
+      const markerIcon = fitnessIcon;
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
+        this.callParent(node);
+      });
+      this.fitnessLayerGroup.addLayer(marker).addTo(this.map);
+    });
+  }
+
   callParent(data: OsmNode) {
     this.markerClicked.emit(JSON.stringify(data));
   }
@@ -383,7 +423,7 @@ export class MapComponent implements OnInit {
   }
 
   updateLoadingState() {
-    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations) || (!this.atmsLoaded && this.settings.atm) || (!this.tabletennisLoaded && this.settings.tabletennis);
+    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations) || (!this.atmsLoaded && this.settings.atm) || (!this.tabletennisLoaded && this.settings.tabletennis) || (!this.fitnessLoaded && this.settings.fitness);
     this.settingsService.updateLoadingState(newLoadingState)
   }
 }
