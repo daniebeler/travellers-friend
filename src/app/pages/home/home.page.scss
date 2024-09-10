@@ -73,3 +73,33 @@ ion-fab-button {
     color: var(--ion-color-primary);
   }
 }
+
+.water-checkbox {
+  --checkbox-background-checked: var(--color-water);
+  --border-color-checked: var(--color-water);
+}
+
+.toilet-checkbox {
+  --checkbox-background-checked: var(--color-toilet);
+  --border-color-checked: var(--color-toilet);
+}
+
+.bike-checkbox {
+  --checkbox-background-checked: var(--color-bike);
+  --border-color-checked: var(--color-bike);
+}
+
+.atm-checkbox {
+  --checkbox-background-checked: var(--color-atm);
+  --border-color-checked: var(--color-atm);
+}
+
+.tabletennis-checkbox {
+  --checkbox-background-checked: var(--color-tabletennis);
+  --border-color-checked: var(--color-tabletennis);
+}
+
+.fitness-checkbox {
+  --checkbox-background-checked: var(--color-fitness);
+  --border-color-checked: var(--color-fitness);
+}

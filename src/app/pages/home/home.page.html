@@ -120,24 +120,24 @@
 
           <ion-row>
             <ion-col>
-              <ion-checkbox [checked]="settings.water" (ionChange)="settingsChanged('water', $event)"
+              <ion-checkbox class="water-checkbox" [checked]="settings.water" (ionChange)="settingsChanged('water', $event)"
                 labelPlacement="end">Drinking Water</ion-checkbox>
               <br />
-              <ion-checkbox [checked]="settings.toilets" (ionChange)="settingsChanged('toilets', $event)"
+              <ion-checkbox class="toilet-checkbox" [checked]="settings.toilets" (ionChange)="settingsChanged('toilets', $event)"
                 labelPlacement="end">Toilets</ion-checkbox>
               <br />
-              <ion-checkbox [checked]="settings.bikeStations" (ionChange)="settingsChanged('bikeStations', $event)"
+              <ion-checkbox class="bike-checkbox" [checked]="settings.bikeStations" (ionChange)="settingsChanged('bikeStations', $event)"
                 labelPlacement="end">Bike Repair Stations</ion-checkbox>
               <br />
-              <ion-checkbox [checked]="settings.atm" (ionChange)="settingsChanged('atm', $event)"
+              <ion-checkbox class="atm-checkbox" [checked]="settings.atm" (ionChange)="settingsChanged('atm', $event)"
                 labelPlacement="end">ATMs</ion-checkbox>
 
               <br />
-              <ion-checkbox [checked]="settings.tabletennis" (ionChange)="settingsChanged('tabletennis', $event)"
+              <ion-checkbox class="tabletennis-checkbox" [checked]="settings.tabletennis" (ionChange)="settingsChanged('tabletennis', $event)"
                 labelPlacement="end">Table Tennis Tables</ion-checkbox>
 
                 <br />
-              <ion-checkbox [checked]="settings.fitness" (ionChange)="settingsChanged('fitness', $event)"
+              <ion-checkbox class="fitness-checkbox" [checked]="settings.fitness" (ionChange)="settingsChanged('fitness', $event)"
                 labelPlacement="end">Outdoor Gyms</ion-checkbox>
             </ion-col>
           </ion-row>
