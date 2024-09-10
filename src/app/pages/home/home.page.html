@@ -37,56 +37,55 @@
 
           <ion-row *ngIf="tags" style="display: flex; justify-content: center">
             <ion-col size="4" *ngIf="tags.charge">
-              <p class="ion-text-center">Charge</p>
+              <p class="ion-text-center bold">Charge</p>
               <p class="ion-text-center">{{tags.charge}}</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.fee === 'no'">
-              <p class="ion-text-center">Charge</p>
+              <p class="ion-text-center bold">Charge</p>
               <p class="ion-text-center">free</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.wheelchair">
-              <p class="ion-text-center">Accessible</p>
+              <p class="ion-text-center bold">Accessible</p>
               <p class="ion-text-center">{{tags.wheelchair}}</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.opening_hours">
-              <p class="ion-text-center">Opening Hours</p>
+              <p class="ion-text-center bold">Opening Hours</p>
               <p class="ion-text-center">{{tags.opening_hours}}</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.access && tags.access !== 'yes'">
-              <p class="ion-text-center">Access</p>
+              <p class="ion-text-center bold">Access</p>
               <p class="ion-text-center">{{tags.access}}</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.drinking_water === 'yes'">
-              <p class="ion-text-center">Drinking Water</p>
+              <p class="ion-text-center bold">Drinking Water</p>
               <p class="ion-text-center">Yes</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.fitness_station">
-              <p class="ion-text-center">Fitness station</p>
+              <p class="ion-text-center bold">Fitness station</p>
               <p class="ion-text-center">{{tags.fitness_station}}</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.operator">
-              <p class="ion-text-center">Operator</p>
+              <p class="ion-text-center bold">Operator</p>
               <p class="ion-text-center">{{tags.operator}}</p>
             </ion-col>
 
             <ion-col size="4" *ngIf="tags.name">
-              <p class="ion-text-center">Name</p>
+              <p class="ion-text-center bold">Name</p>
               <p class="ion-text-center">{{tags.name}}</p>
             </ion-col>
 
           </ion-row>
 
           <ion-row *ngIf="tags.website">
-
             <ion-col style="display: flex; flex-direction: column; align-items: center;">
-              <p class="ion-text-center">Website</p>
+              <p class="ion-text-center bold">Website</p>
               <a class="ion-text-center" href="{{tags.website}}" target="_blank"
                 rel="noopener noreferrer">{{tags.website}}</a>
             </ion-col>
