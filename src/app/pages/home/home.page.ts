@@ -72,7 +72,7 @@ export class HomePage implements OnInit {
     } else if (this.tags.leisure === 'pitch') {
       this.heading = 'Table Tennis Table'
       this.modalClass = 'tabletennis-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-tennistable');
+      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-tabletennis');
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';
       this.modalClass = 'toilet-modal';
