@@ -103,3 +103,39 @@ ion-fab-button {
   --checkbox-background-checked: var(--color-fitness);
   --border-color-checked: var(--color-fitness);
 }
+
+.water-modal {
+  .add-info-btn {
+    --background: var(--color-water);
+  }
+}
+
+.toilet-modal {
+  .add-info-btn {
+    --background: var(--color-toilet);
+  }
+}
+
+.bike-modal {
+  .add-info-btn {
+    --background: var(--color-bike);
+  }
+}
+
+.atm-modal {
+  .add-info-btn {
+    --background: var(--color-atm);
+  }
+}
+
+.tabletennis-modal {
+  .add-info-btn {
+    --background: var(--color-tabletennis);
+  }
+}
+
+.fitness-modal {
+  .add-info-btn {
+    --background: var(--color-fitness);
+  }
+}

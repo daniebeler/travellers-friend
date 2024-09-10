@@ -27,7 +27,7 @@
 
   <ion-modal [isOpen]="modalIsOpen" (willDismiss)="modalIsOpen = false" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
     <ng-template>
-      <div class="block ion-padding">
+      <div class="block ion-padding {{modalClass}}">
         <ion-grid>
           <ion-row>
             <ion-col>

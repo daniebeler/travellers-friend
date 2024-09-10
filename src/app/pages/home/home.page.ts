@@ -17,6 +17,7 @@ export class HomePage implements OnInit {
   tags: any;
   nodeId: number;
   heading = '';
+  modalClass = '';
   isLoadingData = false;
 
   settings: Settings;
@@ -49,22 +50,31 @@ export class HomePage implements OnInit {
 
     if (this.tags.amenity === 'drinking_water') {
       this.heading = 'Drinking Water';
+      this.modalClass = 'water-modal';
     } else if (this.tags.amenity === 'bicycle_repair_station') {
       this.heading = 'Bike Repair Station'
+      this.modalClass = 'bike-modal';
     } else if (this.tags.amenity === 'atm') {
       this.heading = 'ATM machine'
+      this.modalClass = 'atm-modal';
     } else if (this.tags.amenity === 'bank') {
       this.heading = 'Bank with ATM'
+      this.modalClass = 'atm-modal';
     }else if (this.tags.leisure === 'fitness_station') {
       this.heading = 'Outdoor Gym'
+      this.modalClass = 'fitness-modal';
     } else if (this.tags.leisure === 'pitch') {
       this.heading = 'Table Tennis Table'
+      this.modalClass = 'tabletennis-modal';
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';
+      this.modalClass = 'toilet-modal';
     } else if (this.tags.fee === 'yes') {
       this.heading = 'Paid Toilet';
+      this.modalClass = 'toilet-modal';
     } else {
       this.heading = 'Toilet';
+      this.modalClass = 'toilet-modal';
     }
 
     this.nodeTags = new Array();
