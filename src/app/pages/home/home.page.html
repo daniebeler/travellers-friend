@@ -5,13 +5,15 @@
     <button
       class="menu-item px-3 py-1 rounded-md bg-transparent text-black hover:bg-gray-100"
       (click)="openAboutModal()"
-    >
+      >
       About
     </button>
   </div>
-  <div *ngIf="isLoadingData" class="absolute bottom-0 left-0 w-full">
-    <div class="h-1 bg-gradient-to-r from-orange-500 via-yellow-400 to-green-500 animate-pulse"></div>
-  </div>
+  @if (isLoadingData) {
+    <div class="absolute bottom-0 left-0 w-full">
+      <div class="h-1 bg-gradient-to-r from-orange-500 via-yellow-400 to-green-500 animate-pulse"></div>
+    </div>
+  }
 </header>
 
 <!-- Main Content -->
@@ -28,7 +30,7 @@
     <button
       class="rounded-full bg-orange-500 text-white p-4 shadow-lg hover:bg-orange-600 transition"
       (click)="openTileLayerModal()"
-    >
+      >
       <i class="fas fa-layer-group"></i>
     </button>
   </div>
@@ -37,89 +39,100 @@
     <button
       class="rounded-full bg-orange-500 text-white p-4 shadow-lg hover:bg-orange-600 transition"
       (click)="openSettingsModal()"
-    >
+      >
       <i class="fas fa-filter"></i>
     </button>
   </div>
 
   <!-- Info Modal -->
-  <div
-    *ngIf="modalIsOpen"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-    (click)="modalIsOpen = false"
-  >
+  @if (modalIsOpen) {
     <div
-      class="bg-white rounded-xl max-w-lg w-full mx-4 p-6 overflow-y-auto"
-      [ngClass]="modalClass"
-      (click)="$event.stopPropagation()"
-    >
-      <app-headline
-        [headline]="heading"
-        [color]="modalColor"
-      ></app-headline>
-
-      <!-- Tags -->
-      <div *ngIf="tags" class="grid grid-cols-3 gap-4 mt-4 text-center">
-        <div *ngIf="tags.charge">
-          <p class="font-bold">Charge</p>
-          <p>{{ tags.charge }}</p>
-        </div>
-
-        <div *ngIf="tags.fee === 'no'">
-          <p class="font-bold">Charge</p>
-          <p>free</p>
-        </div>
-
-        <div *ngIf="tags.wheelchair">
-          <p class="font-bold">Accessible</p>
-          <p>{{ tags.wheelchair }}</p>
-        </div>
-
-        <div *ngIf="tags.opening_hours">
-          <p class="font-bold">Opening Hours</p>
-          <p>{{ tags.opening_hours }}</p>
-        </div>
-
-        <div *ngIf="tags.access && tags.access !== 'yes'">
-          <p class="font-bold">Access</p>
-          <p>{{ tags.access }}</p>
-        </div>
-
-        <div *ngIf="tags.drinking_water === 'yes'">
-          <p class="font-bold">Drinking Water</p>
-          <p>Yes</p>
-        </div>
-
-        <div *ngIf="tags.fitness_station">
-          <p class="font-bold">Fitness station</p>
-          <p>{{ tags.fitness_station }}</p>
-        </div>
-
-        <div *ngIf="tags.operator">
-          <p class="font-bold">Operator</p>
-          <p>{{ tags.operator }}</p>
-        </div>
-
-        <div *ngIf="tags.name">
-          <p class="font-bold">Name</p>
-          <p>{{ tags.name }}</p>
-        </div>
-      </div>
-
-      <div *ngIf="tags.website" class="mt-4 flex flex-col items-center">
-        <p class="font-bold">Website</p>
-        <a
-          class="text-blue-600 underline"
-          href="{{ tags.website }}"
-          target="_blank"
-          rel="noopener noreferrer"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      (click)="modalIsOpen = false"
+      >
+      <div
+        class="bg-white rounded-xl max-w-lg w-full mx-4 p-6 overflow-y-auto"
+        [ngClass]="modalClass"
+        (click)="$event.stopPropagation()"
         >
-          {{ tags.website }}
-        </a>
-      </div>
-
-      <div class="flex justify-center mt-6">
-        <a
+        <app-headline
+          [headline]="heading"
+          [color]="modalColor"
+        ></app-headline>
+        <!-- Tags -->
+        @if (tags) {
+          <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+            @if (tags.charge) {
+              <div>
+                <p class="font-bold">Charge</p>
+                <p>{{ tags.charge }}</p>
+              </div>
+            }
+            @if (tags.fee === 'no') {
+              <div>
+                <p class="font-bold">Charge</p>
+                <p>free</p>
+              </div>
+            }
+            @if (tags.wheelchair) {
+              <div>
+                <p class="font-bold">Accessible</p>
+                <p>{{ tags.wheelchair }}</p>
+              </div>
+            }
+            @if (tags.opening_hours) {
+              <div>
+                <p class="font-bold">Opening Hours</p>
+                <p>{{ tags.opening_hours }}</p>
+              </div>
+            }
+            @if (tags.access && tags.access !== 'yes') {
+              <div>
+                <p class="font-bold">Access</p>
+                <p>{{ tags.access }}</p>
+              </div>
+            }
+            @if (tags.drinking_water === 'yes') {
+              <div>
+                <p class="font-bold">Drinking Water</p>
+                <p>Yes</p>
+              </div>
+            }
+            @if (tags.fitness_station) {
+              <div>
+                <p class="font-bold">Fitness station</p>
+                <p>{{ tags.fitness_station }}</p>
+              </div>
+            }
+            @if (tags.operator) {
+              <div>
+                <p class="font-bold">Operator</p>
+                <p>{{ tags.operator }}</p>
+              </div>
+            }
+            @if (tags.name) {
+              <div>
+                <p class="font-bold">Name</p>
+                <p>{{ tags.name }}</p>
+              </div>
+            }
+          </div>
+        }
+        @if (tags.website) {
+          <div class="mt-4 flex flex-col items-center">
+            <p class="font-bold">Website</p>
+            <a
+              class="text-blue-600 underline"
+              href="{{ tags.website }}"
+              target="_blank"
+              rel="noopener noreferrer"
+              >
+              {{ tags.website }}
+            </a>
+          </div>
+        }
+        <div class="flex justify-center mt-6">
+          <a
           [href]="'https://www.openstreetmap.org/edit?node=' + nodeId"
           target="_blank"
           class="px-6 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition"
@@ -129,10 +142,12 @@
       </div>
     </div>
   </div>
+}
 
   <!-- Settings Modal -->
-  <div
-    *ngIf="isSettingsModalOpen"
+  @if (isSettingsModalOpen) {
+<div
+   
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
     (click)="isSettingsModalOpen = false"
   >
@@ -147,127 +162,124 @@
             type="checkbox"
             [checked]="settings.water"
             (change)="settingsChanged('water', $event)"
-          />
-          <span>Drinking Water</span>
-        </label>
-
-        <label class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            [checked]="settings.toilets"
-            (change)="settingsChanged('toilets', $event)"
-          />
-          <span>Toilets</span>
-        </label>
-
-        <label class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            [checked]="settings.bikeStations"
-            (change)="settingsChanged('bikeStations', $event)"
-          />
-          <span>Bike Repair Stations</span>
-        </label>
-
-        <label class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            [checked]="settings.atm"
-            (change)="settingsChanged('atm', $event)"
-          />
-          <span>ATMs</span>
-        </label>
-
-        <label class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            [checked]="settings.tabletennis"
-            (change)="settingsChanged('tabletennis', $event)"
-          />
-          <span>Table Tennis Tables</span>
-        </label>
-
-        <label class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            [checked]="settings.fitness"
-            (change)="settingsChanged('fitness', $event)"
-          />
-          <span>Outdoor Gyms</span>
-        </label>
+              />
+            <span>Drinking Water</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              [checked]="settings.toilets"
+              (change)="settingsChanged('toilets', $event)"
+              />
+            <span>Toilets</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              [checked]="settings.bikeStations"
+              (change)="settingsChanged('bikeStations', $event)"
+              />
+            <span>Bike Repair Stations</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              [checked]="settings.atm"
+              (change)="settingsChanged('atm', $event)"
+              />
+            <span>ATMs</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              [checked]="settings.tabletennis"
+              (change)="settingsChanged('tabletennis', $event)"
+              />
+            <span>Table Tennis Tables</span>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              [checked]="settings.fitness"
+              (change)="settingsChanged('fitness', $event)"
+              />
+            <span>Outdoor Gyms</span>
+          </label>
+        </div>
       </div>
     </div>
-  </div>
+  }
 
   <!-- Tile Layer Modal -->
-  <div
-    *ngIf="isTileLayerModalOpen"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-    (click)="isTileLayerModalOpen = false"
-  >
+  @if (isTileLayerModalOpen) {
     <div
-      class="bg-white rounded-xl max-w-lg w-full mx-4 p-6"
-      (click)="$event.stopPropagation()"
-    >
-      <app-headline headline="Map type" color="#000"></app-headline>
-      <div class="flex space-x-4 mt-4">
-        <div
-          (click)="tileLayerChanged(0)"
-          class="cursor-pointer border rounded-lg p-2 text-center"
-          [ngClass]="{ 'border-orange-500': tileMode === 0 }"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      (click)="isTileLayerModalOpen = false"
+      >
+      <div
+        class="bg-white rounded-xl max-w-lg w-full mx-4 p-6"
+        (click)="$event.stopPropagation()"
         >
-          <img
-            class="h-24 w-24 object-cover"
-            src="../../../assets/images/satelite-tiles.png"
-          />
-          <p>Satelite</p>
-        </div>
-
-        <div
-          (click)="tileLayerChanged(1)"
-          class="cursor-pointer border rounded-lg p-2 text-center"
-          [ngClass]="{ 'border-orange-500': tileMode === 1 }"
-        >
-          <img
-            class="h-24 w-24 object-cover"
-            src="../../../assets/images/default-tiles.png"
-          />
-          <p>Normal</p>
+        <app-headline headline="Map type" color="#000"></app-headline>
+        <div class="flex space-x-4 mt-4">
+          <div
+            (click)="tileLayerChanged(0)"
+            class="cursor-pointer border rounded-lg p-2 text-center"
+            [ngClass]="{ 'border-orange-500': tileMode === 0 }"
+            >
+            <img
+              class="h-24 w-24 object-cover"
+              src="../../../assets/images/satelite-tiles.png"
+              />
+            <p>Satelite</p>
+          </div>
+          <div
+            (click)="tileLayerChanged(1)"
+            class="cursor-pointer border rounded-lg p-2 text-center"
+            [ngClass]="{ 'border-orange-500': tileMode === 1 }"
+            >
+            <img
+              class="h-24 w-24 object-cover"
+              src="../../../assets/images/default-tiles.png"
+              />
+            <p>Normal</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  }
 
   <!-- About Modal -->
-  <div
-    *ngIf="isAboutModalOpen"
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-    (click)="isAboutModalOpen = false"
-  >
+  @if (isAboutModalOpen) {
     <div
-      class="bg-white rounded-xl max-w-lg w-full mx-4 p-6"
-      (click)="$event.stopPropagation()"
-    >
-      <app-headline headline="About" color="#F24713"></app-headline>
-      <p class="mt-4">
-        Travellers Friend was created during the
-        <a
-          href="https://digitaleinitiativen.at/initiativen/ummahuesla-hackathon/"
-          target="_blank"
-          class="text-blue-600 underline"
-          >Umma Hüsla Hackathon</a
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      (click)="isAboutModalOpen = false"
+      >
+      <div
+        class="bg-white rounded-xl max-w-lg w-full mx-4 p-6"
+        (click)="$event.stopPropagation()"
         >
-        2022 by Daniel, Mathias and Jakob.
-      </p>
-      <p class="mt-2">
-        The source code is available on
-        <a
-          href="https://github.com/daniebeler/travellers-friend"
-          target="_blank"
-          class="text-blue-600 underline"
-          >Github</a
-        >.
-      </p>
-    </div>
-  </div>
-</main>
+        <app-headline headline="About" color="#F24713"></app-headline>
+        <p class="mt-4">
+          Travellers Friend was created during the
+          <a
+            href="https://digitaleinitiativen.at/initiativen/ummahuesla-hackathon/"
+            target="_blank"
+            class="text-blue-600 underline"
+            >Umma Hüsla Hackathon</a
+            >
+            2022 by Daniel, Mathias and Jakob.
+          </p>
+          <p class="mt-2">
+            The source code is available on
+            <a
+              href="https://github.com/daniebeler/travellers-friend"
+              target="_blank"
+              class="text-blue-600 underline"
+              >Github</a
+              >.
+            </p>
+          </div>
+        </div>
+      }
+    </main>
