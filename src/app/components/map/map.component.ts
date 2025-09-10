@@ -38,7 +38,6 @@ const waterIcon: L.Icon = L.icon({
   iconUrl: 'assets/pointer/water-new.svg',
 });
 
-
 const bikeStationsIcon: L.Icon = L.icon({
   iconSize: [48, 48],
   iconAnchor: [24, 48],
@@ -70,16 +69,12 @@ const fitnessIcon: L.Icon = L.icon({
 const preloadingRadius = 0.05;
 
 @Component({
-    selector: 'app-map',
-    templateUrl: './map.component.html',
-    standalone: true,
-    imports: [
-      CommonModule,
-      NgxLeafletLocateModule
-    ]
+  selector: 'app-map',
+  templateUrl: './map.component.html',
+  standalone: true,
+  imports: [CommonModule, NgxLeafletLocateModule],
 })
 export class MapComponent implements OnInit {
-
   settings: Settings;
 
   @Output() markerClicked = new EventEmitter<string>();
@@ -94,15 +89,14 @@ export class MapComponent implements OnInit {
   fitnessLoaded = false;
   accessibleToiletsMode = false;
 
-
   private toiletLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
     iconCreateFunction: (cluster) => {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
         className: 'toilet-cluster marker-cluster',
-        iconSize: L.point(40, 40)
+        iconSize: L.point(40, 40),
       });
-    }
+    },
   });
 
   private waterLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
@@ -110,9 +104,9 @@ export class MapComponent implements OnInit {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
         className: 'water-cluster marker-cluster',
-        iconSize: L.point(40, 40)
+        iconSize: L.point(40, 40),
       });
-    }
+    },
   });
 
   private bikeStationsLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
@@ -120,9 +114,9 @@ export class MapComponent implements OnInit {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
         className: 'bike-cluster marker-cluster',
-        iconSize: L.point(40, 40)
+        iconSize: L.point(40, 40),
       });
-    }
+    },
   });
 
   private atmLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
@@ -130,9 +124,9 @@ export class MapComponent implements OnInit {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
         className: 'atm-cluster marker-cluster',
-        iconSize: L.point(40, 40)
+        iconSize: L.point(40, 40),
       });
-    }
+    },
   });
 
   private tabletennisLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
@@ -140,9 +134,9 @@ export class MapComponent implements OnInit {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
         className: 'tabletennis-cluster marker-cluster',
-        iconSize: L.point(40, 40)
+        iconSize: L.point(40, 40),
       });
-    }
+    },
   });
 
   private fitnessLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
@@ -150,11 +144,10 @@ export class MapComponent implements OnInit {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
         className: 'fitness-cluster marker-cluster',
-        iconSize: L.point(40, 40)
+        iconSize: L.point(40, 40),
       });
-    }
+    },
   });
-
 
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
@@ -169,83 +162,95 @@ export class MapComponent implements OnInit {
     }
   );
 
-  private sateliteTiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 20,
-    minZoom: 3,
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-  });
+  private sateliteTiles = L.tileLayer(
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    {
+      maxZoom: 20,
+      minZoom: 3,
+      attribution:
+        'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    }
+  );
 
   constructor(
     private overpassService: OverpassService,
     private settingsService: SettingsService,
     private storageService: StorageService
-  ) { }
-
-  ngAfterViewInit() {
-  this.initializeMap();
-}
-
+  ) {}
 
   ngOnInit() {
-
-    //this.initializeMap()
+    this.initializeMap();
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const latitude = position.coords.latitude;
         const longitude = position.coords.longitude;
-        this.map.flyTo([latitude, longitude])
+        this.map.flyTo([latitude, longitude]);
       });
     }
 
-    this.settingsService.getSettings().subscribe(settings => {
+    this.settingsService.getSettings().subscribe((settings) => {
       this.settings = settings;
       this.reloadNodes();
-    })
+    });
 
-    this.settingsService.getTileMode().subscribe(v => {
+    this.settingsService.getTileMode().subscribe((v) => {
       if (v == 1) {
-        this.map.removeLayer(this.sateliteTiles)
-        this.map.addLayer(this.tiles)
+        this.map.removeLayer(this.sateliteTiles);
+        this.map.addLayer(this.tiles);
       } else {
-        this.map.addLayer(this.sateliteTiles)
-        this.map.removeLayer(this.tiles)
+        this.map.addLayer(this.sateliteTiles);
+        this.map.removeLayer(this.tiles);
       }
     });
   }
 
   initializeMap(latitude: number = 47.404391, longitude: number = 9.744025) {
-    console.log("init started")
+    console.log('init started');
 
-    const savedPosition = this.storageService.getCoordinates()
-    const lat = savedPosition.lat
-    const long = savedPosition.long
+    const savedPosition = this.storageService.getCoordinates();
+    const lat = savedPosition.lat;
+    const long = savedPosition.long;
 
     this.map = L.map('map', {
       center: [lat, long],
       zoom: 18,
       attributionControl: false,
       preferCanvas: true,
-      zoomControl: false
+      zoomControl: false,
     });
 
-    L.control.locate({ flyTo: true, keepCurrentZoomLevel: true, locateOptions: { enableHighAccuracy: true }, icon: "fa fa-location-arrow" }).addTo(this.map).start();
+    L.control
+      .locate({
+        flyTo: true,
+        keepCurrentZoomLevel: true,
+        locateOptions: { enableHighAccuracy: true },
+        icon: 'fa fa-location-arrow',
+      })
+      .addTo(this.map)
+      .start();
 
     this.map.on('moveend', () => {
+      this.storageService.setCoordinates(
+        this.map.getBounds().getCenter().lat,
+        this.map.getBounds().getCenter().lng
+      );
 
-      this.storageService.setCoordinates(this.map.getBounds().getCenter().lat, this.map.getBounds().getCenter().lng)
-
-      if ((this.map.getZoom() > 11) && (
-        this.map.getBounds().getCenter().lat < this.lastPreloadingBounds.lat1 ||
-        this.map.getBounds().getCenter().lng < this.lastPreloadingBounds.lng1 ||
-        this.map.getBounds().getCenter().lat > this.lastPreloadingBounds.lat2 ||
-        this.map.getBounds().getCenter().lng > this.lastPreloadingBounds.lng2
-      )) {
+      if (
+        this.map.getZoom() > 11 &&
+        (this.map.getBounds().getCenter().lat <
+          this.lastPreloadingBounds.lat1 ||
+          this.map.getBounds().getCenter().lng <
+            this.lastPreloadingBounds.lng1 ||
+          this.map.getBounds().getCenter().lat >
+            this.lastPreloadingBounds.lat2 ||
+          this.map.getBounds().getCenter().lng > this.lastPreloadingBounds.lng2)
+      ) {
         this.reloadNodes();
       }
     });
 
-    this.map.addLayer(this.tiles)
+    this.map.addLayer(this.tiles);
 
     setTimeout(() => {
       this.map.invalidateSize();
@@ -280,7 +285,7 @@ export class MapComponent implements OnInit {
       this.fitnessLayerGroup.clearLayers();
     }
 
-    this.updateLoadingState()
+    this.updateLoadingState();
 
     const mapCenter = this.map.getBounds().getCenter();
 
@@ -288,11 +293,10 @@ export class MapComponent implements OnInit {
       lat1: mapCenter.lat - preloadingRadius,
       lng1: mapCenter.lng - preloadingRadius,
       lat2: mapCenter.lat + preloadingRadius,
-      lng2: mapCenter.lng + preloadingRadius
+      lng2: mapCenter.lng + preloadingRadius,
     };
 
     if (this.settings.toilets) {
-
       if (!this.accessibleToiletsMode) {
         this.overpassService
           .getNodes(
@@ -304,11 +308,10 @@ export class MapComponent implements OnInit {
           )
           .subscribe((nodes) => {
             this.toiletsLoaded = true;
-            this.updateLoadingState()
+            this.updateLoadingState();
             this.setToiletMarker(nodes);
           });
-      }
-      else {
+      } else {
         this.overpassService
           .getNodes(
             '"amenity"="toilets"]["wheelchair"="yes"',
@@ -319,7 +322,7 @@ export class MapComponent implements OnInit {
           )
           .subscribe((nodes) => {
             this.toiletsLoaded = true;
-            this.updateLoadingState()
+            this.updateLoadingState();
             this.setToiletMarker(nodes);
           });
       }
@@ -337,11 +340,10 @@ export class MapComponent implements OnInit {
         )
         .subscribe((nodes) => {
           this.watersLoaded = true;
-          this.updateLoadingState()
+          this.updateLoadingState();
           this.setWaterMarker(nodes);
         });
     }
-
 
     if (this.settings.bikeStations) {
       this.overpassService
@@ -354,7 +356,7 @@ export class MapComponent implements OnInit {
         )
         .subscribe((nodes) => {
           this.bikeStationsLoaded = true;
-          this.updateLoadingState()
+          this.updateLoadingState();
           this.setBikeStationsMarker(nodes);
         });
     }
@@ -371,7 +373,7 @@ export class MapComponent implements OnInit {
         )
         .subscribe((nodes) => {
           this.atmsLoaded = true;
-          this.updateLoadingState()
+          this.updateLoadingState();
           this.setAtmMarker(nodes);
         });
     }
@@ -388,7 +390,7 @@ export class MapComponent implements OnInit {
         )
         .subscribe((nodes) => {
           this.tabletennisLoaded = true;
-          this.updateLoadingState()
+          this.updateLoadingState();
           this.setTabletennisMarker(nodes);
         });
     }
@@ -404,7 +406,7 @@ export class MapComponent implements OnInit {
         )
         .subscribe((nodes) => {
           this.fitnessLoaded = true;
-          this.updateLoadingState()
+          this.updateLoadingState();
           this.setFitnessMarker(nodes);
         });
     }
@@ -421,9 +423,12 @@ export class MapComponent implements OnInit {
         markerIcon = paidToiletIcon;
       }
 
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        this.callParent(node);
-      });
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
+        'click',
+        (event) => {
+          this.callParent(node);
+        }
+      );
       this.toiletLayerGroup.addLayer(marker).addTo(this.map);
     });
   }
@@ -432,21 +437,26 @@ export class MapComponent implements OnInit {
     this.waterLayerGroup.clearLayers();
     nodes.forEach((node) => {
       const markerIcon = waterIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        this.callParent(node);
-      });
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
+        'click',
+        (event) => {
+          this.callParent(node);
+        }
+      );
       this.waterLayerGroup.addLayer(marker).addTo(this.map);
     });
   }
-
 
   setBikeStationsMarker(nodes: OsmNode[]) {
     this.bikeStationsLayerGroup.clearLayers();
     nodes.forEach((node) => {
       const markerIcon = bikeStationsIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        this.callParent(node);
-      });
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
+        'click',
+        (event) => {
+          this.callParent(node);
+        }
+      );
       this.bikeStationsLayerGroup.addLayer(marker).addTo(this.map);
     });
   }
@@ -455,9 +465,12 @@ export class MapComponent implements OnInit {
     this.atmLayerGroup.clearLayers();
     nodes.forEach((node) => {
       const markerIcon = atmIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        this.callParent(node);
-      });
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
+        'click',
+        (event) => {
+          this.callParent(node);
+        }
+      );
       this.atmLayerGroup.addLayer(marker).addTo(this.map);
     });
   }
@@ -466,9 +479,12 @@ export class MapComponent implements OnInit {
     this.tabletennisLayerGroup.clearLayers();
     nodes.forEach((node) => {
       const markerIcon = tabletennisIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        this.callParent(node);
-      });
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
+        'click',
+        (event) => {
+          this.callParent(node);
+        }
+      );
       this.tabletennisLayerGroup.addLayer(marker).addTo(this.map);
     });
   }
@@ -477,9 +493,12 @@ export class MapComponent implements OnInit {
     this.fitnessLayerGroup.clearLayers();
     nodes.forEach((node) => {
       const markerIcon = fitnessIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on('click', event => {
-        this.callParent(node);
-      });
+      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
+        'click',
+        (event) => {
+          this.callParent(node);
+        }
+      );
       this.fitnessLayerGroup.addLayer(marker).addTo(this.map);
     });
   }
@@ -493,7 +512,13 @@ export class MapComponent implements OnInit {
   }
 
   updateLoadingState() {
-    const newLoadingState = (!this.watersLoaded && this.settings.water) || (!this.toiletsLoaded && this.settings.toilets) || (!this.bikeStationsLoaded && this.settings.bikeStations) || (!this.atmsLoaded && this.settings.atm) || (!this.tabletennisLoaded && this.settings.tabletennis) || (!this.fitnessLoaded && this.settings.fitness);
-    this.settingsService.updateLoadingState(newLoadingState)
+    const newLoadingState =
+      (!this.watersLoaded && this.settings.water) ||
+      (!this.toiletsLoaded && this.settings.toilets) ||
+      (!this.bikeStationsLoaded && this.settings.bikeStations) ||
+      (!this.atmsLoaded && this.settings.atm) ||
+      (!this.tabletennisLoaded && this.settings.tabletennis) ||
+      (!this.fitnessLoaded && this.settings.fitness);
+    this.settingsService.updateLoadingState(newLoadingState);
   }
 }

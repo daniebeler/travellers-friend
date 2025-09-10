@@ -2,284 +2,195 @@
 <header class="w-full bg-white shadow flex items-center px-4 py-2">
   <img class="h-8" src="../../../assets/images/logo-text.png" alt="Logo">
   <div class="ml-auto flex items-center space-x-2">
-    <button
-      class="menu-item px-3 py-1 rounded-md bg-transparent text-black hover:bg-gray-100"
-      (click)="openAboutModal()"
-      >
+    <button class="menu-item px-3 py-1 rounded-md bg-transparent text-black hover:bg-gray-100"
+      (click)="openAboutModal()">
       About
     </button>
   </div>
   @if (isLoadingData) {
-    <div class="absolute bottom-0 left-0 w-full">
-      <div class="h-1 bg-gradient-to-r from-orange-500 via-yellow-400 to-green-500 animate-pulse"></div>
-    </div>
+  <div class="absolute bottom-0 left-0 w-full">
+    <div class="h-1 bg-gradient-to-r from-orange-500 via-yellow-400 to-green-500 animate-pulse"></div>
+  </div>
   }
 </header>
 
 <!-- Main Content -->
 <main class="relative w-full h-screen">
   <div class="h-screen w-full">
-    <app-map
-      (markerClicked)="openModal($event)"
-      (openSettingsModal)="openSettingsModal()"
-    ></app-map>
+    <app-map (markerClicked)="openModal($event)" (openSettingsModal)="openSettingsModal()"></app-map>
   </div>
 
   <!-- Floating Buttons -->
-  <div class="fixed top-8 right-8">
-    <button
-      class="rounded-full bg-orange-500 text-white p-4 shadow-lg hover:bg-orange-600 transition"
-      (click)="openTileLayerModal()"
-      >
-      <i class="fas fa-layer-group"></i>
+  <div class="fixed top-18 right-8">
+    <button class="rounded-full bg-orange-500 text-white p-4 shadow-lg hover:bg-orange-600 transition"
+      (click)="openTileLayerModal()">
+      <lucide-icon [img]="layersIcon"></lucide-icon>
     </button>
   </div>
 
   <div class="fixed bottom-8 right-8">
-    <button
-      class="rounded-full bg-orange-500 text-white p-4 shadow-lg hover:bg-orange-600 transition"
-      (click)="openSettingsModal()"
-      >
-      <i class="fas fa-filter"></i>
+    <button class="rounded-full bg-orange-500 text-white p-4 shadow-lg hover:bg-orange-600 transition"
+      (click)="openSettingsModal()">
+      <lucide-icon [img]="filterIcon"></lucide-icon>
     </button>
   </div>
 
   <!-- Info Modal -->
   @if (modalIsOpen) {
-    <div
-      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      (click)="modalIsOpen = false"
-      >
-      <div
-        class="bg-white rounded-xl max-w-lg w-full mx-4 p-6 overflow-y-auto"
-        [ngClass]="modalClass"
-        (click)="$event.stopPropagation()"
-        >
-        <app-headline
-          [headline]="heading"
-          [color]="modalColor"
-        ></app-headline>
-        <!-- Tags -->
-        @if (tags) {
-          <div class="grid grid-cols-3 gap-4 mt-4 text-center">
-            @if (tags.charge) {
-              <div>
-                <p class="font-bold">Charge</p>
-                <p>{{ tags.charge }}</p>
-              </div>
-            }
-            @if (tags.fee === 'no') {
-              <div>
-                <p class="font-bold">Charge</p>
-                <p>free</p>
-              </div>
-            }
-            @if (tags.wheelchair) {
-              <div>
-                <p class="font-bold">Accessible</p>
-                <p>{{ tags.wheelchair }}</p>
-              </div>
-            }
-            @if (tags.opening_hours) {
-              <div>
-                <p class="font-bold">Opening Hours</p>
-                <p>{{ tags.opening_hours }}</p>
-              </div>
-            }
-            @if (tags.access && tags.access !== 'yes') {
-              <div>
-                <p class="font-bold">Access</p>
-                <p>{{ tags.access }}</p>
-              </div>
-            }
-            @if (tags.drinking_water === 'yes') {
-              <div>
-                <p class="font-bold">Drinking Water</p>
-                <p>Yes</p>
-              </div>
-            }
-            @if (tags.fitness_station) {
-              <div>
-                <p class="font-bold">Fitness station</p>
-                <p>{{ tags.fitness_station }}</p>
-              </div>
-            }
-            @if (tags.operator) {
-              <div>
-                <p class="font-bold">Operator</p>
-                <p>{{ tags.operator }}</p>
-              </div>
-            }
-            @if (tags.name) {
-              <div>
-                <p class="font-bold">Name</p>
-                <p>{{ tags.name }}</p>
-              </div>
-            }
-          </div>
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" (click)="modalIsOpen = false">
+    <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6 overflow-y-auto" [ngClass]="modalClass"
+      (click)="$event.stopPropagation()">
+      <app-headline [headline]="heading" [color]="modalColor"></app-headline>
+      <!-- Tags -->
+      @if (tags) {
+      <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+        @if (tags.charge) {
+        <div>
+          <p class="font-bold">Charge</p>
+          <p>{{ tags.charge }}</p>
+        </div>
         }
-        @if (tags.website) {
-          <div class="mt-4 flex flex-col items-center">
-            <p class="font-bold">Website</p>
-            <a
-              class="text-blue-600 underline"
-              href="{{ tags.website }}"
-              target="_blank"
-              rel="noopener noreferrer"
-              >
-              {{ tags.website }}
-            </a>
-          </div>
+        @if (tags.fee === 'no') {
+        <div>
+          <p class="font-bold">Charge</p>
+          <p>free</p>
+        </div>
         }
-        <div class="flex justify-center mt-6">
-          <a
-          [href]="'https://www.openstreetmap.org/edit?node=' + nodeId"
-          target="_blank"
-          class="px-6 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition"
-        >
+        @if (tags.wheelchair) {
+        <div>
+          <p class="font-bold">Accessible</p>
+          <p>{{ tags.wheelchair }}</p>
+        </div>
+        }
+        @if (tags.opening_hours) {
+        <div>
+          <p class="font-bold">Opening Hours</p>
+          <p>{{ tags.opening_hours }}</p>
+        </div>
+        }
+        @if (tags.access && tags.access !== 'yes') {
+        <div>
+          <p class="font-bold">Access</p>
+          <p>{{ tags.access }}</p>
+        </div>
+        }
+        @if (tags.drinking_water === 'yes') {
+        <div>
+          <p class="font-bold">Drinking Water</p>
+          <p>Yes</p>
+        </div>
+        }
+        @if (tags.fitness_station) {
+        <div>
+          <p class="font-bold">Fitness station</p>
+          <p>{{ tags.fitness_station }}</p>
+        </div>
+        }
+        @if (tags.operator) {
+        <div>
+          <p class="font-bold">Operator</p>
+          <p>{{ tags.operator }}</p>
+        </div>
+        }
+        @if (tags.name) {
+        <div>
+          <p class="font-bold">Name</p>
+          <p>{{ tags.name }}</p>
+        </div>
+        }
+      </div>
+      }
+      @if (tags.website) {
+      <div class="mt-4 flex flex-col items-center">
+        <p class="font-bold">Website</p>
+        <a class="text-blue-600 underline" href="{{ tags.website }}" target="_blank" rel="noopener noreferrer">
+          {{ tags.website }}
+        </a>
+      </div>
+      }
+      <div class="flex justify-center mt-6">
+        <a [href]="'https://www.openstreetmap.org/edit?node=' + nodeId" target="_blank"
+          class="px-6 py-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition">
           Add missing information
         </a>
       </div>
     </div>
   </div>
-}
+  }
 
   <!-- Settings Modal -->
   @if (isSettingsModalOpen) {
-<div
-
-    class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-    (click)="isSettingsModalOpen = false"
-  >
-    <div
-      class="bg-white rounded-xl max-w-lg w-full mx-4 p-6"
-      (click)="$event.stopPropagation()"
-    >
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" (click)="isSettingsModalOpen = false">
+    <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6" (click)="$event.stopPropagation()">
       <app-headline headline="Filter" color="#000"></app-headline>
       <div class="flex flex-col space-y-2 mt-4">
         <label class="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            [checked]="settings.water"
-            (change)="settingsChanged('water', $event)"
-              />
-            <span>Drinking Water</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              [checked]="settings.toilets"
-              (change)="settingsChanged('toilets', $event)"
-              />
-            <span>Toilets</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              [checked]="settings.bikeStations"
-              (change)="settingsChanged('bikeStations', $event)"
-              />
-            <span>Bike Repair Stations</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              [checked]="settings.atm"
-              (change)="settingsChanged('atm', $event)"
-              />
-            <span>ATMs</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              [checked]="settings.tabletennis"
-              (change)="settingsChanged('tabletennis', $event)"
-              />
-            <span>Table Tennis Tables</span>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              [checked]="settings.fitness"
-              (change)="settingsChanged('fitness', $event)"
-              />
-            <span>Outdoor Gyms</span>
-          </label>
-        </div>
+          <input type="checkbox" [checked]="settings.water" (change)="settingsChanged('water', $event)" />
+          <span>Drinking Water</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" [checked]="settings.toilets" (change)="settingsChanged('toilets', $event)" />
+          <span>Toilets</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" [checked]="settings.bikeStations" (change)="settingsChanged('bikeStations', $event)" />
+          <span>Bike Repair Stations</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" [checked]="settings.atm" (change)="settingsChanged('atm', $event)" />
+          <span>ATMs</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" [checked]="settings.tabletennis" (change)="settingsChanged('tabletennis', $event)" />
+          <span>Table Tennis Tables</span>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input type="checkbox" [checked]="settings.fitness" (change)="settingsChanged('fitness', $event)" />
+          <span>Outdoor Gyms</span>
+        </label>
       </div>
     </div>
+  </div>
   }
 
   <!-- Tile Layer Modal -->
   @if (isTileLayerModalOpen) {
-    <div
-      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      (click)="isTileLayerModalOpen = false"
-      >
-      <div
-        class="bg-white rounded-xl max-w-lg w-full mx-4 p-6"
-        (click)="$event.stopPropagation()"
-        >
-        <app-headline headline="Map type" color="#000"></app-headline>
-        <div class="flex space-x-4 mt-4">
-          <div
-            (click)="tileLayerChanged(0)"
-            class="cursor-pointer border rounded-lg p-2 text-center"
-            [ngClass]="{ 'border-orange-500': tileMode === 0 }"
-            >
-            <img
-              class="h-24 w-24 object-cover"
-              src="../../../assets/images/satelite-tiles.png"
-              />
-            <p>Satelite</p>
-          </div>
-          <div
-            (click)="tileLayerChanged(1)"
-            class="cursor-pointer border rounded-lg p-2 text-center"
-            [ngClass]="{ 'border-orange-500': tileMode === 1 }"
-            >
-            <img
-              class="h-24 w-24 object-cover"
-              src="../../../assets/images/default-tiles.png"
-              />
-            <p>Normal</p>
-          </div>
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" (click)="isTileLayerModalOpen = false">
+    <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6" (click)="$event.stopPropagation()">
+      <app-headline headline="Map type" color="#000"></app-headline>
+      <div class="flex space-x-4 mt-4">
+        <div (click)="tileLayerChanged(0)" class="cursor-pointer border rounded-lg p-2 text-center"
+          [ngClass]="{ 'border-orange-500': tileMode === 0 }">
+          <img class="h-24 w-24 object-cover" src="../../../assets/images/satelite-tiles.png" />
+          <p>Satelite</p>
+        </div>
+        <div (click)="tileLayerChanged(1)" class="cursor-pointer border rounded-lg p-2 text-center"
+          [ngClass]="{ 'border-orange-500': tileMode === 1 }">
+          <img class="h-24 w-24 object-cover" src="../../../assets/images/default-tiles.png" />
+          <p>Normal</p>
         </div>
       </div>
     </div>
+  </div>
   }
 
   <!-- About Modal -->
   @if (isAboutModalOpen) {
-    <div
-      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      (click)="isAboutModalOpen = false"
-      >
-      <div
-        class="bg-white rounded-xl max-w-lg w-full mx-4 p-6"
-        (click)="$event.stopPropagation()"
-        >
-        <app-headline headline="About" color="#F24713"></app-headline>
-        <p class="mt-4">
-          Travellers Friend was created during the
-          <a
-            href="https://digitaleinitiativen.at/initiativen/ummahuesla-hackathon/"
-            target="_blank"
-            class="text-blue-600 underline"
-            >Umma Hüsla Hackathon</a
-            >
-            2022 by Daniel, Mathias and Jakob.
-          </p>
-          <p class="mt-2">
-            The source code is available on
-            <a
-              href="https://github.com/daniebeler/travellers-friend"
-              target="_blank"
-              class="text-blue-600 underline"
-              >Github</a
-              >.
-            </p>
-          </div>
-        </div>
-      }
-    </main>
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" (click)="isAboutModalOpen = false">
+    <div class="bg-white rounded-xl max-w-lg w-full mx-4 p-6" (click)="$event.stopPropagation()">
+      <app-headline headline="About" color="#F24713"></app-headline>
+      <p class="mt-4">
+        Travellers Friend was created during the
+        <a href="https://digitaleinitiativen.at/initiativen/ummahuesla-hackathon/" target="_blank"
+          class="text-blue-600 underline">Umma Hüsla Hackathon</a>
+        2022 by Daniel, Mathias and Jakob.
+      </p>
+      <p class="mt-2">
+        The source code is available on
+        <a href="https://github.com/daniebeler/travellers-friend" target="_blank"
+          class="text-blue-600 underline">Github</a>.
+      </p>
+    </div>
+  </div>
+  }
+</main>

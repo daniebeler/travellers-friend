@@ -4,6 +4,7 @@ import { HeadlineComponent } from 'src/app/components/headline/headline.componen
 import { MapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
+import { LucideAngularModule, LayersIcon, ListFilterIcon } from 'lucide-angular';
 
 @Component({
     selector: 'app-home',
@@ -13,10 +14,13 @@ import { SettingsService } from 'src/app/services/settings.service';
     imports: [
       CommonModule,
       MapComponent,
-      HeadlineComponent
+      HeadlineComponent,
+      LucideAngularModule
     ]
 })
 export class HomePage implements OnInit {
+  readonly layersIcon = LayersIcon;
+  readonly filterIcon = ListFilterIcon;
 
   modalIsOpen = false;
   isSettingsModalOpen = false;
