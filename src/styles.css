@@ -1,60 +1,34 @@
 @import "tailwindcss";
 
+/* Import Leaflet CSS */
 @import "leaflet/dist/leaflet.css";
 
-@font-face {
-  font-family: "custom-regular";
-  src: url("/assets/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
-  font-display: swap;
-  font-weight: 300;
+/* ------------------ Fonts ------------------ */
+@layer base {
+  @font-face {
+    font-family: "roboto";
+    src: url("/assets/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
+    font-display: swap;
+    font-weight: 300 400 500 600 700 800 900;
+  }
+
+  html,
+  body {
+    @apply h-full w-full;
+  }
+
+  * {
+    font-family: "roboto", sans-serif;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
 }
 
-@font-face {
-  font-family: "custom-medium";
-  src: url("/assets/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
-  font-weight: 500;
-  font-display: swap;
-}
+@layer components {
 
-@font-face {
-  font-family: "custom-semibold";
-  src: url("/assets/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
-  font-display: swap;
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "custom-bold";
-  src: url("/assets/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
-  font-display: swap;
-  font-weight: 800;
-}
-
-.regular {
-  font-family: "custom-regular";
-}
-
-.medium {
-  font-family: "custom-medium";
-}
-
-.semibold {
-  font-family: "custom-semibold";
-}
-
-.bold {
-  font-family: "custom-bold";
-}
-
-* {
-  font-family: "custom-medium", sans-serif;
-}
-
-ion-modal {
-  --border-radius: 16px 16px 0 0;
-}
-
-.leaflet-cluster-anim .leaflet-marker-icon,
+  .leaflet-cluster-anim .leaflet-marker-icon,
 .leaflet-cluster-anim .leaflet-marker-shadow {
   -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
   -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
@@ -72,53 +46,38 @@ ion-modal {
     -o-stroke-opacity 0.3s ease-in;
   transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
 }
-
-.toilet-cluster {
-  background-color: var(--color-toilet);
-  color: var(--color-toilet);
 }
 
-.water-cluster {
-  background-color: var(--color-water);
-  color: var(--color-water);
-}
+@layer utilities {
+  .toilet-cluster {
+    @apply bg-[color:var(--color-toilet)] text-[color:var(--color-toilet)];
+  }
 
-.bike-cluster {
-  background-color: var(--color-bike);
-  color: var(--color-bike);
-}
+  .water-cluster {
+    @apply bg-[color:var(--color-water)] text-[color:var(--color-water)];
+  }
 
-.atm-cluster {
-  background-color: var(--color-atm);
-  color: var(--color-atm);
-}
+  .bike-cluster {
+    @apply bg-[color:var(--color-bike)] text-[color:var(--color-bike)];
+  }
 
-.tabletennis-cluster {
-  background-color: var(--color-tabletennis);
-  color: var(--color-tabletennis);
-}
+  .atm-cluster {
+    @apply bg-[color:var(--color-atm)] text-[color:var(--color-atm)];
+  }
 
-.fitness-cluster {
-  background-color: var(--color-fitness);
-  color: var(--color-fitness);
-}
+  .tabletennis-cluster {
+    @apply bg-[color:var(--color-tabletennis)] text-[color:var(--color-tabletennis)];
+  }
 
-.marker-cluster {
-  background-clip: padding-box;
-  border-radius: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  .fitness-cluster {
+    @apply bg-[color:var(--color-fitness)] text-[color:var(--color-fitness)];
+  }
 
-.marker-cluster div {
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.1rem;
-  font-weight: bold;
+  .marker-cluster {
+    @apply flex justify-center items-center rounded-[20px] bg-clip-padding;
+  }
+
+  .marker-cluster div {
+    @apply w-8 h-8 rounded-full flex justify-center items-center bg-white font-bold text-lg;
+  }
 }
