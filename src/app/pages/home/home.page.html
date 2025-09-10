@@ -17,8 +17,8 @@
 </header>
 
 <!-- Main Content -->
-<main class="relative w-full h-full">
-  <div id="container" class="h-full w-full">
+<main class="relative w-full h-screen">
+  <div id="container" class="h-screen w-full">
     <app-map
       (markerClicked)="openModal($event)"
       (openSettingsModal)="openSettingsModal()"
@@ -147,7 +147,7 @@
   <!-- Settings Modal -->
   @if (isSettingsModalOpen) {
 <div
-   
+
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
     (click)="isSettingsModalOpen = false"
   >

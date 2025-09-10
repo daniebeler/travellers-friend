@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { HeadlineComponent } from 'src/app/components/headline/headline.component';
+import { MapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
 
@@ -6,7 +9,12 @@ import { SettingsService } from 'src/app/services/settings.service';
     selector: 'app-home',
     templateUrl: 'home.page.html',
     styleUrls: ['home.page.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      MapComponent,
+      HeadlineComponent
+    ]
 })
 export class HomePage implements OnInit {
 

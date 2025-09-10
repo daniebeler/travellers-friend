@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 
@@ -71,7 +73,11 @@ const preloadingRadius = 0.05;
     selector: 'app-map',
     templateUrl: './map.component.html',
     styleUrls: ['./map.component.scss'],
-    standalone: false
+    standalone: true,
+    imports: [
+      CommonModule,
+      NgxLeafletLocateModule
+    ]
 })
 export class MapComponent implements OnInit {
 
@@ -176,9 +182,14 @@ export class MapComponent implements OnInit {
     private storageService: StorageService
   ) { }
 
+  ngAfterViewInit() {
+  this.initializeMap();
+}
+
+
   ngOnInit() {
 
-    this.initializeMap()
+    //this.initializeMap()
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {

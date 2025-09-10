@@ -41,7 +41,8 @@
             ],
             "styles": [
               "src/theme/variables.scss",
-              "src/global.scss"
+              "node_modules/leaflet/dist/leaflet.css",
+              "src/styles.css"
             ],
             "scripts": [],
             "aot": false,
