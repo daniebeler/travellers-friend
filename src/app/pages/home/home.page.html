@@ -1,3 +1,6 @@
+
+<div class="h-full w-full flex flex-col">
+
 <!-- Header -->
 <header class="w-full bg-white shadow flex items-center px-4 py-2">
   <img class="h-8" src="../../../assets/images/logo-text.png" alt="Logo">
@@ -15,7 +18,7 @@
 </header>
 
 <!-- Main Content -->
-<main class="relative w-full h-full">
+<main class="relative w-full flex-1">
   <div class="h-full w-full">
     <app-map (markerClicked)="openModal($event)" (openSettingsModal)="openSettingsModal()"></app-map>
   </div>
@@ -172,3 +175,4 @@
   </app-popup>
 
 </main>
+</div>
