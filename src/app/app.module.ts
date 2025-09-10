@@ -3,7 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
+import {
+  BrowserAnimationsModule,
+  provideAnimations,
+} from '@angular/platform-browser/animations';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
@@ -16,6 +19,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
@@ -23,6 +27,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
-  providers: [provideHttpClient(withInterceptorsFromDi())],
+  providers: [provideHttpClient(withInterceptorsFromDi()), provideAnimations(),],
 })
 export class AppModule {}

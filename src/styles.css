@@ -74,7 +74,7 @@
   }
 
   .marker-cluster {
-    @apply flex justify-center items-center rounded-[20px] bg-clip-padding;
+    @apply flex! justify-center items-center rounded-[20px] bg-clip-padding;
   }
 
   .marker-cluster div {

@@ -5,6 +5,7 @@ import { MapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
 import { LucideAngularModule, LayersIcon, ListFilterIcon } from 'lucide-angular';
+import { PopupComponent } from 'src/app/components/popup/popup.component';
 
 @Component({
     selector: 'app-home',
@@ -15,7 +16,8 @@ import { LucideAngularModule, LayersIcon, ListFilterIcon } from 'lucide-angular'
       CommonModule,
       MapComponent,
       HeadlineComponent,
-      LucideAngularModule
+      LucideAngularModule,
+      PopupComponent
     ]
 })
 export class HomePage implements OnInit {
