@@ -72,7 +72,6 @@ const preloadingRadius = 0.05;
 @Component({
     selector: 'app-map',
     templateUrl: './map.component.html',
-    styleUrls: ['./map.component.scss'],
     standalone: true,
     imports: [
       CommonModule,
