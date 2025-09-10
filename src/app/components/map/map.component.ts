@@ -4,14 +4,6 @@ import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 
-declare module 'leaflet' {
-  namespace control {
-    function locate(options?: any): any;
-  }
-
-  function markerClusterGroup(options?: any): MarkerClusterGroup;
-}
-
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
 import { OverpassService } from 'src/app/services/overpass.service';
