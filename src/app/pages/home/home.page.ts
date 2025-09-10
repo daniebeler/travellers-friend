@@ -3,9 +3,10 @@ import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss']
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
+    standalone: false
 })
 export class HomePage implements OnInit {
 

@@ -68,9 +68,10 @@ const fitnessIcon: L.Icon = L.icon({
 const preloadingRadius = 0.05;
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+    selector: 'app-map',
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
+    standalone: false
 })
 export class MapComponent implements OnInit {
 
