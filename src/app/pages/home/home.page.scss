@@ -1,7 +1,3 @@
-#container {
-  height: 100%;
-}
-
 .about-modal a {
   color: var(--color-traveller);
   font-weight: bold;
@@ -19,24 +15,10 @@
   height: 35px;
 }
 
-ion-toolbar {
-  --background: var(--ion-color-light);
-}
-
 .menu-item {
   text-transform: none;
   margin-right: 10px;
   color: black;
-}
-
-ion-modal {
-  --height: auto;
-}
-
-ion-fab-button {
-  --border-radius: 15px;
-  --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3),
-    0px 1px 3px 1px rgba(0, 0, 0, 0.15);
 }
 
 .tile-img {
@@ -65,13 +47,6 @@ ion-fab-button {
   p {
     color: var(--ion-color-primary);
   }
-}
-
-ion-checkbox {
-  clear: both;
-  float: left;
-  margin-top: 12px;
-  --size: 20px;
 }
 
 .water-checkbox {

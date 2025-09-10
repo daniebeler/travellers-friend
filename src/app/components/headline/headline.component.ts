@@ -1,9 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-headline',
-  templateUrl: './headline.component.html',
-  styleUrls: ['./headline.component.scss'],
+    selector: 'app-headline',
+    templateUrl: './headline.component.html',
+    standalone: true,
+    imports: [
+      CommonModule
+    ]
 })
 export class HeadlineComponent {
 

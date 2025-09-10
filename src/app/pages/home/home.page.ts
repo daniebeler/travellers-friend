@@ -1,13 +1,28 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { HeadlineComponent } from 'src/app/components/headline/headline.component';
+import { MapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
+import { LucideAngularModule, LayersIcon, ListFilterIcon } from 'lucide-angular';
+import { PopupComponent } from 'src/app/components/popup/popup.component';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
+    standalone: true,
+    imports: [
+      CommonModule,
+      MapComponent,
+      HeadlineComponent,
+      LucideAngularModule,
+      PopupComponent
+    ]
 })
 export class HomePage implements OnInit {
+  readonly layersIcon = LayersIcon;
+  readonly filterIcon = ListFilterIcon;
 
   modalIsOpen = false;
   isSettingsModalOpen = false;

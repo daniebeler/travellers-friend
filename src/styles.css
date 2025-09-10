@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Import Leaflet CSS */
+@import "leaflet/dist/leaflet.css";
+
+/* ------------------ Fonts ------------------ */
+@layer base {
+  @font-face {
+    font-family: "roboto";
+    src: url("/assets/fonts/RobotoFlex-VariableFont.ttf") format("truetype");
+    font-display: swap;
+    font-weight: 300 400 500 600 700 800 900;
+  }
+
+  html,
+  body {
+    @apply h-full w-full;
+  }
+
+  * {
+    font-family: "roboto", sans-serif;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+
+  .leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+  -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
+  -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
+  -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+.leaflet-cluster-spider-leg {
+  /* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */
+  -webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out,
+    -webkit-stroke-opacity 0.3s ease-in;
+  -moz-transition: -moz-stroke-dashoffset 0.3s ease-out,
+    -moz-stroke-opacity 0.3s ease-in;
+  -o-transition: -o-stroke-dashoffset 0.3s ease-out,
+    -o-stroke-opacity 0.3s ease-in;
+  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
+}
+}
+
+@layer utilities {
+  .toilet-cluster {
+    @apply bg-[color:var(--color-toilet)] text-[color:var(--color-toilet)];
+  }
+
+  .water-cluster {
+    @apply bg-[color:var(--color-water)] text-[color:var(--color-water)];
+  }
+
+  .bike-cluster {
+    @apply bg-[color:var(--color-bike)] text-[color:var(--color-bike)];
+  }
+
+  .atm-cluster {
+    @apply bg-[color:var(--color-atm)] text-[color:var(--color-atm)];
+  }
+
+  .tabletennis-cluster {
+    @apply bg-[color:var(--color-tabletennis)] text-[color:var(--color-tabletennis)];
+  }
+
+  .fitness-cluster {
+    @apply bg-[color:var(--color-fitness)] text-[color:var(--color-fitness)];
+  }
+
+  .marker-cluster {
+    @apply flex! justify-center items-center rounded-[20px] bg-clip-padding;
+  }
+
+  .marker-cluster div {
+    @apply w-8 h-8 rounded-full flex justify-center items-center bg-white font-bold text-lg;
+  }
+}
