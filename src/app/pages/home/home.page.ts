@@ -5,6 +5,7 @@ import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
 import { LucideAngularModule, LayersIcon, ListFilterIcon } from 'lucide-angular';
 import { PopupComponent } from 'src/app/components/popup/popup.component';
+import { Category } from 'src/app/models/Category';
 
 @Component({
     selector: 'app-home',
@@ -18,6 +19,8 @@ import { PopupComponent } from 'src/app/components/popup/popup.component';
       PopupComponent
     ]
 })
+
+
 export class HomePage implements OnInit {
   readonly layersIcon = LayersIcon;
   readonly filterIcon = ListFilterIcon;
@@ -37,6 +40,15 @@ export class HomePage implements OnInit {
   settings: Settings;
 
   tileMode = 0;
+
+  categories: Category[] = [
+    { key: 'water', label: 'Drinking Water', color: 'bg-water' },
+    { key: 'toilets', label: 'Toilets', color: 'bg-toilet' },
+    { key: 'bikeStations', label: 'Bike Repair Stations', color: 'bg-bike' },
+    { key: 'atm', label: 'ATMs', color: 'bg-atm' },
+    { key: 'tabletennis', label: 'Table Tennis Tables', color: 'bg-tabletennis' },
+    { key: 'fitness', label: 'Outdoor Gyms', color: 'bg-fitness' },
+  ];
 
   constructor(
     private settingsService: SettingsService
@@ -65,39 +77,30 @@ export class HomePage implements OnInit {
     if (this.tags.amenity === 'drinking_water') {
       this.heading = 'Drinking Water';
       this.modalClass = 'water-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-water');
     } else if (this.tags.amenity === 'bicycle_repair_station') {
       this.heading = 'Bike Repair Station'
       this.modalClass = 'bike-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-bike');
     } else if (this.tags.amenity === 'atm') {
       this.heading = 'ATM machine'
       this.modalClass = 'atm-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-atm');
     } else if (this.tags.amenity === 'bank') {
       this.heading = 'Bank with ATM'
       this.modalClass = 'atm-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-atm');
     } else if (this.tags.leisure === 'fitness_station') {
       this.heading = 'Outdoor Gym'
       this.modalClass = 'fitness-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-fitness');
     } else if (this.tags.leisure === 'pitch') {
       this.heading = 'Table Tennis Table'
       this.modalClass = 'tabletennis-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-tabletennis');
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';
       this.modalClass = 'toilet-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-toilet');
     } else if (this.tags.fee === 'yes') {
       this.heading = 'Paid Toilet';
       this.modalClass = 'toilet-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-toilet');
     } else {
       this.heading = 'Toilet';
       this.modalClass = 'toilet-modal';
-      this.modalColor = getComputedStyle(document.documentElement).getPropertyValue('--color-toilet');
     }
 
     this.nodeTags = new Array();
@@ -131,36 +134,8 @@ export class HomePage implements OnInit {
     this.settingsService.updateTileMode(mode);
   }
 
-  settingsChanged(key: string, event: any) {
-
-    if (key === 'water') {
-      this.settings.water = event.target.checked
-      this.settingsService.updateSettings(this.settings)
-    }
-
-    if (key === 'toilets') {
-      this.settings.toilets = event.target.checked
-      this.settingsService.updateSettings(this.settings)
-    }
-
-    if (key === 'bikeStations') {
-      this.settings.bikeStations = event.target.checked
-      this.settingsService.updateSettings(this.settings)
-    }
-
-    if (key === 'atm') {
-      this.settings.atm = event.target.checked
-      this.settingsService.updateSettings(this.settings)
-    }
-
-    if (key === 'tabletennis') {
-      this.settings.tabletennis = event.target.checked
-      this.settingsService.updateSettings(this.settings)
-    }
-
-    if (key === 'fitness') {
-      this.settings.fitness = event.target.checked
-      this.settingsService.updateSettings(this.settings)
-    }
+  toggleSetting(key: keyof Settings) {
+    this.settings[key] = !this.settings[key];
+    this.settingsService.updateSettings(this.settings);
   }
 }
