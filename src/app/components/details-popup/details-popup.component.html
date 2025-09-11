@@ -1,69 +1,81 @@
 @if (tags) {
-<div class="grid grid-cols-3 gap-4 justify-items-center mt-4 text-center">
+<div class="space-y-3">
   @if (tags.charge) {
-  <div>
-    <p class="font-bold">Charge</p>
-    <p>{{ tags.charge }}</p>
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-orange-600 text-white p-2">
+      <lucide-icon [img]="freeOfChargeIcon"></lucide-icon>
+    </div>
+    <span class="font-bold">Costs {{ tags.charge }}</span>
   </div>
   }
   @if (tags.fee === 'no') {
-  <div>
-    <p class="font-bold">Charge</p>
-    <p>free</p>
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-green-600 text-white p-2">
+      <lucide-icon [img]="freeOfChargeIcon"></lucide-icon>
+    </div>
+    <span class="font-bold">Free of charge</span>
   </div>
   }
-  @if (tags.wheelchair) {
-  <div>
-    <p class="font-bold">Accessible</p>
-    <p>{{ tags.wheelchair }}</p>
+  @if (tags.wheelchair === "yes") {
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-green-600 text-white p-2">
+      <lucide-icon [img]="wheelchairIcon"></lucide-icon>
+    </div>
+    <span class="font-bold">Unrestricted wheelchair access</span>
+  </div>
+  }
+  @if (tags.wheelchair === "limited") {
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-orange-600 text-white p-2">
+      <lucide-icon [img]="wheelchairIcon"></lucide-icon>
+    </div>
+    <span class="font-bold">Limited accessibility</span>
   </div>
   }
   @if (tags.opening_hours) {
-  <div>
-    <p class="font-bold">Opening Hours</p>
-    <p>{{ tags.opening_hours }}</p>
-  </div>
-  }
-  @if (tags.access && tags.access !== 'yes') {
-  <div>
-    <p class="font-bold">Access</p>
-    <p>{{ tags.access }}</p>
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-gray-600 text-white p-2">
+      <lucide-icon [img]="openingHoursIcon"></lucide-icon>
+    </div>
+    <span class="font-bold">Open {{tags.opening_hours}}</span>
   </div>
   }
   @if (tags.drinking_water === 'yes') {
-  <div>
-    <p class="font-bold">Drinking Water</p>
-    <p>Yes</p>
-  </div>
-  }
-  @if (tags.fitness_station) {
-  <div>
-    <p class="font-bold">Fitness station</p>
-    <p>{{ tags.fitness_station }}</p>
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-blue-600 text-white p-2">
+      <lucide-icon [img]="drinkingWaterIcon"></lucide-icon>
+    </div>
+    <span class="font-semibold">Drinking water</span>
   </div>
   }
   @if (tags.operator) {
-  <div>
-    <p class="font-bold">Operator</p>
-    <p>{{ tags.operator }}</p>
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-gray-600 text-white p-2">
+      <lucide-icon [img]="elevatorOperatorIcon"></lucide-icon>
+    </div>
+    <span class="font-semibold">Operated by {{ tags.operator }}</span>
   </div>
   }
   @if (tags.name) {
-  <div>
-    <p class="font-bold">Name</p>
-    <p>{{ tags.name }}</p>
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-gray-600 text-white p-2">
+      <lucide-icon [img]="nameIcon"></lucide-icon>
+    </div>
+    <span class="font-semibold">{{ tags.name }}</span>
+  </div>
+  }
+
+  @if (tags.website) {
+  <div class="flex items-center space-x-2">
+    <div class="rounded-full bg-gray-600 text-white p-2">
+      <lucide-icon [img]="websiteIcon"></lucide-icon>
+    </div>
+    <a class="text-blue-600 underline" href="{{ tags.website }}" target="_blank" rel="noopener noreferrer">
+      {{ tags.website }}
+    </a>
   </div>
   }
 </div>
-
-@if (tags.website) {
-<div class="mt-4 flex flex-col items-center">
-  <p class="font-bold">Website</p>
-  <a class="text-blue-600 underline" href="{{ tags.website }}" target="_blank" rel="noopener noreferrer">
-    {{ tags.website }}
-  </a>
-</div>
-}
 }
 
 <div class="flex justify-center mt-6">

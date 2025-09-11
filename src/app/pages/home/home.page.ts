@@ -78,6 +78,8 @@ export class HomePage implements OnInit {
     this.nodeId = JSON.parse(data).id;
     this.tags = JSON.parse(data).tags;
 
+    console.log(this.tags)
+
     if (this.tags.amenity === 'drinking_water') {
       this.heading = 'Drinking Water';
       this.modalClass = 'water-modal';
