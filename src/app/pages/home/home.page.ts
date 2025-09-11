@@ -3,24 +3,28 @@ import { Component, OnInit } from '@angular/core';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
-import { LucideAngularModule, LayersIcon, ListFilterIcon } from 'lucide-angular';
+import {
+  LucideAngularModule,
+  LayersIcon,
+  ListFilterIcon,
+} from 'lucide-angular';
 import { PopupComponent } from 'src/app/components/popup/popup.component';
 import { Category } from 'src/app/models/Category';
+import { Tags } from 'src/app/models/Tags';
+import { DetailsPopupComponent } from 'src/app/components/details-popup/details-popup.component';
 
 @Component({
-    selector: 'app-home',
-    templateUrl: 'home.page.html',
-    styleUrls: ['home.page.scss'],
-    standalone: true,
-    imports: [
-      CommonModule,
-      MapComponent,
-      LucideAngularModule,
-      PopupComponent
-    ]
+  selector: 'app-home',
+  templateUrl: 'home.page.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MapComponent,
+    LucideAngularModule,
+    PopupComponent,
+    DetailsPopupComponent,
+  ],
 })
-
-
 export class HomePage implements OnInit {
   readonly layersIcon = LayersIcon;
   readonly filterIcon = ListFilterIcon;
@@ -30,7 +34,7 @@ export class HomePage implements OnInit {
   isTileLayerModalOpen = false;
   isAboutModalOpen = false;
   nodeTags: Array<any>;
-  tags: any;
+  tags: Tags;
   nodeId: number;
   heading = '';
   modalClass = '';
@@ -46,28 +50,28 @@ export class HomePage implements OnInit {
     { key: 'toilets', label: 'Toilets', color: 'bg-toilet' },
     { key: 'bikeStations', label: 'Bike Repair Stations', color: 'bg-bike' },
     { key: 'atm', label: 'ATMs', color: 'bg-atm' },
-    { key: 'tabletennis', label: 'Table Tennis Tables', color: 'bg-tabletennis' },
+    {
+      key: 'tabletennis',
+      label: 'Table Tennis Tables',
+      color: 'bg-tabletennis',
+    },
     { key: 'fitness', label: 'Outdoor Gyms', color: 'bg-fitness' },
   ];
 
-  constructor(
-    private settingsService: SettingsService
-  ) {
-  }
-
+  constructor(private settingsService: SettingsService) {}
 
   ngOnInit() {
-    this.settingsService.getSettings().subscribe(settings => {
+    this.settingsService.getSettings().subscribe((settings) => {
       this.settings = settings;
-    })
+    });
 
-    this.settingsService.getTileMode().subscribe(tileMode => {
+    this.settingsService.getTileMode().subscribe((tileMode) => {
       this.tileMode = tileMode;
-    })
+    });
 
-    this.settingsService.getLoadingState().subscribe(loadingState => {
+    this.settingsService.getLoadingState().subscribe((loadingState) => {
       this.isLoadingData = loadingState;
-    })
+    });
   }
 
   openModal(data: string) {
@@ -78,19 +82,19 @@ export class HomePage implements OnInit {
       this.heading = 'Drinking Water';
       this.modalClass = 'water-modal';
     } else if (this.tags.amenity === 'bicycle_repair_station') {
-      this.heading = 'Bike Repair Station'
+      this.heading = 'Bike Repair Station';
       this.modalClass = 'bike-modal';
     } else if (this.tags.amenity === 'atm') {
-      this.heading = 'ATM machine'
+      this.heading = 'ATM machine';
       this.modalClass = 'atm-modal';
     } else if (this.tags.amenity === 'bank') {
-      this.heading = 'Bank with ATM'
+      this.heading = 'Bank with ATM';
       this.modalClass = 'atm-modal';
     } else if (this.tags.leisure === 'fitness_station') {
-      this.heading = 'Outdoor Gym'
+      this.heading = 'Outdoor Gym';
       this.modalClass = 'fitness-modal';
     } else if (this.tags.leisure === 'pitch') {
-      this.heading = 'Table Tennis Table'
+      this.heading = 'Table Tennis Table';
       this.modalClass = 'tabletennis-modal';
     } else if (this.tags.fee === 'no') {
       this.heading = 'Free Toilet';

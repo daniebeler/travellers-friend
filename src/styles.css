@@ -90,4 +90,29 @@
   .marker-cluster div {
     @apply w-8 h-8 rounded-full flex justify-center items-center bg-white font-bold text-lg;
   }
+
+  .water-modal .add-info-btn {
+  background: var(--color-water);
+}
+
+.toilet-modal .add-info-btn {
+  background: var(--color-toilet);
+}
+
+.bike-modal .add-info-btn {
+  background: var(--color-bike);
+}
+
+.atm-modal .add-info-btn {
+  background: var(--color-atm);
+}
+
+.tabletennis-modal .add-info-btn {
+  background: var(--color-tabletennis);
+}
+
+.fitness-modal .add-info-btn {
+  background: var(--color-fitness);
+}
+
 }
