@@ -44,7 +44,7 @@
               "node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
             ],
-            "scripts": [  "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"],
+            "scripts": [],
             "aot": false,
             "extractLicenses": false,
             "sourceMap": true,

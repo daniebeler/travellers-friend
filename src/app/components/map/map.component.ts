@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
+
+import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
+
 
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
 import { OverpassService } from 'src/app/services/overpass.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { StorageService } from 'src/app/services/storage.service';
+
+console.log('markerClusterGroup available?', (L as any).markerClusterGroup);
 
 const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
