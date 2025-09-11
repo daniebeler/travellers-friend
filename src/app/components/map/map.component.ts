@@ -220,7 +220,7 @@ export class MapComponent implements OnInit {
       zoom: 18,
       attributionControl: false,
       preferCanvas: true,
-      zoomControl: false,
+      zoomControl: false
     });
 
     L.control
