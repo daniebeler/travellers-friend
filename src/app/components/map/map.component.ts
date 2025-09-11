@@ -185,7 +185,17 @@ export class MapComponent implements OnInit {
     private storageService: StorageService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+
+    (window as any).L = L;
+
+    // dynamic import of exact dist file forces runtime execution
+    await import('leaflet.markercluster/dist/leaflet.markercluster.js');
+
+    console.log('markerClusterGroup available fief?', (L as any).markerClusterGroup);
+
+
+
     this.initializeMap();
 
     if (navigator.geolocation) {
