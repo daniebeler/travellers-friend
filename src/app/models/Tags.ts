@@ -11,4 +11,6 @@ export interface Tags {
   name?: string;
   website?: string;
   charge?: string;
+  brand?: string;
+  level?: string;
 }
