@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
-import 'leaflet.markercluster';
-
+import * as MarkerCluster from 'leaflet.markercluster';
 import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
-
+const _keepMarkerCluster = MarkerCluster;
 
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
