@@ -12,6 +12,10 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 console.log('markerClusterGroup available?', (L as any).markerClusterGroup);
+(async () => {
+  await import('leaflet.markercluster');
+  console.log('markerClusterGroup available now?', (L as any).markerClusterGroup);
+})();
 
 const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
