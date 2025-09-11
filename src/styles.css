@@ -1,10 +1,13 @@
 @import "tailwindcss";
-
-/* Import Leaflet CSS */
 @import "leaflet/dist/leaflet.css";
 
-/* ------------------ Fonts ------------------ */
+@theme {
+  --color-traveller: #ff6900;
+  --color-traveller-shade: #f54900;
+}
+
 @layer base {
+
   @font-face {
     font-family: "roboto";
     src: url("/assets/fonts/RobotoFlex-VariableFont.ttf") format("truetype");

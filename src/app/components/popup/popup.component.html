@@ -1,16 +1,17 @@
 @if (show) {
-  <div @fadeBackdrop class="fixed inset-0 z-40 bg-[#0006] will-change-opacity"></div>
+<div @fadeBackdrop class="fixed inset-0 z-40 bg-[#0006] will-change-opacity"></div>
 
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-3">
-    <div class="bg-gray-100 rounded-2xl p-6 w-full max-w-2xl shadow-xl relative will-change-transform will-change-opacity max-h-full overflow-auto" @fadeScale>
-      <div class="w-full flex justify-between items-center pb-5">
-        <span class="font-bold text-xl">{{ title }}</span>
-        <button (click)="onBackdropClick()"
-          class="bg-surface/50 border border-gray-700 rounded-full p-2 hover:bg-surface/80">
-          <lucide-icon [img]="closeIcon" size="20"></lucide-icon>
-        </button>
-      </div>
-      <ng-content></ng-content>
+<div class="fixed inset-0 z-50 flex items-center justify-center p-3" (click)="closePopup()">
+  <div
+    class="bg-gray-100 rounded-2xl p-6 w-full max-w-2xl shadow-xl relative will-change-transform will-change-opacity max-h-full overflow-auto"
+    @fadeScale (click)="$event.stopPropagation()">
+    <div class="w-full flex justify-between items-center pb-5">
+      <span class="font-bold text-xl">{{ title }}</span>
+      <button (click)="closePopup()" class="bg-surface/50 border border-gray-700 rounded-full p-2 hover:bg-surface/80">
+        <lucide-icon [img]="closeIcon" size="20"></lucide-icon>
+      </button>
     </div>
+    <ng-content></ng-content>
   </div>
-  }
+</div>
+}

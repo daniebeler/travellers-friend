@@ -58,7 +58,7 @@ export class PopupComponent implements OnChanges, OnDestroy {
     document.body.style.overflow = '';
   }
 
-  onBackdropClick() {
+  closePopup() {
     this.close.emit();
   }
 }
