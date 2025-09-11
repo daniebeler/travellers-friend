@@ -208,8 +208,7 @@ export class MapComponent implements OnInit {
     });
   }
 
-  initializeMap(latitude: number = 47.404391, longitude: number = 9.744025) {
-    console.log('init started');
+  initializeMap() {
 
     const savedPosition = this.storageService.getCoordinates();
     const lat = savedPosition.lat;

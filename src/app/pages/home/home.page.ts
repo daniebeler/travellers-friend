@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { HeadlineComponent } from 'src/app/components/headline/headline.component';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
@@ -15,7 +14,6 @@ import { PopupComponent } from 'src/app/components/popup/popup.component';
     imports: [
       CommonModule,
       MapComponent,
-      HeadlineComponent,
       LucideAngularModule,
       PopupComponent
     ]

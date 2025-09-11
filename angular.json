@@ -40,7 +40,6 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "src/theme/variables.scss",
               "node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
             ],

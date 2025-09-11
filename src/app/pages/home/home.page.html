@@ -45,9 +45,9 @@
   </div>
 
 
-  <app-popup [show]="modalIsOpen" (close)="modalIsOpen = false" [title]="heading">
+  <app-popup [show]="modalIsOpen" (close)="modalIsOpen = false" [title]="heading" [class]="modalClass">
     @if (tags) {
-    <div class="grid grid-cols-3 gap-4 mt-4 text-center">
+    <div class="grid grid-cols-3 gap-4 justify-items-center mt-4 text-center">
       @if (tags.charge) {
       <div>
         <p class="font-bold">Charge</p>
@@ -116,7 +116,7 @@
 
     <div class="flex justify-center mt-6">
       <a [href]="'https://www.openstreetmap.org/edit?node=' + nodeId" target="_blank"
-        class="px-6 py-2 rounded-full bg-traveller text-white hover:bg-traveller-shade transition">
+        class="px-6 py-2 rounded-full add-info-btn text-white text-sm transition">
         Add missing information
       </a>
     </div>

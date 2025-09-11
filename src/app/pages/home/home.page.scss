@@ -1,116 +1,23 @@
-.about-modal a {
-  color: var(--color-traveller);
-  font-weight: bold;
-  text-decoration: none;
+.water-modal .add-info-btn {
+  background: var(--color-water);
 }
 
-.add-info-btn {
-  text-transform: initial;
-  --box-shadow: none;
-  border-radius: 9px;
+.toilet-modal .add-info-btn {
+  background: var(--color-toilet);
 }
 
-.toolbar-img {
-  margin: 15px 20px;
-  height: 35px;
+.bike-modal .add-info-btn {
+  background: var(--color-bike);
 }
 
-.menu-item {
-  text-transform: none;
-  margin-right: 10px;
-  color: black;
+.atm-modal .add-info-btn {
+  background: var(--color-atm);
 }
 
-.tile-img {
-  width: 60px;
-  height: 60px;
-  border-radius: 8px;
+.tabletennis-modal .add-info-btn {
+  background: var(--color-tabletennis);
 }
 
-.tile-button-wrapper {
-  margin: 6px;
-
-  p {
-    margin-top: 3px;
-  }
-
-  :hover {
-    cursor: pointer;
-  }
-}
-
-.active-tile-button {
-  img {
-    border: var(--ion-color-primary) 3px solid;
-  }
-
-  p {
-    color: var(--ion-color-primary);
-  }
-}
-
-.water-checkbox {
-  --checkbox-background-checked: var(--color-water);
-  --border-color-checked: var(--color-water);
-}
-
-.toilet-checkbox {
-  --checkbox-background-checked: var(--color-toilet);
-  --border-color-checked: var(--color-toilet);
-}
-
-.bike-checkbox {
-  --checkbox-background-checked: var(--color-bike);
-  --border-color-checked: var(--color-bike);
-}
-
-.atm-checkbox {
-  --checkbox-background-checked: var(--color-atm);
-  --border-color-checked: var(--color-atm);
-}
-
-.tabletennis-checkbox {
-  --checkbox-background-checked: var(--color-tabletennis);
-  --border-color-checked: var(--color-tabletennis);
-}
-
-.fitness-checkbox {
-  --checkbox-background-checked: var(--color-fitness);
-  --border-color-checked: var(--color-fitness);
-}
-
-.water-modal {
-  .add-info-btn {
-    --background: var(--color-water);
-  }
-}
-
-.toilet-modal {
-  .add-info-btn {
-    --background: var(--color-toilet);
-  }
-}
-
-.bike-modal {
-  .add-info-btn {
-    --background: var(--color-bike);
-  }
-}
-
-.atm-modal {
-  .add-info-btn {
-    --background: var(--color-atm);
-  }
-}
-
-.tabletennis-modal {
-  .add-info-btn {
-    --background: var(--color-tabletennis);
-  }
-}
-
-.fitness-modal {
-  .add-info-btn {
-    --background: var(--color-fitness);
-  }
+.fitness-modal .add-info-btn {
+  background: var(--color-fitness);
 }

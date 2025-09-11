@@ -4,6 +4,13 @@
 @theme {
   --color-traveller: #ff6900;
   --color-traveller-shade: #f54900;
+
+  --color-toilet: #000;
+  --color-water: #007fff;
+  --color-atm: #168118;
+  --color-bike: #FF4630;
+  --color-tabletennis: #59BDFF;
+  --color-fitness: #6247AA;
 }
 
 @layer base {
@@ -53,11 +60,11 @@
 
 @layer utilities {
   .toilet-cluster {
-    @apply bg-[color:var(--color-toilet)] text-[color:var(--color-toilet)];
+    @apply bg-toilet text-toilet;
   }
 
   .water-cluster {
-    @apply bg-[color:var(--color-water)] text-[color:var(--color-water)];
+    @apply bg-water text-water;
   }
 
   .bike-cluster {
