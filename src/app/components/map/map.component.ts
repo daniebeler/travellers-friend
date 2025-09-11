@@ -1,9 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import * as L from 'leaflet';
-import * as MarkerCluster from 'leaflet.markercluster';
+
 import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
-const _keepMarkerCluster = MarkerCluster;
 
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
@@ -11,11 +9,9 @@ import { OverpassService } from 'src/app/services/overpass.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { StorageService } from 'src/app/services/storage.service';
 
-console.log('markerClusterGroup available?', (L as any).markerClusterGroup);
-(async () => {
-  await import('leaflet.markercluster');
-  console.log('markerClusterGroup available now?', (L as any).markerClusterGroup);
-})();
+import 'leaflet.markercluster';
+
+declare const L: any;
 
 const toiletIcon: L.Icon = L.icon({
   iconSize: [48, 48],
@@ -96,7 +92,7 @@ export class MapComponent implements OnInit {
   fitnessLoaded = false;
   accessibleToiletsMode = false;
 
-  private toiletLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+  private toiletLayerGroup: any = L.markerClusterGroup({
     iconCreateFunction: (cluster) => {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
@@ -106,7 +102,7 @@ export class MapComponent implements OnInit {
     },
   });
 
-  private waterLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+  private waterLayerGroup: any = L.markerClusterGroup({
     iconCreateFunction: (cluster) => {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
@@ -116,7 +112,7 @@ export class MapComponent implements OnInit {
     },
   });
 
-  private bikeStationsLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+  private bikeStationsLayerGroup: any = L.markerClusterGroup({
     iconCreateFunction: (cluster) => {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
@@ -126,7 +122,7 @@ export class MapComponent implements OnInit {
     },
   });
 
-  private atmLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+  private atmLayerGroup: any = L.markerClusterGroup({
     iconCreateFunction: (cluster) => {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
@@ -136,7 +132,7 @@ export class MapComponent implements OnInit {
     },
   });
 
-  private tabletennisLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+  private tabletennisLayerGroup: any = L.markerClusterGroup({
     iconCreateFunction: (cluster) => {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
@@ -146,7 +142,7 @@ export class MapComponent implements OnInit {
     },
   });
 
-  private fitnessLayerGroup: L.MarkerClusterGroup = L.markerClusterGroup({
+  private fitnessLayerGroup: any = L.markerClusterGroup({
     iconCreateFunction: (cluster) => {
       return L.divIcon({
         html: `<div>${cluster.getChildCount()}</div>`,
@@ -187,7 +183,7 @@ export class MapComponent implements OnInit {
 
   async ngOnInit() {
 
-    (window as any).L = L;
+
 
     // dynamic import of exact dist file forces runtime execution
     await import('leaflet.markercluster/dist/leaflet.markercluster.js');
