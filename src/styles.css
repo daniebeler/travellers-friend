@@ -115,4 +115,7 @@
   background: var(--color-fitness);
 }
 
+.leaflet-control-locate {
+  @apply hidden;
+}
 }

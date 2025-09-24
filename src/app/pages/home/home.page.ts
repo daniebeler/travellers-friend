@@ -31,7 +31,6 @@ export class HomePage implements OnInit {
 
   modalIsOpen = false;
   isSettingsModalOpen = false;
-  isTileLayerModalOpen = false;
   isAboutModalOpen = false;
   nodeTags: Array<any>;
   tags: Tags;
@@ -126,10 +125,6 @@ export class HomePage implements OnInit {
 
   openSettingsModal() {
     this.isSettingsModalOpen = true;
-  }
-
-  openTileLayerModal() {
-    this.isTileLayerModalOpen = true;
   }
 
   openAboutModal() {

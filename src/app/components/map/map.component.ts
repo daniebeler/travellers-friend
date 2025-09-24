@@ -10,6 +10,12 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { StorageService } from 'src/app/services/storage.service';
 
 import 'leaflet.markercluster';
+import {
+  LocateFixedIcon,
+  LocateIcon,
+  LocateOffIcon,
+  LucideAngularModule,
+} from 'lucide-angular';
 
 declare const L: any;
 
@@ -75,13 +81,20 @@ const preloadingRadius = 0.05;
   selector: 'app-map',
   templateUrl: './map.component.html',
   standalone: true,
-  imports: [CommonModule, NgxLeafletLocateModule],
+  imports: [CommonModule, NgxLeafletLocateModule, LucideAngularModule],
 })
 export class MapComponent implements OnInit {
+  readonly locateIcon = LocateIcon;
+  readonly locateFixedIcon = LocateFixedIcon;
+  readonly locateOffIcon = LocateOffIcon;
+
   settings: Settings;
 
   @Output() markerClicked = new EventEmitter<string>();
   @Output() openSettingsModal = new EventEmitter();
+
+  currentPosition: L.LatLng | null = null;
+  isAtCurrentLocation = false;
 
   map;
   toiletsLoaded = false;
@@ -185,11 +198,14 @@ export class MapComponent implements OnInit {
     this.initializeMap();
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-        this.map.flyTo([latitude, longitude]);
-      });
+      if (navigator.geolocation) {
+        navigator.geolocation.watchPosition((pos) => {
+          this.currentPosition = L.latLng(
+            pos.coords.latitude,
+            pos.coords.longitude
+          );
+        });
+      }
     }
 
     this.settingsService.getSettings().subscribe((settings) => {
@@ -209,7 +225,6 @@ export class MapComponent implements OnInit {
   }
 
   initializeMap() {
-
     const savedPosition = this.storageService.getCoordinates();
     const lat = savedPosition.lat;
     const long = savedPosition.long;
@@ -219,7 +234,7 @@ export class MapComponent implements OnInit {
       zoom: 18,
       attributionControl: false,
       preferCanvas: true,
-      zoomControl: true
+      zoomControl: true,
     });
 
     L.control
@@ -233,10 +248,14 @@ export class MapComponent implements OnInit {
       .start();
 
     this.map.on('moveend', () => {
-      this.storageService.setCoordinates(
-        this.map.getBounds().getCenter().lat,
-        this.map.getBounds().getCenter().lng
-      );
+      const center = this.map.getCenter();
+
+      if (this.currentPosition) {
+        const distance = center.distanceTo(this.currentPosition);
+        this.isAtCurrentLocation = distance < 20;
+      }
+
+      this.storageService.setCoordinates(center.lat, center.lng);
 
       if (
         this.map.getZoom() > 11 &&
@@ -253,10 +272,6 @@ export class MapComponent implements OnInit {
     });
 
     this.map.addLayer(this.tiles);
-
-    setTimeout(() => {
-      this.map.invalidateSize();
-    }, 0);
   }
 
   reloadNodes() {
@@ -511,6 +526,34 @@ export class MapComponent implements OnInit {
 
   openSettingsModalInParent() {
     this.openSettingsModal.emit();
+  }
+
+  goToCurrentLocation() {
+    if (!navigator.geolocation) {
+      console.log('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.currentPosition = L.latLng(
+          pos.coords.latitude,
+          pos.coords.longitude
+        );
+        this.map.flyTo(this.currentPosition, 18, {
+          animate: true,
+          duration: 1.5,
+        });
+      },
+      (err) => {
+        if (err.code === err.PERMISSION_DENIED) {
+          console.log('Location permission denied by user.');
+        } else {
+          console.log('Could not get your location:', err.message);
+        }
+      },
+      { enableHighAccuracy: true }
+    );
   }
 
   updateLoadingState() {

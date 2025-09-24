@@ -5,3 +5,27 @@
     </div>
   </div>
 </div>
+
+@if (currentPosition) {
+@if (isAtCurrentLocation) {
+<div class="fixed bottom-24 right-8">
+  <button class="rounded-full bg-gray-800 text-blue-600 p-4 shadow-lg hover:bg-gray-900 transition"
+    (click)="goToCurrentLocation()">
+    <lucide-icon [img]="locateFixedIcon"></lucide-icon>
+  </button>
+</div>
+} @else {
+<div class="fixed bottom-24 right-8">
+  <button class="rounded-full bg-gray-800 text-white p-4 shadow-lg hover:bg-gray-900 transition"
+    (click)="goToCurrentLocation()">
+    <lucide-icon [img]="locateIcon"></lucide-icon>
+  </button>
+</div>
+}
+} @else {
+  <div class="fixed bottom-24 right-8">
+  <button (click)="goToCurrentLocation()" class="rounded-full bg-gray-800 text-red-500 p-4 shadow-lg hover:bg-gray-900 transition">
+    <lucide-icon [img]="locateOffIcon"></lucide-icon>
+  </button>
+</div>
+}
