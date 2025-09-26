@@ -16,7 +16,6 @@ import {
   LocateOffIcon,
   LucideAngularModule,
 } from 'lucide-angular';
-import { environment } from 'src/environments/environment';
 
 declare const L: any;
 
@@ -168,14 +167,18 @@ export class MapComponent implements OnInit {
 
   private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
 
-  private tiles = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.{ext}', {
-	minZoom: 0,
-	maxZoom: 20,
-	attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-	ext: 'png'
-});
+  private tiles = L.tileLayer(
+    // eslint-disable-next-line max-len
+    'https://tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=jf5kUBdghTSZetSsy8bqMOqYMeJ57shUT3rkMG1vGTD3EhD8tk83dglqoYPsBtvL',
+    {
+      maxZoom: 20,
+      minZoom: 3,
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    }
+  );
 
- private sateliteTiles = L.tileLayer(
+  private sateliteTiles = L.tileLayer(
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     {
       maxZoom: 20,
@@ -184,6 +187,7 @@ export class MapComponent implements OnInit {
         'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
     }
   );
+
   constructor(
     private overpassService: OverpassService,
     private settingsService: SettingsService,
