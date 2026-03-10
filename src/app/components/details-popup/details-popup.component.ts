@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import {
   AccessibilityIcon,
@@ -19,7 +19,7 @@ import { TagInfoComponent } from '../tag-info/tag-info.component';
 
 @Component({
   selector: 'app-details-popup',
-  imports: [CommonModule, LucideAngularModule, TagInfoComponent],
+  imports: [LucideAngularModule, TagInfoComponent],
   templateUrl: './details-popup.component.html',
 })
 export class DetailsPopupComponent {

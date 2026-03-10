@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
@@ -81,7 +81,7 @@ const preloadingRadius = 0.05;
   selector: 'app-map',
   templateUrl: './map.component.html',
   standalone: true,
-  imports: [CommonModule, NgxLeafletLocateModule, LucideAngularModule],
+  imports: [NgxLeafletLocateModule, LucideAngularModule],
 })
 export class MapComponent implements OnInit {
   readonly locateIcon = LocateIcon;

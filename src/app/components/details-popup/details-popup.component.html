@@ -1,5 +1,7 @@
 @if (tags) {
-  <app-tag-info *ngFor="let tag of tagDisplayList" [tag]="tag"></app-tag-info>
+  @for (tag of tagDisplayList; track tag) {
+    <app-tag-info [tag]="tag"></app-tag-info>
+  }
 }
 
 <div class="flex justify-center mt-6">
