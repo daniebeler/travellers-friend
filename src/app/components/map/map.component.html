@@ -1,31 +1,39 @@
-<div class="h-full">
-  <div class="h-full z-0 relative">
-    <div class="h-full">
-      <div id="map" class="h-full"></div>
-    </div>
+<div class="h-full relative overflow-hidden">
+  <mgl-map [mapStyle]="currentStyle" [zoom]="[14]" [center]="[initialCoords.long, initialCoords.lat]"
+    (mapLoad)="onMapLoad($event)" (moveEnd)="onMapMove($event)" class="h-full w-full">
+
+    @for (source of mapSources; track source.id) {
+    <mgl-geojson-source [id]="source.id" [cluster]="false">
+    </mgl-geojson-source>
+
+    <mgl-layer [id]="source.id + '-point-icon'" type="symbol" [source]="source.id"
+      [filter]="['!', ['has', 'point_count']]" [layout]="{
+      'icon-image': ['get', 'icon-name'],
+      'icon-size': 1,
+      'icon-allow-overlap': true,
+      'icon-anchor': 'bottom'
+    }" (layerClick)="onMarkerClick($event)">
+    </mgl-layer>
+
+    <mgl-layer [id]="source.id + '-debug-point'" type="circle" [source]="source.id" [paint]="{
+        'circle-radius': 10,
+        'circle-color': source.color,
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#ffffff'
+      }">
+    </mgl-layer>
+    }
+
+    <mgl-control mglGeolocate [positionOptions]="{enableHighAccuracy: true}" [trackUserLocation]="true"></mgl-control>
+    <mgl-control mglNavigation position="top-right"></mgl-control>
+  </mgl-map>
+
+  <div class="fixed bottom-24 right-8 flex flex-col gap-2">
+    <button (click)="goToCurrentLocation()"
+      [class]="isAtCurrentLocation ? 'bg-gray-800 text-blue-600' : 'bg-gray-800 text-white'"
+      class="rounded-full p-4 shadow-lg hover:bg-gray-900 transition">
+      <lucide-icon
+        [img]="isAtCurrentLocation ? locateFixedIcon : (currentPosition ? locateIcon : locateOffIcon)"></lucide-icon>
+    </button>
   </div>
 </div>
-
-@if (currentPosition) {
-@if (isAtCurrentLocation) {
-<div class="fixed bottom-24 right-8">
-  <button class="rounded-full bg-gray-800 text-blue-600 p-4 shadow-lg hover:bg-gray-900 transition"
-    (click)="goToCurrentLocation()">
-    <lucide-icon [img]="locateFixedIcon"></lucide-icon>
-  </button>
-</div>
-} @else {
-<div class="fixed bottom-24 right-8">
-  <button class="rounded-full bg-gray-800 text-white p-4 shadow-lg hover:bg-gray-900 transition"
-    (click)="goToCurrentLocation()">
-    <lucide-icon [img]="locateIcon"></lucide-icon>
-  </button>
-</div>
-}
-} @else {
-  <div class="fixed bottom-24 right-8">
-  <button (click)="goToCurrentLocation()" class="rounded-full bg-gray-800 text-red-500 p-4 shadow-lg hover:bg-gray-900 transition">
-    <lucide-icon [img]="locateOffIcon"></lucide-icon>
-  </button>
-</div>
-}

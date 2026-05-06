@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { MapComponent } from 'src/app/components/map/map.component';
+import { MyMapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
 import {
@@ -19,7 +19,7 @@ import { DetailsPopupComponent } from 'src/app/components/details-popup/details-
   standalone: true,
   imports: [
     CommonModule,
-    MapComponent,
+    MyMapComponent,
     LucideAngularModule,
     PopupComponent,
     DetailsPopupComponent,

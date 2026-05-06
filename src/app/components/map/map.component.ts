@@ -1,7 +1,22 @@
-
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
-import { NgxLeafletLocateModule } from '@runette/ngx-leaflet-locate';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  NgxMapLibreGLModule,
+  MapComponent as MglMapComponent,
+} from '@maplibre/ngx-maplibre-gl';
+import {
+  LucideAngularModule,
+  LocateIcon,
+  LocateFixedIcon,
+  LocateOffIcon,
+} from 'lucide-angular';
+import * as maplibregl from 'maplibre-gl';
 
 import { OsmNode } from 'src/app/models/OsmNode';
 import { Settings } from 'src/app/models/Settings';
@@ -9,340 +24,162 @@ import { OverpassService } from 'src/app/services/overpass.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { StorageService } from 'src/app/services/storage.service';
 
-import 'leaflet.markercluster';
-import {
-  LocateFixedIcon,
-  LocateIcon,
-  LocateOffIcon,
-  LucideAngularModule,
-} from 'lucide-angular';
-
-declare const L: any;
-
-const toiletIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/toilet-new.svg',
-});
-
-const freeToiletIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/toilet-free-new.svg',
-});
-
-const paidToiletIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/toilet-paid-new.svg',
-});
-
-const waterIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/water-new.svg',
-});
-
-const bikeStationsIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/bike-station-new.svg',
-});
-
-const atmIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/atm-new.svg',
-});
-
-const tabletennisIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/table-tennis-new.svg',
-});
-
-const fitnessIcon: L.Icon = L.icon({
-  iconSize: [48, 48],
-  iconAnchor: [24, 48],
-  popupAnchor: [2, -40],
-  iconUrl: 'assets/pointer/fitness.svg',
-});
-
-const preloadingRadius = 0.05;
-
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   standalone: true,
-  imports: [NgxLeafletLocateModule, LucideAngularModule],
+  imports: [CommonModule, NgxMapLibreGLModule, LucideAngularModule],
 })
-export class MapComponent implements OnInit {
+export class MyMapComponent implements OnInit {
+  @ViewChild(MglMapComponent) mapComponent!: MglMapComponent;
+
   readonly locateIcon = LocateIcon;
   readonly locateFixedIcon = LocateFixedIcon;
   readonly locateOffIcon = LocateOffIcon;
 
-  settings: Settings;
-
   @Output() markerClicked = new EventEmitter<string>();
   @Output() openSettingsModal = new EventEmitter();
 
-  currentPosition: L.LatLng | null = null;
+  settings: Settings;
+  currentStyle = 'https://tiles.openfreemap.org/styles/bright';
+  initialCoords: { lat: number; long: number };
+  currentPosition: [number, number] | null = null;
   isAtCurrentLocation = false;
+  private mapInstance: maplibregl.Map;
 
-  map;
-  toiletsLoaded = false;
-  watersLoaded = false;
-  bikeStationsLoaded = false;
-  atmsLoaded = false;
-  tabletennisLoaded = false;
-  fitnessLoaded = false;
-  accessibleToiletsMode = false;
+  private sourcesReady = false;
 
-  private toiletLayerGroup: any = L.markerClusterGroup({
-    iconCreateFunction: (cluster) => {
-      return L.divIcon({
-        html: `<div>${cluster.getChildCount()}</div>`,
-        className: 'toilet-cluster marker-cluster',
-        iconSize: L.point(40, 40),
-      });
-    },
-  });
-
-  private waterLayerGroup: any = L.markerClusterGroup({
-    iconCreateFunction: (cluster) => {
-      return L.divIcon({
-        html: `<div>${cluster.getChildCount()}</div>`,
-        className: 'water-cluster marker-cluster',
-        iconSize: L.point(40, 40),
-      });
-    },
-  });
-
-  private bikeStationsLayerGroup: any = L.markerClusterGroup({
-    iconCreateFunction: (cluster) => {
-      return L.divIcon({
-        html: `<div>${cluster.getChildCount()}</div>`,
-        className: 'bike-cluster marker-cluster',
-        iconSize: L.point(40, 40),
-      });
-    },
-  });
-
-  private atmLayerGroup: any = L.markerClusterGroup({
-    iconCreateFunction: (cluster) => {
-      return L.divIcon({
-        html: `<div>${cluster.getChildCount()}</div>`,
-        className: 'atm-cluster marker-cluster',
-        iconSize: L.point(40, 40),
-      });
-    },
-  });
-
-  private tabletennisLayerGroup: any = L.markerClusterGroup({
-    iconCreateFunction: (cluster) => {
-      return L.divIcon({
-        html: `<div>${cluster.getChildCount()}</div>`,
-        className: 'tabletennis-cluster marker-cluster',
-        iconSize: L.point(40, 40),
-      });
-    },
-  });
-
-  private fitnessLayerGroup: any = L.markerClusterGroup({
-    iconCreateFunction: (cluster) => {
-      return L.divIcon({
-        html: `<div>${cluster.getChildCount()}</div>`,
-        className: 'fitness-cluster marker-cluster',
-        iconSize: L.point(40, 40),
-      });
-    },
-  });
-
-  private lastPreloadingBounds = { lat1: 0, lng1: 0, lat2: 0, lng2: 0 };
-
-  private tiles = L.tileLayer(
-    // eslint-disable-next-line max-len
-    'https://tile.jawg.io/jawg-streets/{z}/{x}/{y}{r}.png?access-token=jf5kUBdghTSZetSsy8bqMOqYMeJ57shUT3rkMG1vGTD3EhD8tk83dglqoYPsBtvL',
-    {
-      maxZoom: 20,
-      minZoom: 3,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }
-  );
-
-  private sateliteTiles = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    {
-      maxZoom: 20,
-      minZoom: 3,
-      attribution:
-        'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-    }
-  );
+  // Unified data state for the map sources
+  mapSources = [
+    { id: 'toilets', color: '#e11d48' },
+    { id: 'water', color: '#2563eb' },
+    { id: 'bike', color: '#16a34a' },
+    { id: 'atm', color: '#9333ea' },
+    { id: 'pingpong', color: '#ea580c' },
+    { id: 'fitness', color: '#0891b2' },
+  ];
 
   constructor(
     private overpassService: OverpassService,
     private settingsService: SettingsService,
-    private storageService: StorageService
-  ) {}
+    private storageService: StorageService,
+  ) {
+    this.initialCoords = this.storageService.getCoordinates();
+  }
 
   ngOnInit() {
-    this.initializeMap();
+    this.settingsService.getSettings().subscribe((s) => {
+      this.settings = s;
+      //this.reloadNodes();
+    });
+    this.settingsService.getTileMode().subscribe((v) => {
+      this.currentStyle =
+        v === 1
+          ? 'https://tiles.openfreemap.org/styles/bright'
+          : 'https://tiles.openfreemap.org/styles/hybrid'; // Or Esri URL
+    });
 
     if (navigator.geolocation) {
-      if (navigator.geolocation) {
-        navigator.geolocation.watchPosition((pos) => {
-          this.currentPosition = L.latLng(
-            pos.coords.latitude,
-            pos.coords.longitude
-          );
-        });
-      }
+      navigator.geolocation.watchPosition((pos) => {
+        this.currentPosition = [pos.coords.longitude, pos.coords.latitude];
+      });
     }
+  }
 
-    this.settingsService.getSettings().subscribe((settings) => {
-      this.settings = settings;
+  async onMapLoad(map: maplibregl.Map) {
+    this.mapInstance = map;
+
+    map.once('idle', () => {
+      this.initializeSources();
+      this.sourcesReady = true;
       this.reloadNodes();
     });
-
-    this.settingsService.getTileMode().subscribe((v) => {
-      if (v == 1) {
-        this.map.removeLayer(this.sateliteTiles);
-        this.map.addLayer(this.tiles);
-      } else {
-        this.map.addLayer(this.sateliteTiles);
-        this.map.removeLayer(this.tiles);
-      }
-    });
   }
 
-  initializeMap() {
-    const savedPosition = this.storageService.getCoordinates();
-    const lat = savedPosition.lat;
-    const long = savedPosition.long;
+  private initializeSources() {
+    if (!this.mapInstance) return;
 
-    this.map = L.map('map', {
-      center: [lat, long],
-      zoom: 18,
-      attributionControl: false,
-      preferCanvas: true,
-      zoomControl: true,
-    });
+    for (const source of this.mapSources) {
+      if (!this.mapInstance.getSource(source.id)) continue;
 
-    L.control
-      .locate({
-        flyTo: true,
-        keepCurrentZoomLevel: true,
-        locateOptions: { enableHighAccuracy: true },
-        icon: 'fa fa-location-arrow',
-      })
-      .addTo(this.map)
-      .start();
+      const empty: GeoJSON.FeatureCollection = {
+        type: 'FeatureCollection',
+        features: [],
+      };
 
-    this.map.on('moveend', () => {
-      const center = this.map.getCenter();
+      (
+        this.mapInstance.getSource(source.id) as maplibregl.GeoJSONSource
+      ).setData(empty);
 
-      if (this.currentPosition) {
-        const distance = center.distanceTo(this.currentPosition);
-        this.isAtCurrentLocation = distance < 20;
-      }
+      console.log(
+        'checking source:',
+        source.id,
+        this.mapInstance.getSource(source.id),
+      );
+    }
 
-      this.storageService.setCoordinates(center.lat, center.lng);
-
-      if (
-        this.map.getZoom() > 11 &&
-        (this.map.getBounds().getCenter().lat <
-          this.lastPreloadingBounds.lat1 ||
-          this.map.getBounds().getCenter().lng <
-            this.lastPreloadingBounds.lng1 ||
-          this.map.getBounds().getCenter().lat >
-            this.lastPreloadingBounds.lat2 ||
-          this.map.getBounds().getCenter().lng > this.lastPreloadingBounds.lng2)
-      ) {
-        this.reloadNodes();
-      }
-    });
-
-    this.map.addLayer(this.tiles);
+    console.log('sources available:', this.mapInstance.getStyle().sources);
   }
+
+  private lastPreloadingCenter: maplibregl.LngLat | null = null;
+  private lastPreloadingZoom: number | null = null;
+  private readonly MOVE_THRESHOLD_METERS = 500;
+  private readonly ZOOM_THRESHOLD = 0.5;
+
+  onMapMove(event: any) {
+    const map = event.target as maplibregl.Map;
+    const currentCenter = map.getCenter();
+    const currentZoom = map.getZoom();
+
+    // 1. Always save position
+    this.storageService.setCoordinates(currentCenter.lat, currentCenter.lng);
+
+    return;
+
+    // 2. Initial load
+    if (!this.lastPreloadingCenter || this.lastPreloadingZoom === null) {
+      this.lastPreloadingCenter = currentCenter;
+      this.lastPreloadingZoom = currentZoom;
+      this.reloadNodes();
+      return;
+    }
+
+    // 3. Calculate changes
+    const distance = this.lastPreloadingCenter.distanceTo(currentCenter);
+    const zoomDiff = Math.abs(this.lastPreloadingZoom - currentZoom);
+
+    // 4. Trigger if either threshold is hit
+    if (
+      distance > this.MOVE_THRESHOLD_METERS ||
+      zoomDiff > this.ZOOM_THRESHOLD
+    ) {
+      this.lastPreloadingCenter = currentCenter;
+      this.lastPreloadingZoom = currentZoom;
+      this.reloadNodes();
+    }
+  }
+
+  // --- NODE FETCHING & GEOJSON CONVERSION ---
 
   reloadNodes() {
-    this.watersLoaded = false;
-    this.toiletsLoaded = false;
+    if (!this.mapInstance || !this.settings) return;
 
-    if (!this.settings.toilets) {
-      this.toiletLayerGroup.clearLayers();
-    }
-
-    if (!this.settings.water) {
-      this.waterLayerGroup.clearLayers();
-    }
-
-    if (!this.settings.bikeStations) {
-      this.bikeStationsLayerGroup.clearLayers();
-    }
-
-    if (!this.settings.atm) {
-      this.atmLayerGroup.clearLayers();
-    }
-
-    if (!this.settings.tabletennis) {
-      this.tabletennisLayerGroup.clearLayers();
-    }
-
-    if (!this.settings.fitness) {
-      this.fitnessLayerGroup.clearLayers();
-    }
-
-    this.updateLoadingState();
-
-    const mapCenter = this.map.getBounds().getCenter();
-
-    this.lastPreloadingBounds = {
-      lat1: mapCenter.lat - preloadingRadius,
-      lng1: mapCenter.lng - preloadingRadius,
-      lat2: mapCenter.lat + preloadingRadius,
-      lng2: mapCenter.lng + preloadingRadius,
-    };
+    const bounds = this.mapInstance.getBounds();
+    const mapCenter = bounds.getCenter();
+    const radius = 0.05;
 
     if (this.settings.toilets) {
-      if (!this.accessibleToiletsMode) {
-        this.overpassService
-          .getNodes(
-            '"amenity"="toilets"',
-            mapCenter.lat - preloadingRadius,
-            mapCenter.lng - preloadingRadius,
-            mapCenter.lat + preloadingRadius,
-            mapCenter.lng + preloadingRadius
-          )
-          .subscribe((nodes) => {
-            this.toiletsLoaded = true;
-            this.updateLoadingState();
-            this.setToiletMarker(nodes);
-          });
-      } else {
-        this.overpassService
-          .getNodes(
-            '"amenity"="toilets"]["wheelchair"="yes"',
-            mapCenter.lat - preloadingRadius,
-            mapCenter.lng - preloadingRadius,
-            mapCenter.lat + preloadingRadius,
-            mapCenter.lng + preloadingRadius
-          )
-          .subscribe((nodes) => {
-            this.toiletsLoaded = true;
-            this.updateLoadingState();
-            this.setToiletMarker(nodes);
-          });
-      }
+      this.overpassService
+        .getNodes(
+          '"amenity"="toilets"',
+          mapCenter.lat - radius,
+          mapCenter.lng - radius,
+          mapCenter.lat + radius,
+          mapCenter.lng + radius,
+        )
+        .subscribe((nodes) => {
+          this.updateSource('toilets', nodes);
+        });
     }
 
     if (this.settings.water) {
@@ -350,220 +187,84 @@ export class MapComponent implements OnInit {
         .getNodesOr(
           '"amenity"="drinking_water"',
           '"man_made"="water_tap"',
-          mapCenter.lat - preloadingRadius,
-          mapCenter.lng - preloadingRadius,
-          mapCenter.lat + preloadingRadius,
-          mapCenter.lng + preloadingRadius
+          mapCenter.lat - radius,
+          mapCenter.lng - radius,
+          mapCenter.lat + radius,
+          mapCenter.lng + radius,
         )
         .subscribe((nodes) => {
-          this.watersLoaded = true;
-          this.updateLoadingState();
-          this.setWaterMarker(nodes);
-        });
-    }
-
-    if (this.settings.bikeStations) {
-      this.overpassService
-        .getNodes(
-          '"amenity"="bicycle_repair_station"',
-          mapCenter.lat - preloadingRadius,
-          mapCenter.lng - preloadingRadius,
-          mapCenter.lat + preloadingRadius,
-          mapCenter.lng + preloadingRadius
-        )
-        .subscribe((nodes) => {
-          this.bikeStationsLoaded = true;
-          this.updateLoadingState();
-          this.setBikeStationsMarker(nodes);
-        });
-    }
-
-    if (this.settings.atm) {
-      this.overpassService
-        .getNodesOr(
-          '"amenity"="atm"',
-          '"amenity"="bank"]["atm"!~"no"',
-          mapCenter.lat - preloadingRadius,
-          mapCenter.lng - preloadingRadius,
-          mapCenter.lat + preloadingRadius,
-          mapCenter.lng + preloadingRadius
-        )
-        .subscribe((nodes) => {
-          this.atmsLoaded = true;
-          this.updateLoadingState();
-          this.setAtmMarker(nodes);
-        });
-    }
-
-    if (this.settings.tabletennis) {
-      this.overpassService
-        .getNodes2(
-          '"leisure"="pitch"',
-          '"sport"="table_tennis"',
-          mapCenter.lat - preloadingRadius,
-          mapCenter.lng - preloadingRadius,
-          mapCenter.lat + preloadingRadius,
-          mapCenter.lng + preloadingRadius
-        )
-        .subscribe((nodes) => {
-          this.tabletennisLoaded = true;
-          this.updateLoadingState();
-          this.setTabletennisMarker(nodes);
-        });
-    }
-
-    if (this.settings.fitness) {
-      this.overpassService
-        .getNodes(
-          '"leisure"="fitness_station"',
-          mapCenter.lat - preloadingRadius,
-          mapCenter.lng - preloadingRadius,
-          mapCenter.lat + preloadingRadius,
-          mapCenter.lng + preloadingRadius
-        )
-        .subscribe((nodes) => {
-          this.fitnessLoaded = true;
-          this.updateLoadingState();
-          this.setFitnessMarker(nodes);
+          this.updateSource('water', nodes);
         });
     }
   }
 
-  setToiletMarker(nodes: OsmNode[]) {
-    this.toiletLayerGroup.clearLayers();
-    nodes.forEach((node: OsmNode) => {
-      let markerIcon = toiletIcon;
-
-      if (node.tags.fee === 'no') {
-        markerIcon = freeToiletIcon;
-      } else if (node.tags.fee === 'yes') {
-        markerIcon = paidToiletIcon;
-      }
-
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
-        'click',
-        (event) => {
-          this.callParent(node);
-        }
-      );
-      this.toiletLayerGroup.addLayer(marker).addTo(this.map);
-    });
-  }
-
-  setWaterMarker(nodes: OsmNode[]) {
-    this.waterLayerGroup.clearLayers();
-    nodes.forEach((node) => {
-      const markerIcon = waterIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
-        'click',
-        (event) => {
-          this.callParent(node);
-        }
-      );
-      this.waterLayerGroup.addLayer(marker).addTo(this.map);
-    });
-  }
-
-  setBikeStationsMarker(nodes: OsmNode[]) {
-    this.bikeStationsLayerGroup.clearLayers();
-    nodes.forEach((node) => {
-      const markerIcon = bikeStationsIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
-        'click',
-        (event) => {
-          this.callParent(node);
-        }
-      );
-      this.bikeStationsLayerGroup.addLayer(marker).addTo(this.map);
-    });
-  }
-
-  setAtmMarker(nodes: OsmNode[]) {
-    this.atmLayerGroup.clearLayers();
-    nodes.forEach((node) => {
-      const markerIcon = atmIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
-        'click',
-        (event) => {
-          this.callParent(node);
-        }
-      );
-      this.atmLayerGroup.addLayer(marker).addTo(this.map);
-    });
-  }
-
-  setTabletennisMarker(nodes: OsmNode[]) {
-    this.tabletennisLayerGroup.clearLayers();
-    nodes.forEach((node) => {
-      const markerIcon = tabletennisIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
-        'click',
-        (event) => {
-          this.callParent(node);
-        }
-      );
-      this.tabletennisLayerGroup.addLayer(marker).addTo(this.map);
-    });
-  }
-
-  setFitnessMarker(nodes: OsmNode[]) {
-    this.fitnessLayerGroup.clearLayers();
-    nodes.forEach((node) => {
-      const markerIcon = fitnessIcon;
-      const marker = L.marker([node.lat, node.lon], { icon: markerIcon }).on(
-        'click',
-        (event) => {
-          this.callParent(node);
-        }
-      );
-      this.fitnessLayerGroup.addLayer(marker).addTo(this.map);
-    });
-  }
-
-  callParent(data: OsmNode) {
-    this.markerClicked.emit(JSON.stringify(data));
-  }
-
-  openSettingsModalInParent() {
-    this.openSettingsModal.emit();
-  }
-
-  goToCurrentLocation() {
-    if (!navigator.geolocation) {
-      console.log('Geolocation is not supported by your browser.');
+  private updateSource(sourceId: string, nodes: any[]) {
+    const source = this.mapInstance.getSource(
+      sourceId,
+    ) as maplibregl.GeoJSONSource;
+    if (!source) {
+      console.error(`Source ${sourceId} not found in map style`);
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        this.currentPosition = L.latLng(
-          pos.coords.latitude,
-          pos.coords.longitude
-        );
-        this.map.flyTo(this.currentPosition, 18, {
-          animate: true,
-          duration: 1.5,
-        });
-      },
-      (err) => {
-        if (err.code === err.PERMISSION_DENIED) {
-          console.log('Location permission denied by user.');
-        } else {
-          console.log('Could not get your location:', err.message);
-        }
-      },
-      { enableHighAccuracy: true }
-    );
+    const geojson: GeoJSON.FeatureCollection = {
+      type: 'FeatureCollection',
+      features: nodes.map((n) => ({
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [n.lon, n.lat], // CRITICAL: Ensure this is [Longitude, Latitude]
+        },
+        properties: {},
+      })),
+    };
+
+    source.setData(geojson);
+    console.log(`Updated ${sourceId} with ${nodes.length} dots.`);
   }
 
-  updateLoadingState() {
-    const newLoadingState =
-      (!this.watersLoaded && this.settings.water) ||
-      (!this.toiletsLoaded && this.settings.toilets) ||
-      (!this.bikeStationsLoaded && this.settings.bikeStations) ||
-      (!this.atmsLoaded && this.settings.atm) ||
-      (!this.tabletennisLoaded && this.settings.tabletennis) ||
-      (!this.fitnessLoaded && this.settings.fitness);
-    this.settingsService.updateLoadingState(newLoadingState);
+  // --- MAP INTERACTION ---
+
+  onMarkerClick(evt: any) {
+    const feature = evt.features[0];
+    if (feature) {
+      this.markerClicked.emit(JSON.stringify(feature.properties.originalNode));
+    }
+  }
+
+  async zoomToCluster(evt: any, sourceId: string) {
+    // Get the cluster feature that was clicked
+    const features = this.mapInstance.queryRenderedFeatures(evt.point, {
+      layers: [sourceId + '-cluster'],
+    });
+
+    if (!features.length) return;
+
+    const clusterId = features[0].properties['cluster_id'];
+    const source = this.mapInstance.getSource(
+      sourceId,
+    ) as maplibregl.GeoJSONSource;
+
+    try {
+      // Modern MapLibre: getClusterExpansionZoom returns a Promise
+      const zoom = await source.getClusterExpansionZoom(clusterId);
+
+      // We cast geometry to any to access coordinates easily
+      const coordinates = (features[0].geometry as any).coordinates;
+
+      this.mapInstance.easeTo({
+        center: coordinates,
+        zoom: zoom + 0.5, // Adding a tiny bit extra zoom for a better view
+        duration: 500, // Smooth transition in milliseconds
+      });
+    } catch (err) {
+      console.error('Error expanding cluster:', err);
+    }
+  }
+
+  goToCurrentLocation() {
+    if (this.currentPosition) {
+      this.mapInstance.flyTo({ center: this.currentPosition, zoom: 18 });
+    }
   }
 }

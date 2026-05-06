@@ -40,13 +40,10 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/maplibre-gl/dist/maplibre-gl.css",
               "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/leaflet/dist/leaflet.js",
-              "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"
-            ],
+            "scripts": [],
             "aot": false,
             "extractLicenses": false,
             "sourceMap": true,
