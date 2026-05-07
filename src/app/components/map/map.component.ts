@@ -86,10 +86,29 @@ export class MyMapComponent implements OnInit {
     }
   }
 
+  private async registerMarkerIcons() {
+    const PREFIX = 'custom-';
+    const icons = [
+      { id: 'toilets', url: 'assets/pointer/water-new.png' },
+      { id: 'water', url: 'assets/pointer/water-new.png' },
+    ];
+
+    for (const icon of icons) {
+      if (this.mapInstance.hasImage(PREFIX + icon.id)) continue;
+
+      const image = await this.mapInstance.loadImage(icon.url);
+
+      if (!image || !image.data) continue;
+
+      this.mapInstance.addImage(PREFIX + icon.id, image.data);
+    }
+  }
+
   async onMapLoad(map: maplibregl.Map) {
     this.mapInstance = map;
 
-    map.once('idle', () => {
+    map.once('idle', async () => {
+      await this.registerMarkerIcons();
       this.initializeSources();
       this.sourcesReady = true;
       this.reloadNodes();
@@ -130,36 +149,8 @@ export class MyMapComponent implements OnInit {
     const map = event.target as maplibregl.Map;
     const currentCenter = map.getCenter();
     const currentZoom = map.getZoom();
-
-    // 1. Always save position
     this.storageService.setCoordinates(currentCenter.lat, currentCenter.lng);
-
-    return;
-
-    // 2. Initial load
-    if (!this.lastPreloadingCenter || this.lastPreloadingZoom === null) {
-      this.lastPreloadingCenter = currentCenter;
-      this.lastPreloadingZoom = currentZoom;
-      this.reloadNodes();
-      return;
-    }
-
-    // 3. Calculate changes
-    const distance = this.lastPreloadingCenter.distanceTo(currentCenter);
-    const zoomDiff = Math.abs(this.lastPreloadingZoom - currentZoom);
-
-    // 4. Trigger if either threshold is hit
-    if (
-      distance > this.MOVE_THRESHOLD_METERS ||
-      zoomDiff > this.ZOOM_THRESHOLD
-    ) {
-      this.lastPreloadingCenter = currentCenter;
-      this.lastPreloadingZoom = currentZoom;
-      this.reloadNodes();
-    }
   }
-
-  // --- NODE FETCHING & GEOJSON CONVERSION ---
 
   reloadNodes() {
     if (!this.mapInstance || !this.settings) return;
@@ -213,9 +204,9 @@ export class MyMapComponent implements OnInit {
         type: 'Feature',
         geometry: {
           type: 'Point',
-          coordinates: [n.lon, n.lat], // CRITICAL: Ensure this is [Longitude, Latitude]
+          coordinates: [n.lon, n.lat],
         },
-        properties: {},
+        properties: { 'icon-name': 'custom-' + sourceId },
       })),
     };
 
@@ -229,36 +220,6 @@ export class MyMapComponent implements OnInit {
     const feature = evt.features[0];
     if (feature) {
       this.markerClicked.emit(JSON.stringify(feature.properties.originalNode));
-    }
-  }
-
-  async zoomToCluster(evt: any, sourceId: string) {
-    // Get the cluster feature that was clicked
-    const features = this.mapInstance.queryRenderedFeatures(evt.point, {
-      layers: [sourceId + '-cluster'],
-    });
-
-    if (!features.length) return;
-
-    const clusterId = features[0].properties['cluster_id'];
-    const source = this.mapInstance.getSource(
-      sourceId,
-    ) as maplibregl.GeoJSONSource;
-
-    try {
-      // Modern MapLibre: getClusterExpansionZoom returns a Promise
-      const zoom = await source.getClusterExpansionZoom(clusterId);
-
-      // We cast geometry to any to access coordinates easily
-      const coordinates = (features[0].geometry as any).coordinates;
-
-      this.mapInstance.easeTo({
-        center: coordinates,
-        zoom: zoom + 0.5, // Adding a tiny bit extra zoom for a better view
-        duration: 500, // Smooth transition in milliseconds
-      });
-    } catch (err) {
-      console.error('Error expanding cluster:', err);
     }
   }
 

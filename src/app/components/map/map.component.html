@@ -6,21 +6,12 @@
     <mgl-geojson-source [id]="source.id" [cluster]="false">
     </mgl-geojson-source>
 
-    <mgl-layer [id]="source.id + '-point-icon'" type="symbol" [source]="source.id"
-      [filter]="['!', ['has', 'point_count']]" [layout]="{
-      'icon-image': ['get', 'icon-name'],
-      'icon-size': 1,
-      'icon-allow-overlap': true,
-      'icon-anchor': 'bottom'
-    }" (layerClick)="onMarkerClick($event)">
-    </mgl-layer>
-
-    <mgl-layer [id]="source.id + '-debug-point'" type="circle" [source]="source.id" [paint]="{
-        'circle-radius': 10,
-        'circle-color': source.color,
-        'circle-stroke-width': 2,
-        'circle-stroke-color': '#ffffff'
-      }">
+    <mgl-layer [id]="source.id + '-icon'" type="symbol" [source]="source.id" [layout]="{
+    'icon-image': ['get', 'icon-name'],
+    'icon-size': 0.3,
+    'icon-allow-overlap': true,
+    'icon-anchor': 'bottom'
+  }" (layerClick)="onMarkerClick($event)">
     </mgl-layer>
     }
 
