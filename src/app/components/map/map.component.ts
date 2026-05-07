@@ -89,8 +89,12 @@ export class MyMapComponent implements OnInit {
   private async registerMarkerIcons() {
     const PREFIX = 'custom-';
     const icons = [
-      { id: 'toilets', url: 'assets/pointer/water-new.png' },
-      { id: 'water', url: 'assets/pointer/water-new.png' },
+      { id: 'toilets', url: 'assets/pointer/toilet.png' },
+      { id: 'water', url: 'assets/pointer/water.png' },
+      { id: 'bike', url: 'assets/pointer/bike-station.png' },
+      { id: 'atm', url: 'assets/pointer/atm.png' },
+      { id: 'pingpong', url: 'assets/pointer/table-tennis.png' },
+      { id: 'fitness', url: 'assets/pointer/fitness.png' },
     ];
 
     for (const icon of icons) {
@@ -189,7 +193,7 @@ export class MyMapComponent implements OnInit {
     }
   }
 
-  private updateSource(sourceId: string, nodes: any[]) {
+  private updateSource(sourceId: string, nodes: OsmNode[]) {
     const source = this.mapInstance.getSource(
       sourceId,
     ) as maplibregl.GeoJSONSource;
@@ -206,7 +210,7 @@ export class MyMapComponent implements OnInit {
           type: 'Point',
           coordinates: [n.lon, n.lat],
         },
-        properties: { 'icon-name': 'custom-' + sourceId },
+        properties: { 'icon-name': 'custom-' + sourceId, },
       })),
     };
 
@@ -214,12 +218,11 @@ export class MyMapComponent implements OnInit {
     console.log(`Updated ${sourceId} with ${nodes.length} dots.`);
   }
 
-  // --- MAP INTERACTION ---
 
   onMarkerClick(evt: any) {
     const feature = evt.features[0];
     if (feature) {
-      this.markerClicked.emit(JSON.stringify(feature.properties.originalNode));
+      this.markerClicked.emit(feature.properties.originalNode);
     }
   }
 
