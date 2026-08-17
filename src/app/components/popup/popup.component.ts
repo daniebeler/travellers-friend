@@ -3,12 +3,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import {
   Component,
   EventEmitter,
-  Input,
   OnChanges,
   OnDestroy,
   Output,
   SimpleChanges,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  input
 } from '@angular/core';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { X } from '@hugeicons/core-free-icons';
@@ -43,13 +43,13 @@ import { X } from '@hugeicons/core-free-icons';
 export class PopupComponent implements OnChanges, OnDestroy {
   readonly closeIcon = X;
 
-  @Input() show = false;
-  @Input() title = '';
+  readonly show = input(false);
+  readonly title = input('');
   @Output() close = new EventEmitter<void>();
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['show']) {
-      if (this.show) {
+      if (this.show()) {
         document.body.style.overflow = 'hidden';
       } else {
         document.body.style.overflow = '';

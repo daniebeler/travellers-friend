@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input } from '@angular/core';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { TagDisplay } from 'src/app/models/TagDisplay';
 
@@ -10,5 +10,5 @@ import { TagDisplay } from 'src/app/models/TagDisplay';
   templateUrl: './tag-info.component.html',
 })
 export class TagInfoComponent {
- @Input() tag!: TagDisplay;
+ readonly tag = input.required<TagDisplay>();
 }

@@ -18,4 +18,6 @@ export interface Tags {
   'service:bicycle:tools'?: string;
   'service:bicycle:chain_tool'?: string;
   'service:bicycle:stand'?: string;
+
+  [key: string]: string | undefined;
 }

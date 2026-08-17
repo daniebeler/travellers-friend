@@ -29,15 +29,15 @@ export class HomePage implements OnInit {
   modalIsOpen = false;
   isSettingsModalOpen = false;
   isAboutModalOpen = false;
-  nodeTags: Array<any>;
-  tags: Tags;
-  nodeId: number;
+  nodeTags: Array<any> = [];
+  tags!: Tags;
+  nodeId!: number;
   heading = '';
   modalClass = '';
   modalColor = '';
   isLoadingData = false;
 
-  settings: Settings;
+  settings: Settings = new Settings();
 
   tileMode = 0;
 
