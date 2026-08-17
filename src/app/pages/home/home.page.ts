@@ -9,6 +9,7 @@ import { Tags } from 'src/app/models/Tags';
 import { DetailsPopupComponent } from 'src/app/components/details-popup/details-popup.component';
 import { SearchIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
+import { OsmNode } from 'src/app/models/OsmNode';
 
 @Component({
   selector: 'app-home',
@@ -70,9 +71,9 @@ export class HomePage implements OnInit {
     });
   }
 
-  openModal(data: string) {
-    this.nodeId = JSON.parse(data).id;
-    this.tags = JSON.parse(data).tags;
+  openModal(data: OsmNode) {
+    this.nodeId = data.id;
+    this.tags = data.tags;
 
     console.log(this.tags)
 

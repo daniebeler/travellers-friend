@@ -1,16 +1,13 @@
 import {
   Component,
-  EventEmitter,
   OnInit,
-  Output,
   signal,
-  ViewChild,
   ChangeDetectionStrategy,
+  output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   NgxMapLibreGLModule,
-  MapComponent as MglMapComponent,
 } from '@maplibre/ngx-maplibre-gl';
 import * as maplibregl from 'maplibre-gl';
 
@@ -35,7 +32,30 @@ import {
 import { CategoryType } from 'src/app/models/Category';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { LocationIcon, LocationOfflineIcon } from '@hugeicons/core-free-icons';
-import { setWorkerUrl } from 'maplibre-gl';
+import { setWorkerUrl, StyleSpecification } from 'maplibre-gl';
+
+const SATELLITE_STYLE: StyleSpecification = {
+  version: 8,
+  sources: {
+    'esri-satellite': {
+      type: 'raster',
+      tiles: [
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      ],
+      tileSize: 256,
+      attribution: 'Tiles &copy; Esri',
+    },
+  },
+  layers: [
+    {
+      id: 'esri-satellite-layer',
+      type: 'raster',
+      source: 'esri-satellite',
+      minzoom: 0,
+      maxzoom: 19,
+    },
+  ],
+};
 
 @Component({
   selector: 'app-map',
@@ -45,17 +65,16 @@ import { setWorkerUrl } from 'maplibre-gl';
   imports: [CommonModule, NgxMapLibreGLModule, HugeiconsIconComponent],
 })
 export class MyMapComponent implements OnInit {
-  @ViewChild(MglMapComponent) mapComponent!: MglMapComponent;
 
   readonly locateIcon = LocationIcon;
   readonly locateFixedIcon = LocationOfflineIcon;
   readonly locateOffIcon = LocationIcon;
 
-  @Output() markerClicked = new EventEmitter<string>();
-  @Output() openSettingsModal = new EventEmitter();
+  readonly markerClicked = output<OsmNode>();
+  readonly openSettingsModal = output<void>();
 
   settings: Settings = new Settings();
-  currentStyle = 'https://tiles.openfreemap.org/styles/bright';
+  currentStyle: string | maplibregl.StyleSpecification = 'https://tiles.openfreemap.org/styles/bright';
   initialCoords: { lat: number; long: number };
   currentPosition: [number, number] | null = null;
   isAtCurrentLocation = false;
@@ -98,6 +117,8 @@ export class MyMapComponent implements OnInit {
       });
   }
 
+
+
   ngOnInit() {
     setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);
     this.settingsService.getSettings().subscribe((s) => {
@@ -112,7 +133,7 @@ export class MyMapComponent implements OnInit {
       this.currentStyle =
         v === 1
           ? 'https://tiles.openfreemap.org/styles/bright'
-          : 'https://tiles.openfreemap.org/styles/hybrid';
+          : SATELLITE_STYLE;
     });
 
     if (navigator.geolocation) {

@@ -5,10 +5,10 @@
   <div
     class="bg-neutral-800 text-white rounded-2xl p-6 w-full max-w-2xl shadow-xl relative will-change-transform will-change-opacity max-h-full overflow-auto"
     @fadeScale (click)="$event.stopPropagation()">
-    <div class="w-full flex justify-between items-center pb-5">
+    <div class="w-full flex justify-between items-center">
       <span class="font-bold text-xl">{{ title() }}</span>
       <button (click)="closePopup()" class="bg-surface/50 border border-gray-700 rounded-full p-2 hover:bg-surface/80">
-        <hugeicons-icon [icon]="closeIcon" size="20"></hugeicons-icon>
+        <hugeicons-icon [icon]="closeIcon" size="20" color="currentColor" [strokeWidth]="1.5"></hugeicons-icon>
       </button>
     </div>
     <ng-content></ng-content>

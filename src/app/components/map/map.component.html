@@ -1,6 +1,7 @@
 <div class="h-full relative overflow-hidden">
 
-  <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-gray-900/90 text-white px-4 py-2 rounded-full shadow-lg border border-gray-700 backdrop-blur-sm text-sm font-medium">
+  <div
+    class="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-gray-900/90 text-white px-4 py-2 rounded-full shadow-lg border border-gray-700 backdrop-blur-sm text-sm font-medium">
     <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
     <span>Overpass Requests: <strong class="text-emerald-400 font-bold ml-1">{{ requestCount() }}</strong></span>
   </div>
@@ -22,15 +23,23 @@
     </mgl-layer>
     }
 
-    <mgl-control mglGeolocate [positionOptions]="{enableHighAccuracy: true}" [trackUserLocation]="true"></mgl-control>
-    <mgl-control mglNavigation position="top-right"></mgl-control>
+    @if (currentPosition) {
+    <mgl-marker [lngLat]="currentPosition">
+      <div class="relative flex items-center justify-center">
+        <span class="animate-ping absolute inline-flex h-8 w-8 rounded-full bg-blue-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-4 w-4 bg-blue-600 border-2 border-white shadow-md"></span>
+      </div>
+    </mgl-marker>
+    }
+
+    <mgl-control mglNavigation [showCompass]="false" position="top-left"></mgl-control>
   </mgl-map>
 
   <div class="fixed bottom-24 right-8 flex flex-col gap-2">
     <button (click)="goToCurrentLocation()"
       [class]="isAtCurrentLocation ? 'bg-gray-800 text-blue-600' : 'bg-gray-800 text-white'"
       class="rounded-full p-4 shadow-lg hover:bg-gray-900 transition">
-      <hugeicons-icon
+      <hugeicons-icon color="currentColor" [strokeWidth]="1.5"
         [icon]="isAtCurrentLocation ? locateFixedIcon : (currentPosition ? locateIcon : locateOffIcon)"></hugeicons-icon>
     </button>
   </div>

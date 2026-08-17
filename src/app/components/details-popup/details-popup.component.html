@@ -1,5 +1,5 @@
 @if (tags()) {
-  @for (tag of tagDisplayList; track tag) {
+  @for (tag of tagDisplayList(); track tag.id) {
     <app-tag-info [tag]="tag"></app-tag-info>
   }
 }

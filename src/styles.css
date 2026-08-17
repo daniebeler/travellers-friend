@@ -35,7 +35,18 @@
   }
 }
 
-@layer components {}
+@layer components {
+  hugeicons-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+
+hugeicons-icon svg {
+  display: block;
+}
+}
 
 @layer utilities {
   .toilet-cluster {
