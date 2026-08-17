@@ -47,10 +47,10 @@ export class HomePage implements OnInit {
   categories: Category[] = [
     { key: 'water', label: 'Drinking Water', color: 'bg-water' },
     { key: 'toilets', label: 'Toilets', color: 'bg-toilet' },
-    { key: 'bikeStations', label: 'Bike Repair Stations', color: 'bg-bike' },
+    { key: 'bike', label: 'Bike Repair Stations', color: 'bg-bike' },
     { key: 'atm', label: 'ATMs', color: 'bg-atm' },
     {
-      key: 'tabletennis',
+      key: 'pingpong',
       label: 'Table Tennis Tables',
       color: 'bg-tabletennis',
     },

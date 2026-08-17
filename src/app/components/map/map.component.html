@@ -1,4 +1,11 @@
 <div class="h-full relative overflow-hidden">
+
+  <div class="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-gray-900/90 text-white px-4 py-2 rounded-full shadow-lg border border-gray-700 backdrop-blur-sm text-sm font-medium">
+    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span>Overpass Requests: <strong class="text-emerald-400 font-bold ml-1">{{ requestCount() }}</strong></span>
+  </div>
+
+
   <mgl-map [mapStyle]="currentStyle" [zoom]="[14]" [center]="[initialCoords.long, initialCoords.lat]"
     (mapLoad)="onMapLoad($event)" (moveEnd)="onMapMove($event)" class="h-full w-full">
 
