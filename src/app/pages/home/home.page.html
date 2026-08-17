@@ -16,9 +16,9 @@
       </button>
     </div>
     @if (isLoadingData) {
-      <div class="absolute bottom-0 left-0 w-full">
-        <div class="h-1 bg-gradient-to-r from-orange-500 via-yellow-400 to-green-500 animate-pulse"></div>
-      </div>
+    <div class="absolute bottom-0 left-0 w-full">
+      <div class="h-1 bg-gradient-to-r from-orange-500 via-yellow-400 to-green-500 animate-pulse"></div>
+    </div>
     }
   </header>
 
@@ -30,22 +30,22 @@
 
     <div class="absolute top-4 right-4">
       @if (tileMode === 0) {
-        <img (click)="tileLayerChanged(1)"
-          class="h-14 w-14 object-cover border-2 border-black cursor-pointer rounded-lg mb-1"
-          src="../../../assets/images/default-tiles.png" />
+      <img (click)="tileLayerChanged(1)"
+        class="h-14 w-14 object-cover border-2 border-black cursor-pointer rounded-lg mb-1"
+        src="../../../assets/images/default-tiles.png" />
       }
 
       @if (tileMode === 1) {
-        <img (click)="tileLayerChanged(0)"
-          class="h-14 w-14 object-cover border-2 border-black cursor-pointer rounded-lg mb-1"
-          src="../../../assets/images/satelite-tiles.png" />
+      <img (click)="tileLayerChanged(0)"
+        class="h-14 w-14 object-cover border-2 border-black cursor-pointer rounded-lg mb-1"
+        src="../../../assets/images/satelite-tiles.png" />
       }
     </div>
 
     <div class="fixed bottom-8 right-8">
       <button class="rounded-full bg-traveller text-white p-4 shadow-lg hover:bg-traveller-shade transition"
         (click)="openSettingsModal()">
-        <lucide-icon [img]="filterIcon"></lucide-icon>
+        <hugeicons-icon [icon]="SearchIcon" [size]="24" color="currentColor" [strokeWidth]="1.5" />
       </button>
     </div>
 
@@ -56,21 +56,21 @@
     <app-popup [show]="isSettingsModalOpen" (close)="isSettingsModalOpen = false" title="Filter">
       <div class="flex flex-col space-y-2 mt-4">
         @for (category of categories; track category) {
-          <button type="button" (click)="toggleSetting(category.key)"
-            class="flex items-center justify-between w-full p-2 rounded-lg border transition" [ngClass]="
+        <button type="button" (click)="toggleSetting(category.key)"
+          class="flex items-center justify-between w-full p-2 rounded-lg border transition" [ngClass]="
             settings[category.key]
               ? category.color + ' border-transparent text-white'
               : 'border-neutral-600 text-white'
           ">
-            <span>{{ category.label }}</span>
-            <div
-              class="w-5 h-5 rounded-full border-2 border-gray-300 flex-shrink-0 flex items-center justify-center transition"
-              [ngClass]="settings[category.key] ? category.color : 'bg-neutral-800'">
-              @if (settings[category.key]) {
-                <div class="w-3 h-3 rounded-full bg-white"></div>
-              }
-            </div>
-          </button>
+          <span>{{ category.label }}</span>
+          <div
+            class="w-5 h-5 rounded-full border-2 border-gray-300 flex-shrink-0 flex items-center justify-center transition"
+            [ngClass]="settings[category.key] ? category.color : 'bg-neutral-800'">
+            @if (settings[category.key]) {
+            <div class="w-3 h-3 rounded-full bg-white"></div>
+            }
+          </div>
+        </button>
         }
       </div>
     </app-popup>
@@ -79,13 +79,13 @@
       <p class="mt-4">
         Travellers Friend was created during the
         <a href="https://digitaleinitiativen.at/initiativen/ummahuesla-hackathon/" target="_blank"
-        class="text-traveller font-bold underline">Umma Hüsla Hackathon</a>
+          class="text-traveller font-bold underline">Umma Hüsla Hackathon</a>
         2022 by Daniel, Mathias and Jakob.
       </p>
       <p class="mt-2">
         The source code is available on
         <a href="https://github.com/daniebeler/travellers-friend" target="_blank"
-        class="text-traveller font-bold underline">Github</a>.
+          class="text-traveller font-bold underline">Github</a>.
       </p>
     </app-popup>
 

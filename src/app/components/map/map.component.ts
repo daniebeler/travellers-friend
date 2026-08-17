@@ -11,12 +11,6 @@ import {
   NgxMapLibreGLModule,
   MapComponent as MglMapComponent,
 } from '@maplibre/ngx-maplibre-gl';
-import {
-  LucideAngularModule,
-  LocateIcon,
-  LocateFixedIcon,
-  LocateOffIcon,
-} from 'lucide-angular';
 import * as maplibregl from 'maplibre-gl';
 
 import geohash from 'ngeohash';
@@ -28,19 +22,21 @@ import { StorageService } from 'src/app/services/storage.service';
 import { CacheService } from 'src/app/services/cache.service';
 import { debounce, Subject, timer } from 'rxjs';
 import { CategoryType } from 'src/app/models/Category';
+import { HugeiconsIconComponent } from '@hugeicons/angular';
+import { LocationIcon, LocationOfflineIcon } from '@hugeicons/core-free-icons';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   standalone: true,
-  imports: [CommonModule, NgxMapLibreGLModule, LucideAngularModule],
+  imports: [CommonModule, NgxMapLibreGLModule, HugeiconsIconComponent],
 })
 export class MyMapComponent implements OnInit {
   @ViewChild(MglMapComponent) mapComponent!: MglMapComponent;
 
-  readonly locateIcon = LocateIcon;
-  readonly locateFixedIcon = LocateFixedIcon;
-  readonly locateOffIcon = LocateOffIcon;
+  readonly locateIcon = LocationIcon;
+  readonly locateFixedIcon = LocationOfflineIcon;
+  readonly locateOffIcon = LocationIcon;
 
   @Output() markerClicked = new EventEmitter<string>();
   @Output() openSettingsModal = new EventEmitter();

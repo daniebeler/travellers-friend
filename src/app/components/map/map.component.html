@@ -30,8 +30,8 @@
     <button (click)="goToCurrentLocation()"
       [class]="isAtCurrentLocation ? 'bg-gray-800 text-blue-600' : 'bg-gray-800 text-white'"
       class="rounded-full p-4 shadow-lg hover:bg-gray-900 transition">
-      <lucide-icon
-        [img]="isAtCurrentLocation ? locateFixedIcon : (currentPosition ? locateIcon : locateOffIcon)"></lucide-icon>
+      <hugeicons-icon
+        [icon]="isAtCurrentLocation ? locateFixedIcon : (currentPosition ? locateIcon : locateOffIcon)"></hugeicons-icon>
     </button>
   </div>
 </div>

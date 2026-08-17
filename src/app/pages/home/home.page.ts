@@ -3,15 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { MyMapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
-import {
-  LucideAngularModule,
-  LayersIcon,
-  ListFilterIcon,
-} from 'lucide-angular';
 import { PopupComponent } from 'src/app/components/popup/popup.component';
 import { Category } from 'src/app/models/Category';
 import { Tags } from 'src/app/models/Tags';
 import { DetailsPopupComponent } from 'src/app/components/details-popup/details-popup.component';
+import { SearchIcon } from '@hugeicons/core-free-icons';
+import { HugeiconsIconComponent } from '@hugeicons/angular';
 
 @Component({
   selector: 'app-home',
@@ -20,14 +17,13 @@ import { DetailsPopupComponent } from 'src/app/components/details-popup/details-
   imports: [
     CommonModule,
     MyMapComponent,
-    LucideAngularModule,
+    HugeiconsIconComponent,
     PopupComponent,
     DetailsPopupComponent,
   ],
 })
 export class HomePage implements OnInit {
-  readonly layersIcon = LayersIcon;
-  readonly filterIcon = ListFilterIcon;
+  readonly SearchIcon = SearchIcon;
 
   modalIsOpen = false;
   isSettingsModalOpen = false;

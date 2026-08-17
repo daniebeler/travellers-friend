@@ -9,12 +9,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { LucideAngularModule, XIcon } from 'lucide-angular';
+import { HugeiconsIconComponent } from '@hugeicons/angular';
+import { X } from '@hugeicons/core-free-icons';
 
 @Component({
   selector: 'app-popup',
   templateUrl: './popup.component.html',
-  imports: [LucideAngularModule],
+  imports: [HugeiconsIconComponent],
   animations: [
     trigger('fadeScale', [
       transition(':enter', [
@@ -38,7 +39,7 @@ import { LucideAngularModule, XIcon } from 'lucide-angular';
   ],
 })
 export class PopupComponent implements OnChanges, OnDestroy {
-  readonly closeIcon = XIcon;
+  readonly closeIcon = X;
 
   @Input() show = false;
   @Input() title = '';
