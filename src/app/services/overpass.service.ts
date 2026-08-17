@@ -42,7 +42,6 @@ export class OverpassService {
 
     const query = `[out:json][timeout:${TIMEOUT}][bbox:${south},${west},${north},${east}];(${queryStatements});out center;`;
 
-    // Send query in the body via POST
     const body = new URLSearchParams();
     body.set('data', query);
 
@@ -50,7 +49,7 @@ export class OverpassService {
       'Content-Type': 'application/x-www-form-urlencoded',
     });
 
-    return this.http.post<any>(this.api, body.toString()).pipe(
+    return this.http.post<any>(this.api, query).pipe(
       map((data) => {
         const elements = data.elements || [];
 

@@ -5,7 +5,7 @@ import {
   Output,
   signal,
   ViewChild,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -21,7 +21,17 @@ import { OverpassService } from 'src/app/services/overpass.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { CacheService } from 'src/app/services/cache.service';
-import { debounce, Subject, timer } from 'rxjs';
+import {
+  catchError,
+  debounce,
+  from,
+  mergeMap,
+  Observable,
+  of,
+  Subject,
+  tap,
+  timer,
+} from 'rxjs';
 import { CategoryType } from 'src/app/models/Category';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { LocationIcon, LocationOfflineIcon } from '@hugeicons/core-free-icons';
@@ -66,6 +76,7 @@ export class MyMapComponent implements OnInit {
   ];
 
   private loadedGeohashCategories = new Set<string>();
+  private pendingGeohashCategories = new Set<string>();
   private categoryNodes = new Map<string, Map<number, OsmNode>>();
 
   private reloadSubject = new Subject<void>();
@@ -88,7 +99,8 @@ export class MyMapComponent implements OnInit {
   }
 
   ngOnInit() {
-setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);    this.settingsService.getSettings().subscribe((s) => {
+    setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);
+    this.settingsService.getSettings().subscribe((s) => {
       this.settings = s;
 
       this.updateVisibleLayers();
@@ -232,7 +244,9 @@ setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);    this.
     // Determine strictly what needs to be fetched
     for (const hash of visibleGeohashes) {
       const missingForHash = activeCategories.filter(
-        (cat) => !this.loadedGeohashCategories.has(`${hash}_${cat}`),
+        (cat) =>
+          !this.loadedGeohashCategories.has(`${hash}_${cat}`) &&
+          !this.pendingGeohashCategories.has(`${hash}_${cat}`),
       );
 
       if (missingForHash.length > 0) {
@@ -243,21 +257,25 @@ setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);    this.
     // Guard: Only fetch if there's actual missing data in the current bounds
     if (tasks.size === 0) return;
 
-    for (const [hash, categories] of tasks.entries()) {
-      this.fetchDataForGeohash(hash, categories);
-    }
+    const taskArray = Array.from(tasks.entries());
+
+    from(taskArray)
+      .pipe(
+        mergeMap(([hash, categories]) => {
+          return this.fetchDataForGeohash(hash, categories);
+        }, 2),
+      )
+      .subscribe();
   }
 
-  private async fetchDataForGeohash(
+  private fetchDataForGeohash(
     geohashKey: string,
     activeCategories: CategoryType[],
-  ) {
+  ): Observable<any> {
     const { cached, missing } = this.cacheService.getAvailableAndMissing(
       geohashKey,
       activeCategories,
     );
-
-    const categoriesUpdated = new Set<string>();
 
     // 1. Daten aus dem Cache verarbeiten & loggen
     if (cached.length > 0) {
@@ -266,11 +284,15 @@ setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);    this.
         `[CACHE] Hit for geohash '${geohashKey}' -> Categories: [${cachedCategories}]`,
       );
 
+      const cachedCategoriesUpdated = new Set<string>();
+
       for (const res of cached) {
         this.addNodesToGlobalList(res.categoryId, res.nodes);
         this.loadedGeohashCategories.add(`${geohashKey}_${res.categoryId}`);
-        categoriesUpdated.add(res.categoryId);
+        cachedCategoriesUpdated.add(res.categoryId);
       }
+
+      this.updateMapSources(Array.from(cachedCategoriesUpdated));
     }
 
     // 2. Fehlende Kategorien per API abrufen & loggen
@@ -278,37 +300,56 @@ setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);    this.
       console.log(
         `[API] Request for geohash '${geohashKey}' -> Fetching missing categories: [${missing.join(', ')}]`,
       );
+
+      for (const cat of missing) {
+        this.pendingGeohashCategories.add(`${geohashKey}_${cat}`);
+      }
+
       this.requestCount.update((count) => count + 1);
 
-      this.overpassService.getNodesByGeohash(geohashKey, missing).subscribe({
-        next: (results) => {
-          console.log(
-            `[API] Success for geohash '${geohashKey}' -> Received ${results.length} category dataset(s)`,
-          );
+      return this.overpassService.getNodesByGeohash(geohashKey, missing).pipe(
+        tap({
+          next: (results) => {
+            console.log(
+              `[API] Success for geohash '${geohashKey}' -> Received ${results.length} category dataset(s)`,
+            );
 
-          for (const res of results) {
-            this.cacheService.set(geohashKey, res.categoryId, res.nodes);
-            this.addNodesToGlobalList(res.categoryId, res.nodes);
-            this.loadedGeohashCategories.add(`${geohashKey}_${res.categoryId}`);
-            categoriesUpdated.add(res.categoryId);
-          }
-          this.updateMapSources(Array.from(categoriesUpdated));
-        },
-        error: (err) => {
-          console.error(
-            `[API] Failed to fetch data for geohash '${geohashKey}':`,
-            err,
-          );
-        },
-      });
+            const apiCategoriesUpdated = new Set<string>();
+            for (const res of results) {
+              this.cacheService.set(geohashKey, res.categoryId, res.nodes);
+              this.addNodesToGlobalList(res.categoryId, res.nodes);
+              this.loadedGeohashCategories.add(
+                `${geohashKey}_${res.categoryId}`,
+              );
+              apiCategoriesUpdated.add(res.categoryId);
+
+              this.pendingGeohashCategories.delete(
+                `${geohashKey}_${res.categoryId}`,
+              );
+            }
+            if (apiCategoriesUpdated.size > 0) {
+              this.updateMapSources(Array.from(apiCategoriesUpdated));
+            }
+          },
+          error: (err) => {
+            console.error(
+              `[API] Failed to fetch data for geohash '${geohashKey}':`,
+              err,
+            );
+
+            for (const cat of missing) {
+              this.pendingGeohashCategories.delete(`${geohashKey}_${cat}`);
+            }
+          },
+        }),
+        catchError(() => of(null)),
+      );
     } else {
       console.log(
         `[CACHE] All requested categories for geohash '${geohashKey}' served from cache. No API request needed.`,
       );
-    }
 
-    if (cached.length > 0) {
-      this.updateMapSources(Array.from(categoriesUpdated));
+      return of(null);
     }
   }
 
@@ -369,9 +410,10 @@ setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);    this.
     const feature = evt.features[0];
     if (feature && feature.properties?.originalNode) {
       try {
-        const originalNode = typeof feature.properties.originalNode === 'string'
-          ? JSON.parse(feature.properties.originalNode)
-          : feature.properties.originalNode;
+        const originalNode =
+          typeof feature.properties.originalNode === 'string'
+            ? JSON.parse(feature.properties.originalNode)
+            : feature.properties.originalNode;
 
         this.markerClicked.emit(originalNode);
       } catch (e) {
