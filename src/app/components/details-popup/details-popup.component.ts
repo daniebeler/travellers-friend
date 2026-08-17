@@ -1,39 +1,28 @@
 
-import { Component, Input } from '@angular/core';
-import {
-  AccessibilityIcon,
-  BikeIcon,
-  ClockIcon,
-  GlassWaterIcon,
-  GlobeIcon,
-  LucideAngularModule,
-  MilestoneIcon,
-  PiggyBankIcon,
-  TagIcon,
-  UserRoundIcon,
-  WrenchIcon,
-} from 'lucide-angular';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TagDisplay } from 'src/app/models/TagDisplay';
 import { Tags } from 'src/app/models/Tags';
 import { TagInfoComponent } from '../tag-info/tag-info.component';
+import { BikeIcon, ClockIcon, GlobeIcon, Milestone, MoneyIcon, TagIcon, ToolsIcon, UserIcon, WaterPumpIcon, WheelchairIcon } from '@hugeicons/core-free-icons';
 
 @Component({
   selector: 'app-details-popup',
-  imports: [LucideAngularModule, TagInfoComponent],
+  imports: [TagInfoComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   templateUrl: './details-popup.component.html',
 })
 export class DetailsPopupComponent {
-  readonly freeOfChargeIcon = PiggyBankIcon;
-  readonly wheelchairIcon = AccessibilityIcon;
-  readonly elevatorOperatorIcon = UserRoundIcon;
+  readonly freeOfChargeIcon = MoneyIcon;
+  readonly wheelchairIcon = WheelchairIcon;
+  readonly elevatorOperatorIcon = UserIcon;
   readonly openingHoursIcon = ClockIcon;
   readonly nameIcon = TagIcon;
-  readonly drinkingWaterIcon = GlassWaterIcon;
+  readonly drinkingWaterIcon = WaterPumpIcon;
   readonly websiteIcon = GlobeIcon;
   readonly pumpIcon = BikeIcon;
-  readonly toolsIcon = WrenchIcon;
+  readonly toolsIcon = ToolsIcon;
   readonly bicycleStandIcon = BikeIcon;
-  readonly levelIcon = MilestoneIcon;
+  readonly levelIcon = Milestone;
 
   @Input() tags: Tags;
   @Input() nodeId: number;

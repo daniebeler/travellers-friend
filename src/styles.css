@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "leaflet/dist/leaflet.css";
 
 @theme {
   --color-traveller: #ff6900;
@@ -36,27 +35,7 @@
   }
 }
 
-@layer components {
-
-  .leaflet-cluster-anim .leaflet-marker-icon,
-.leaflet-cluster-anim .leaflet-marker-shadow {
-  -webkit-transition: -webkit-transform 0.3s ease-out, opacity 0.3s ease-in;
-  -moz-transition: -moz-transform 0.3s ease-out, opacity 0.3s ease-in;
-  -o-transition: -o-transform 0.3s ease-out, opacity 0.3s ease-in;
-  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
-}
-
-.leaflet-cluster-spider-leg {
-  /* stroke-dashoffset (duration and function) should match with leaflet-marker-icon transform in order to track it exactly */
-  -webkit-transition: -webkit-stroke-dashoffset 0.3s ease-out,
-    -webkit-stroke-opacity 0.3s ease-in;
-  -moz-transition: -moz-stroke-dashoffset 0.3s ease-out,
-    -moz-stroke-opacity 0.3s ease-in;
-  -o-transition: -o-stroke-dashoffset 0.3s ease-out,
-    -o-stroke-opacity 0.3s ease-in;
-  transition: stroke-dashoffset 0.3s ease-out, stroke-opacity 0.3s ease-in;
-}
-}
+@layer components {}
 
 @layer utilities {
   .toilet-cluster {
@@ -84,7 +63,7 @@
   }
 
   .marker-cluster {
-    @apply flex! justify-center items-center rounded-[20px] bg-clip-padding;
+    @apply flex justify-center items-center rounded-[20px] bg-clip-padding;
   }
 
   .marker-cluster div {
@@ -92,30 +71,26 @@
   }
 
   .water-modal .add-info-btn {
-  background: var(--color-water);
-}
+    background: var(--color-water);
+  }
 
-.toilet-modal .add-info-btn {
-  background: var(--color-toilet);
-}
+  .toilet-modal .add-info-btn {
+    background: var(--color-toilet);
+  }
 
-.bike-modal .add-info-btn {
-  background: var(--color-bike);
-}
+  .bike-modal .add-info-btn {
+    background: var(--color-bike);
+  }
 
-.atm-modal .add-info-btn {
-  background: var(--color-atm);
-}
+  .atm-modal .add-info-btn {
+    background: var(--color-atm);
+  }
 
-.tabletennis-modal .add-info-btn {
-  background: var(--color-tabletennis);
-}
+  .tabletennis-modal .add-info-btn {
+    background: var(--color-tabletennis);
+  }
 
-.fitness-modal .add-info-btn {
-  background: var(--color-fitness);
-}
-
-.leaflet-control-locate {
-  @apply hidden;
-}
+  .fitness-modal .add-info-btn {
+    background: var(--color-fitness);
+  }
 }

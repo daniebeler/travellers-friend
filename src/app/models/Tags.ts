@@ -13,4 +13,9 @@ export interface Tags {
   charge?: string;
   brand?: string;
   level?: string;
+
+  'service:bicycle:pump'?: string;
+  'service:bicycle:tools'?: string;
+  'service:bicycle:chain_tool'?: string;
+  'service:bicycle:stand'?: string;
 }

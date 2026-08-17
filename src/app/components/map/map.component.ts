@@ -5,6 +5,7 @@ import {
   Output,
   signal,
   ViewChild,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -29,6 +30,7 @@ import { LocationIcon, LocationOfflineIcon } from '@hugeicons/core-free-icons';
   selector: 'app-map',
   templateUrl: './map.component.html',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, NgxMapLibreGLModule, HugeiconsIconComponent],
 })
 export class MyMapComponent implements OnInit {

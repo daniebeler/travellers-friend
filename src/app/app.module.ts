@@ -10,6 +10,7 @@ import {
 import {
   provideHttpClient,
   withInterceptorsFromDi,
+  withXhr
 } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
@@ -27,6 +28,6 @@ import { ServiceWorkerModule } from '@angular/service-worker';
       registrationStrategy: 'registerWhenStable:30000',
     }),
   ],
-  providers: [provideHttpClient(withInterceptorsFromDi()), provideAnimations(),],
+  providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideAnimations(),],
 })
 export class AppModule {}

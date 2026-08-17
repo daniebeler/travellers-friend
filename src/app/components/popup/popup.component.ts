@@ -8,6 +8,7 @@ import {
   OnDestroy,
   Output,
   SimpleChanges,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { X } from '@hugeicons/core-free-icons';
@@ -16,6 +17,7 @@ import { X } from '@hugeicons/core-free-icons';
   selector: 'app-popup',
   templateUrl: './popup.component.html',
   imports: [HugeiconsIconComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('fadeScale', [
       transition(':enter', [
