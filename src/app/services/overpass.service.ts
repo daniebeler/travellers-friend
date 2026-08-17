@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OsmNode } from '../models/OsmNode';
@@ -13,7 +13,7 @@ const TIMEOUT = 10;
   providedIn: 'root',
 })
 export class OverpassService {
-  private readonly api = 'https://overpass-api.de/api/interpreter?data=';
+  private readonly api = 'https://overpass-api.de/api/interpreter';
 
   constructor(
     private http: HttpClient,
@@ -29,7 +29,7 @@ export class OverpassService {
     fitness: ['"leisure"="fitness_station"'],
   };
 
-  getNodesByGeohash(
+ getNodesByGeohash(
     geohashKey: string,
     categoryIds: CategoryType[],
   ): Observable<{ categoryId: CategoryType; nodes: OsmNode[] }[]> {
@@ -40,17 +40,17 @@ export class OverpassService {
       .flatMap((stmt) => [`node[${stmt}];`, `way[${stmt}];`])
       .join('');
 
-    const query = `
-      [bbox:${south},${west},${north},${east}]
-      [out:json]
-      [timeout:${TIMEOUT}];
-      (
-        ${queryStatements}
-      );
-      out center;
-    `;
+    const query = encodeURIComponent(`[out:json][timeout:${TIMEOUT}][bbox:${south},${west},${north},${east}];(${queryStatements});out center;`);
 
-    return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(
+    // Send query in the body via POST
+    const body = new URLSearchParams();
+    body.set('data', query);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+
+    return this.http.post<any>(this.api, body.toString(), { headers }).pipe(
       map((data) => {
         const elements = data.elements || [];
 
@@ -58,9 +58,10 @@ export class OverpassService {
           categoryId: id,
           nodes: elements
             .filter((el: any) => this.elementMatchesCategory(el, id))
-            .map((el: any) => this.responseAdapter.adapt(el)),
+            .map((el: any) => this.responseAdapter.adapt(el))
+            .filter((node: any): node is OsmNode => node !== null),
         }));
-      }),
+      })
     );
   }
 

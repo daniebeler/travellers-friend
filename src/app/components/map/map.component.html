@@ -6,7 +6,7 @@
   </div>
 
 
-  <mgl-map [mapStyle]="currentStyle" [zoom]="[14]" [center]="[initialCoords.long, initialCoords.lat]"
+  <mgl-map [mapStyle]="currentStyle" [zoom]="14" [center]="[initialCoords.long, initialCoords.lat]"
     (mapLoad)="onMapLoad($event)" (moveEnd)="onMapMove($event)" class="h-full w-full">
 
     @for (source of mapSources; track source.id) {

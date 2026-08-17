@@ -25,6 +25,7 @@ import { debounce, Subject, timer } from 'rxjs';
 import { CategoryType } from 'src/app/models/Category';
 import { HugeiconsIconComponent } from '@hugeicons/angular';
 import { LocationIcon, LocationOfflineIcon } from '@hugeicons/core-free-icons';
+import { setWorkerUrl } from 'maplibre-gl';
 
 @Component({
   selector: 'app-map',
@@ -87,7 +88,7 @@ export class MyMapComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.settingsService.getSettings().subscribe((s) => {
+setWorkerUrl(new URL('maplibre-gl-worker.mjs', document.baseURI).href);    this.settingsService.getSettings().subscribe((s) => {
       this.settings = s;
 
       this.updateVisibleLayers();
