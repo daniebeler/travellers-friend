@@ -1,11 +1,11 @@
-@if (tags) {
-  @for (tag of tagDisplayList; track tag) {
+@if (tags()) {
+  @for (tag of tagDisplayList(); track tag.id) {
     <app-tag-info [tag]="tag"></app-tag-info>
   }
 }
 
 <div class="flex justify-center mt-6">
-  <a [href]="'https://www.openstreetmap.org/edit?node=' + nodeId" target="_blank"
+  <a [href]="'https://www.openstreetmap.org/edit?node=' + nodeId()" target="_blank"
     class="px-6 py-2 rounded-full add-info-btn text-white text-sm transition">
     Add missing information
   </a>

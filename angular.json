@@ -33,6 +33,16 @@
                 "output": "/"
               },
               {
+                "glob": "maplibre-gl-worker.mjs",
+                "input": "node_modules/maplibre-gl/dist",
+                "output": "/"
+              },
+              {
+                "glob": "maplibre-gl-shared.mjs",
+                "input": "node_modules/maplibre-gl/dist",
+                "output": "/"
+              },
+              {
                 "glob": "robots.txt",
                 "input": "src",
                 "output": "/"
@@ -40,13 +50,10 @@
               "src/manifest.webmanifest"
             ],
             "styles": [
-              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/maplibre-gl/dist/maplibre-gl.css",
               "src/styles.css"
             ],
-            "scripts": [
-              "node_modules/leaflet/dist/leaflet.js",
-              "node_modules/leaflet.markercluster/dist/leaflet.markercluster.js"
-            ],
+            "scripts": [],
             "aot": false,
             "extractLicenses": false,
             "sourceMap": true,

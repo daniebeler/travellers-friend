@@ -5,18 +5,21 @@ import { OsmNode } from '../models/OsmNode';
 @Injectable({
   providedIn: 'root',
 })
+export class ResponseAdapter implements Adapter<OsmNode | null> {
+  adapt(item: any): OsmNode | null {
+    if (!item) return null;
 
-export class ResponseAdapter implements Adapter<OsmNode> {
+    const tags = item.tags || {};
 
-  adapt(item: any): OsmNode {
-    if(item.type == "node") {
-      return new OsmNode(item.id, item.lat, item.lon, item.tags);
+    if (item.type === 'node' && typeof item.lat === 'number' && typeof item.lon === 'number') {
+      return new OsmNode(item.id, item.lat, item.lon, tags);
     }
 
-    else if (item.type == "way") {
-        var lat = item.center.lat
-        var lon = item.center.lon
-        return new OsmNode(item.id, lat, lon, item.tags)
-      }
+    if (item.type === 'way' && item.center?.lat != null && item.center?.lon != null) {
+      return new OsmNode(item.id, item.center.lat, item.center.lon, tags);
+    }
+
+    console.warn(`[ResponseAdapter] Skipping unhandled or malformed element:`, item);
+    return null;
   }
 }

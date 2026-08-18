@@ -3,18 +3,21 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import {
   Component,
   EventEmitter,
-  Input,
   OnChanges,
   OnDestroy,
   Output,
   SimpleChanges,
+  ChangeDetectionStrategy,
+  input
 } from '@angular/core';
-import { LucideAngularModule, XIcon } from 'lucide-angular';
+import { HugeiconsIconComponent } from '@hugeicons/angular';
+import { X } from '@hugeicons/core-free-icons';
 
 @Component({
   selector: 'app-popup',
   templateUrl: './popup.component.html',
-  imports: [LucideAngularModule],
+  imports: [HugeiconsIconComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   animations: [
     trigger('fadeScale', [
       transition(':enter', [
@@ -38,15 +41,15 @@ import { LucideAngularModule, XIcon } from 'lucide-angular';
   ],
 })
 export class PopupComponent implements OnChanges, OnDestroy {
-  readonly closeIcon = XIcon;
+  readonly closeIcon = X;
 
-  @Input() show = false;
-  @Input() title = '';
+  readonly show = input(false);
+  readonly title = input('');
   @Output() close = new EventEmitter<void>();
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['show']) {
-      if (this.show) {
+      if (this.show()) {
         document.body.style.overflow = 'hidden';
       } else {
         document.body.style.overflow = '';

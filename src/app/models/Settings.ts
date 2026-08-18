@@ -1,8 +1,8 @@
 export class Settings {
   public water = true;
   public toilets = true;
-  public bikeStations = false;
+  public bike = false;
   public atm = false;
-  public tabletennis = false;
+  public pingpong = false;
   public fitness = false;
 }

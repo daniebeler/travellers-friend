@@ -1,31 +1,46 @@
-<div class="h-full">
-  <div class="h-full z-0 relative">
-    <div class="h-full">
-      <div id="map" class="h-full"></div>
-    </div>
+<div class="h-full relative overflow-hidden">
+
+  <div
+    class="absolute top-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 bg-gray-900/90 text-white px-4 py-2 rounded-full shadow-lg border border-gray-700 backdrop-blur-sm text-sm font-medium">
+    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+    <span>Overpass Requests: <strong class="text-emerald-400 font-bold ml-1">{{ requestCount() }}</strong></span>
+  </div>
+
+
+  <mgl-map [mapStyle]="currentStyle" [zoom]="14" [center]="[initialCoords.long, initialCoords.lat]"
+    (mapLoad)="onMapLoad($event)" (moveEnd)="onMapMove($event)" class="h-full w-full">
+
+    @for (source of mapSources; track source.id) {
+    <mgl-geojson-source [id]="source.id" [cluster]="false">
+    </mgl-geojson-source>
+
+    <mgl-layer [id]="source.id + '-icon'" type="symbol" [source]="source.id" [layout]="{
+    'icon-image': ['get', 'icon-name'],
+    'icon-size': 0.15,
+    'icon-allow-overlap': true,
+    'icon-anchor': 'bottom'
+  }" (layerClick)="onMarkerClick($event)">
+    </mgl-layer>
+    }
+
+    @if (currentPosition) {
+    <mgl-marker [lngLat]="currentPosition">
+      <div class="relative flex items-center justify-center">
+        <span class="animate-ping absolute inline-flex h-8 w-8 rounded-full bg-blue-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-4 w-4 bg-blue-600 border-2 border-white shadow-md"></span>
+      </div>
+    </mgl-marker>
+    }
+
+    <mgl-control mglNavigation [showCompass]="false" position="top-left"></mgl-control>
+  </mgl-map>
+
+  <div class="fixed bottom-24 right-8 flex flex-col gap-2">
+    <button (click)="goToCurrentLocation()"
+      [class]="isAtCurrentLocation ? 'bg-gray-800 text-blue-600' : 'bg-gray-800 text-white'"
+      class="rounded-full p-4 shadow-lg hover:bg-gray-900 transition">
+      <hugeicons-icon color="currentColor" [strokeWidth]="1.5"
+        [icon]="isAtCurrentLocation ? locateFixedIcon : (currentPosition ? locateIcon : locateOffIcon)"></hugeicons-icon>
+    </button>
   </div>
 </div>
-
-@if (currentPosition) {
-@if (isAtCurrentLocation) {
-<div class="fixed bottom-24 right-8">
-  <button class="rounded-full bg-gray-800 text-blue-600 p-4 shadow-lg hover:bg-gray-900 transition"
-    (click)="goToCurrentLocation()">
-    <lucide-icon [img]="locateFixedIcon"></lucide-icon>
-  </button>
-</div>
-} @else {
-<div class="fixed bottom-24 right-8">
-  <button class="rounded-full bg-gray-800 text-white p-4 shadow-lg hover:bg-gray-900 transition"
-    (click)="goToCurrentLocation()">
-    <lucide-icon [img]="locateIcon"></lucide-icon>
-  </button>
-</div>
-}
-} @else {
-  <div class="fixed bottom-24 right-8">
-  <button (click)="goToCurrentLocation()" class="rounded-full bg-gray-800 text-red-500 p-4 shadow-lg hover:bg-gray-900 transition">
-    <lucide-icon [img]="locateOffIcon"></lucide-icon>
-  </button>
-</div>
-}

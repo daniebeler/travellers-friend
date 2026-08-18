@@ -1,56 +1,54 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { MapComponent } from 'src/app/components/map/map.component';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { MyMapComponent } from 'src/app/components/map/map.component';
 import { Settings } from 'src/app/models/Settings';
 import { SettingsService } from 'src/app/services/settings.service';
-import {
-  LucideAngularModule,
-  LayersIcon,
-  ListFilterIcon,
-} from 'lucide-angular';
 import { PopupComponent } from 'src/app/components/popup/popup.component';
 import { Category } from 'src/app/models/Category';
 import { Tags } from 'src/app/models/Tags';
 import { DetailsPopupComponent } from 'src/app/components/details-popup/details-popup.component';
+import { SearchIcon } from '@hugeicons/core-free-icons';
+import { HugeiconsIconComponent } from '@hugeicons/angular';
+import { OsmNode } from 'src/app/models/OsmNode';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
-    MapComponent,
-    LucideAngularModule,
+    MyMapComponent,
+    HugeiconsIconComponent,
     PopupComponent,
     DetailsPopupComponent,
   ],
 })
 export class HomePage implements OnInit {
-  readonly layersIcon = LayersIcon;
-  readonly filterIcon = ListFilterIcon;
+  readonly SearchIcon = SearchIcon;
 
   modalIsOpen = false;
   isSettingsModalOpen = false;
   isAboutModalOpen = false;
-  nodeTags: Array<any>;
-  tags: Tags;
-  nodeId: number;
+  nodeTags: Array<any> = [];
+  tags!: Tags;
+  nodeId!: number;
   heading = '';
   modalClass = '';
   modalColor = '';
   isLoadingData = false;
 
-  settings: Settings;
+  settings: Settings = new Settings();
 
   tileMode = 0;
 
   categories: Category[] = [
     { key: 'water', label: 'Drinking Water', color: 'bg-water' },
     { key: 'toilets', label: 'Toilets', color: 'bg-toilet' },
-    { key: 'bikeStations', label: 'Bike Repair Stations', color: 'bg-bike' },
+    { key: 'bike', label: 'Bike Repair Stations', color: 'bg-bike' },
     { key: 'atm', label: 'ATMs', color: 'bg-atm' },
     {
-      key: 'tabletennis',
+      key: 'pingpong',
       label: 'Table Tennis Tables',
       color: 'bg-tabletennis',
     },
@@ -73,9 +71,9 @@ export class HomePage implements OnInit {
     });
   }
 
-  openModal(data: string) {
-    this.nodeId = JSON.parse(data).id;
-    this.tags = JSON.parse(data).tags;
+  openModal(data: OsmNode) {
+    this.nodeId = data.id;
+    this.tags = data.tags;
 
     console.log(this.tags)
 

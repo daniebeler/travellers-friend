@@ -1,62 +1,89 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { OsmNode } from '../models/OsmNode';
 import { ResponseAdapter } from '../adapter/response-adapter';
+import geohash from 'ngeohash';
+import { CategoryType } from '../models/Category';
 
 const TIMEOUT = 10;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OverpassService {
-
-  api = 'https://overpass-api.de/api/interpreter?data=';
-
+  private readonly api = 'https://overpass-api.de/api/interpreter';
 
   constructor(
     private http: HttpClient,
-    private responseAdapter: ResponseAdapter
-  ) { }
+    private responseAdapter: ResponseAdapter,
+  ) {}
 
-  getNodes(nodeType: string, lat1, lon1, lat2, lon2): Observable<OsmNode[]> {
-    const query =
-      '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
-      '[out:json]' +
-      '[timeout:' + TIMEOUT + '];' +
-      '(node[' + nodeType + ']; way[' + nodeType + '];);' +
-      'out center;';
-    return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(
-      data => data.elements.map(element => this.responseAdapter.adapt(element)))
+  private readonly CATEGORY_STATEMENTS: Record<CategoryType, string[]> = {
+    toilets: ['"amenity"="toilets"'],
+    water: ['"amenity"="drinking_water"', '"man_made"="water_tap"'],
+    bike: ['"amenity"="bicycle_repair_station"'],
+    atm: ['"amenity"="atm"', '"amenity"="bank"'],
+    pingpong: ['"sport"="table_tennis"'],
+    fitness: ['"leisure"="fitness_station"'],
+  };
+
+ getNodesByGeohash(
+    geohashKey: string,
+    categoryIds: CategoryType[],
+  ): Observable<{ categoryId: CategoryType; nodes: OsmNode[] }[]> {
+    const [south, west, north, east] = geohash.decode_bbox(geohashKey);
+
+    const queryStatements = categoryIds
+      .flatMap((id) => this.CATEGORY_STATEMENTS[id])
+      .flatMap((stmt) => [`node[${stmt}];`, `way[${stmt}];`])
+      .join('');
+
+    const query = `[out:json][timeout:${TIMEOUT}][bbox:${south},${west},${north},${east}];(${queryStatements});out center;`;
+
+    const body = new URLSearchParams();
+    body.set('data', query);
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/x-www-form-urlencoded',
+    });
+
+    return this.http.post<any>(this.api, query).pipe(
+      map((data) => {
+        const elements = data.elements || [];
+
+        return categoryIds.map((id) => ({
+          categoryId: id,
+          nodes: elements
+            .filter((el: any) => this.elementMatchesCategory(el, id))
+            .map((el: any) => this.responseAdapter.adapt(el))
+            .filter((node: any): node is OsmNode => node !== null),
+        }));
+      })
     );
   }
 
-  getNodes2(nodeType1: string, nodeType2: string, lat1, lon1, lat2, lon2): Observable<OsmNode[]> {
-    const query =
-      '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
-      '[out:json]' +
-      '[timeout:' + TIMEOUT + '];' +
-      '(node[' + nodeType1 + '][' + nodeType2 + '];' +
-      'way[' + nodeType1 + '][' + nodeType2 + '];);' +
-      'out center;';
-    return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(
-      data => data.elements.map(element => this.responseAdapter.adapt(element)))
-    );
-  }
-
-  getNodesOr(nodeType1: string, nodeType2: string, lat1, lon1, lat2, lon2): Observable<OsmNode[]> {
-    const query =
-      '[bbox:' + lat1 + ',' + lon1 + ',' + lat2 + ',' + lon2 + ']' +
-      '[out:json]' +
-      '[timeout:' + TIMEOUT + '];' +
-      '(node[' + nodeType1 + '];' +
-      'way[' + nodeType1 + '];' +
-      'node[' + nodeType2 + '];' +
-      'way[' + nodeType2 + '];);' +
-      'out center;';
-    return this.http.get<any>(this.api + encodeURIComponent(query)).pipe(map(
-      data => data.elements.map(element => this.responseAdapter.adapt(element)))
-    );
+  private elementMatchesCategory(
+    element: any,
+    categoryId: CategoryType,
+  ): boolean {
+    const tags = element.tags || {};
+    switch (categoryId) {
+      case 'toilets':
+        return tags.amenity === 'toilets';
+      case 'water':
+        return (
+          tags.amenity === 'drinking_water' || tags.man_made === 'water_tap'
+        );
+      case 'bike':
+        return tags.amenity === 'bicycle_repair_station';
+      case 'atm':
+        return tags.amenity === 'atm' || tags.amenity === 'bank';
+      case 'pingpong':
+        return tags.sport === 'table_tennis';
+      case 'fitness':
+        return tags.leisure === 'fitness_station';
+    }
   }
 }
